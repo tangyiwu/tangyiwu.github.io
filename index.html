@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,6 +60,519 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-handler:message:looper机制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/handler:message:looper机制/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Handler-Message-Looper机制"><a href="#Handler-Message-Looper机制" class="headerlink" title="Handler/Message/Looper机制"></a>Handler/Message/Looper机制</h1><h2 id="Handler作用"><a href="#Handler作用" class="headerlink" title="Handler作用"></a>Handler作用</h2><p>android开发过程中，我们都知道在一个异步线程中完成一段耗时操作，利用handler把结果send到UI主线程，从而更新ui；Android应用在初始化启动时，在ActivityThread中也定义了一个Handler的派生类H，用来进行Activity和Service生命周期的管理等；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">private class H extends Handler &#123;</div><div class="line">	...//省略</div><div class="line">	public void handleMessage(Message msg) &#123;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&gt;&gt;&gt; handling: &quot; + codeToString(msg.what));</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case LAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityStart&quot;);</div><div class="line">                    final ActivityClientRecord r = (ActivityClientRecord) msg.obj;</div><div class="line">                    r.packageInfo = getPackageInfoNoCheck(</div><div class="line">                            r.activityInfo.applicationInfo, r.compatInfo);</div><div class="line">                    handleLaunchActivity(r, null);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case RELAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityRestart&quot;);</div><div class="line">                    ActivityClientRecord r = (ActivityClientRecord)msg.obj;</div><div class="line">                    handleRelaunchActivity(r);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case PAUSE_ACTIVITY:</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityPause&quot;);</div><div class="line">                    handlePauseActivity((IBinder)msg.obj, false, (msg.arg1&amp;1) != 0, msg.arg2,</div><div class="line">                            (msg.arg1&amp;2) != 0);</div><div class="line">                    maybeSnapshot();</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                    break;</div><div class="line">                ...</div><div class="line">                &#125;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&lt;&lt;&lt; done: &quot; + codeToString(msg.what));</div><div class="line">        &#125;</div><div class="line">	...//省略</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Message的send机制"><a href="#Message的send机制" class="headerlink" title="Message的send机制"></a>Message的send机制</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessage(Message msg)</div><div class="line">   &#123;</div><div class="line">       return sendMessageDelayed(msg, 0);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>往下追踪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessageDelayed(Message msg, long delayMillis)</div><div class="line">   &#123;</div><div class="line">       if (delayMillis &lt; 0) &#123;</div><div class="line">           delayMillis = 0;</div><div class="line">       &#125;</div><div class="line">       return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>继续往下追踪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public boolean sendMessageAtTime(Message msg, long uptimeMillis) &#123;</div><div class="line">       MessageQueue queue = mQueue;</div><div class="line">       if (queue == null) &#123;</div><div class="line">           RuntimeException e = new RuntimeException(</div><div class="line">                   this + &quot; sendMessageAtTime() called with no mQueue&quot;);</div><div class="line">           Log.w(&quot;Looper&quot;, e.getMessage(), e);</div><div class="line">           return false;</div><div class="line">       &#125;</div><div class="line">       return enqueueMessage(queue, msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>这个方法中我们大致可以看出消息Message是进入一个队列mQueue当中，mQueue是Handler实例化时，从UI主线程里面的Looper中获取到的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public Handler(Callback callback, boolean async) &#123;</div><div class="line">       ...//省略</div><div class="line">       mLooper = Looper.myLooper();</div><div class="line">       if (mLooper == null) &#123;</div><div class="line">           throw new RuntimeException(</div><div class="line">               &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">       &#125;</div><div class="line">       mQueue = mLooper.mQueue;</div><div class="line">       mCallback = callback;</div><div class="line">       mAsynchronous = async;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>每个线程只能对应一个Looper，UI主线程中的Looper在应用中是全局的，所有Message发送后都存储在这个Looper的MessageQueue中</p>
+<p>继续往下看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) &#123;</div><div class="line">       msg.target = this;</div><div class="line">       if (mAsynchronous) &#123;</div><div class="line">           msg.setAsynchronous(true);</div><div class="line">       &#125;</div><div class="line">       return queue.enqueueMessage(msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>以上这些都发生在Handler中，下面进入MessageQueue，看看消息Message是如何进入队列的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long when) &#123;</div><div class="line">	//处理消息msg的Handler不能为空，所有的消息最终还是交给Handler处理的</div><div class="line">       if (msg.target == null) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;Message must have a target.&quot;);</div><div class="line">       &#125;</div><div class="line">       //如果消息msg正在使用中，无需继续执行下去，同时抛出一个异常</div><div class="line">       if (msg.isInUse()) &#123;</div><div class="line">           throw new IllegalStateException(msg + &quot; This message is already in use.&quot;);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       synchronized (this) &#123;</div><div class="line">       	//判断MessageQueue是否已停止，停止抛出一个所在线程死亡的异常</div><div class="line">           if (mQuitting) &#123;</div><div class="line">               IllegalStateException e = new IllegalStateException(</div><div class="line">                       msg.target + &quot; sending message to a Handler on a dead thread&quot;);</div><div class="line">               Log.w(TAG, e.getMessage(), e);</div><div class="line">               msg.recycle();</div><div class="line">               return false;</div><div class="line">           &#125;</div><div class="line">		//标志这个消息正在使用中</div><div class="line">           msg.markInUse();</div><div class="line">           msg.when = when;</div><div class="line">           Message p = mMessages;</div><div class="line">           boolean needWake;</div><div class="line">           //如果在队列中msg前面没有其他消息或者msg不是最新的消息，把当前msg放入队列的头部，如果队列是阻塞状态就唤醒队列</div><div class="line">           if (p == null || when == 0 || when &lt; p.when) &#123;</div><div class="line">               // New head, wake up the event queue if blocked.</div><div class="line">               msg.next = p;</div><div class="line">               mMessages = msg;</div><div class="line">               needWake = mBlocked;</div><div class="line">           &#125; else &#123;//找到合适的位置把msg放入到队列中</div><div class="line">               // Inserted within the middle of the queue.  Usually we don&apos;t have to wake</div><div class="line">               // up the event queue unless there is a barrier at the head of the queue</div><div class="line">               // and the message is the earliest asynchronous message in the queue.</div><div class="line">               needWake = mBlocked &amp;&amp; p.target == null &amp;&amp; msg.isAsynchronous();</div><div class="line">               Message prev;</div><div class="line">               for (;;) &#123;</div><div class="line">                   prev = p;</div><div class="line">                   p = p.next;</div><div class="line">                   //队列中没有更多消息，跳出死循环</div><div class="line">                   if (p == null || when &lt; p.when) &#123;</div><div class="line">                       break;</div><div class="line">                   &#125;</div><div class="line">                   if (needWake &amp;&amp; p.isAsynchronous()) &#123;</div><div class="line">                       needWake = false;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">               msg.next = p; // invariant: p == prev.next</div><div class="line">               prev.next = msg;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // We can assume mPtr != 0 because mQuitting is false.</div><div class="line">           if (needWake) &#123;</div><div class="line">               nativeWake(mPtr);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h2 id="Handler是如何拿到Message的"><a href="#Handler是如何拿到Message的" class="headerlink" title="Handler是如何拿到Message的"></a>Handler是如何拿到Message的</h2><p>应用在启动初始化时，在ActivityThread中开启了一个无限循环检查的操作，当有新的Message时，就从消息队列中MessageQueue中拿出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public static void loop() &#123;</div><div class="line">       final Looper me = myLooper();</div><div class="line">       if (me == null) &#123;</div><div class="line">           throw new RuntimeException(&quot;No Looper; Looper.prepare() wasn&apos;t called on this thread.&quot;);</div><div class="line">       &#125;</div><div class="line">       final MessageQueue queue = me.mQueue;</div><div class="line"></div><div class="line">       // Make sure the identity of this thread is that of the local process,</div><div class="line">       // and keep track of what that identity token actually is.</div><div class="line">       Binder.clearCallingIdentity();</div><div class="line">       final long ident = Binder.clearCallingIdentity();</div><div class="line"></div><div class="line">       for (;;) &#123;</div><div class="line">           Message msg = queue.next(); // 有可能阻塞</div><div class="line">           if (msg == null) &#123;</div><div class="line">               // msg为空说明队列已经停止不可用，不执行后面的操作了</div><div class="line">               return;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // This must be in a local variable, in case a UI event sets the logger</div><div class="line">           Printer logging = me.mLogging;</div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot; +</div><div class="line">                       msg.callback + &quot;: &quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">		//把消息msg交给它的目标Handler来分配处理消息，消息在哪个页面中处理就是通过Message中的target来确定是哪个Activity中的Handler，从而在正确页面中处理msg</div><div class="line">           msg.target.dispatchMessage(msg);</div><div class="line"></div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot; + msg.target + &quot; &quot; + msg.callback);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Make sure that during the course of dispatching the</div><div class="line">           // identity of the thread wasn&apos;t corrupted.</div><div class="line">           final long newIdent = Binder.clearCallingIdentity();</div><div class="line">           if (ident != newIdent) &#123;</div><div class="line">               Log.wtf(TAG, &quot;Thread identity changed from 0x&quot;</div><div class="line">                       + Long.toHexString(ident) + &quot; to 0x&quot;</div><div class="line">                       + Long.toHexString(newIdent) + &quot; while dispatching to &quot;</div><div class="line">                       + msg.target.getClass().getName() + &quot; &quot;</div><div class="line">                       + msg.callback + &quot; what=&quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           msg.recycleUnchecked();</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>Handler调用dispatchMessage(msg)来处理消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void dispatchMessage(Message msg) &#123;</div><div class="line">       if (msg.callback != null) &#123;</div><div class="line">           handleCallback(msg);</div><div class="line">       &#125; else &#123;</div><div class="line">           if (mCallback != null) &#123;</div><div class="line">               if (mCallback.handleMessage(msg)) &#123;</div><div class="line">                   return;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           handleMessage(msg);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>我们终于看到熟悉的handleMessage()了</p>
+<p>##Handler消息机制UML图<br><img src="http://pic002.cnblogs.com/images/2012/328668/2012060815461921.jpg" alt="img_handler_uml"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/handler:message:looper机制/" data-id="ciqtmzoyb0000m0s6ng49nr2e" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-intentservice源码分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/intentservice源码分析/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="#IntentService源码分析"></a>#IntentService源码分析</h2><p>##1 概论<br>IntentService是一种处理异步请求的Service。客户端通过调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##2 IntentService是如何启动一个异步线程处理请求的？</div><div class="line"></div><div class="line">IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</div></pre></td></tr></table></figure></p>
+<p>@Override<br>    public void onCreate() {<br>        super.onCreate();<br>        HandlerThread thread = new HandlerThread(“IntentService[“ + mName + “]”);<br>        thread.start();<br>        mServiceLooper = thread.getLooper();<br>        mServiceHandler = new ServiceHandler(mServiceLooper);<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</div></pre></td></tr></table></figure></p>
+<p>public class HandlerThread extends Thread {<br>    int mPriority;<br>    int mTid = -1;<br>    Looper mLooper;</p>
+<pre><code>public HandlerThread(String name) {
+    super(name);
+    mPriority = Process.THREAD_PRIORITY_DEFAULT;
+}
+...
+@Override
+public void run() {
+    mTid = Process.myTid();
+    Looper.prepare();
+    synchronized (this) {
+        mLooper = Looper.myLooper();
+        notifyAll();
+    }
+    Process.setThreadPriority(mPriority);
+    onLooperPrepared();
+    Looper.loop();
+    mTid = -1;
+}
+...
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##3 IntentService是如何处理Intent的</div><div class="line">调用***Context.startService(Intent)***后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</div></pre></td></tr></table></figure></p>
+<pre><code>public void onStart(Intent intent, int startId) {
+    Message msg = mServiceHandler.obtainMessage();
+    msg.arg1 = startId;
+    msg.obj = intent;
+    mServiceHandler.sendMessage(msg);
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</div></pre></td></tr></table></figure>
+<pre><code>private final class ServiceHandler extends Handler {
+    public ServiceHandler(Looper looper) {
+        super(looper);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        onHandleIntent((Intent)msg.obj);
+        stopSelf(msg.arg1);
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</div><div class="line"></div><div class="line">我们来看onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
+<p>protected abstract void onHandleIntent(Intent intent);<br><code>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用</code>stopSelf()``` Service</p>
+<p>##4 总结</p>
+<ol>
+<li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
+<li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
+<li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
+<li>ServiceHandler处理消息是在异步线程里面的，onHandleIntent(Intent)也是运行在异步线程里面的，这与UI主线程里面的Handler不同；</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/intentservice源码分析/" data-id="ciqtmzoyg0001m0s6x02wz0td" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-serializable_parcelable" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/serializable_parcelable/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
+<p>##2 序列化的作用</p>
+<ol>
+<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
+<li>在网络上传送对象的字节序列</li>
+<li>通过RMI传输对象(不懂，囧)</li>
+<li>将对象数据在进程之间进行传递</li>
+</ol>
+<p>##3 序列化的实现方式</p>
+<p>###3.1 实现Serializable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先查看序列化后的文件内容：<br><img src="http://img.blog.csdn.net/20160706170307481" alt="serializable_file"></p>
+<p>运行结果：<br><img src="http://img.blog.csdn.net/20160706170359457" alt="serializable_result"></p>
+<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
+<p>注释掉序列化代码后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>通过文件，反序列化，结果是：<br><img src="http://img.blog.csdn.net/20160706170427358" alt="serializable_result2"></p>
+<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
+<p>报了一个异常，说明反序列化失败；</p>
+<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
+<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
+<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
+<p>显式地定义serialVersionUID有两种用途：</p>
+<ol>
+<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
+<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
+</ol>
+<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###3.3 把对象包装成JSON字符串传输</p>
+<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
+<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
+<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/serializable_parcelable/" data-id="ciqtmzoyj0002m0s65e6fdqbr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-serializable_parcelable_copy" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/serializable_parcelable_copy/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
+<p>##2 序列化的作用</p>
+<ol>
+<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
+<li>在网络上传送对象的字节序列</li>
+<li>通过RMI传输对象(不懂，囧)</li>
+<li>将对象数据在进程之间进行传递</li>
+</ol>
+<p>##3 序列化的实现方式</p>
+<p>###3.1 实现Serializable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先查看序列化后的文件内容：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic1.png" alt="serializable_file"></p>
+<p>运行结果：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic2.png" alt="serializable_result"></p>
+<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
+<p>注释掉序列化代码后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>通过文件，反序列化，结果是：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic3.png" alt="serializable_result2"></p>
+<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
+<p>报了一个异常，说明反序列化失败；</p>
+<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
+<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
+<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
+<p>显式地定义serialVersionUID有两种用途：</p>
+<ol>
+<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
+<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
+</ol>
+<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###3.3 把对象包装成JSON字符串传输</p>
+<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
+<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
+<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/serializable_parcelable_copy/" data-id="ciqtmzoyl0003m0s6t3piizfa" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-zsh常见快捷键" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/zsh常见快捷键/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Zsh常见快捷键"><a href="#Zsh常见快捷键" class="headerlink" title="Zsh常见快捷键"></a>Zsh常见快捷键</h2><ol>
+<li><strong>ctrl + a</strong>        到行首</li>
+<li><strong>ctrl + e</strong>        到行末</li>
+<li><strong>ctrl + u</strong>     直接清除本行</li>
+<li><strong>ctrl + f/b</strong>    前进后退，相当于左右方向键，但是显然比移开手按方向键更快</li>
+<li><strong>ctrl + p</strong>        上一条命令，相当于 <em>方向键上</em></li>
+<li><strong>ctrl + h</strong>        删除之前的字符</li>
+<li><strong>ctrl + w</strong>        删除光标前的单词</li>
+<li><strong>ctrl + k</strong>        删除到文本末尾</li>
+<li><strong>ctrl + p</strong>        搜索命令历史</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/zsh常见快捷键/" data-id="ciqtmzoyo0004m0s6h3p5825y" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-一次dialog导致的内存泄漏" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/一次dialog导致的内存泄漏/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
+<p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
+<p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
+<p>可以看出点击确定后，dialog先是dismiss()，然后执行deleteRecord()方法，deleteRecord()里面执行请求网络的删除操作。</p>
+<p>打开浏览器，输入问题，都说是Activity finish时，Dialog仍然可见，要在Activity的onDestroy()方法中，确保已经关闭了Dialog，<br>OK，那我就在onDestroy()方法里面校验Dialog，我把Dialog提取出方法，成为Activity的一个成员变量mDeleteDialog;<br>同时重写Activity的onDestroy()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@Override</div><div class="line">protected void onDestroy() &#123;</div><div class="line">    //防止内存泄漏</div><div class="line">    if (mDeleteDialog.isShowing()) &#123;</div><div class="line">        mDeleteDialog.dismissImmediately();</div><div class="line">    &#125;</div><div class="line">    mDeleteDialog = null;</div><div class="line">    super.onDestroy();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>点击Android Studio的运行按钮，apk重新运行，再次进入问题页面，执行删除操作，黑屏事件再次发生，(^|_|^)<br>是谁？是谁？到底是谁窃取了我的Activity？</p>
+<p>冷静了几秒，首先要肯定Activity在finish的时候，Dialog仍然持有Activity引用的真相。<br>为什么Dialog还持有Activity的引用？我明明在finish之前，就调用了Dialog的dismiss()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mDeleteDialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                mDeleteDialog.dismiss();</div><div class="line">                deleteRecord();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>进入Dialog的dismiss()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">	public void dismiss() &#123;</div><div class="line">		if (mActivity.isFinishing()) &#123;</div><div class="line">			return;</div><div class="line">		&#125;</div><div class="line">		mDialogView.dismiss(new OnDialogDismissListener() &#123;</div><div class="line">			@Override</div><div class="line">			public void onFinish() &#123;</div><div class="line">				dismissImmediately();</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>mDialogView是一个自定义View，继承自RelativeLayout</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义标题、内容的Dialog容器</div><div class="line"> */</div><div class="line">public class TitleContentDialog extends Dialog &#123;</div><div class="line">	/** 宿主 */</div><div class="line">	private Activity mActivity;</div><div class="line">	/** 实际显示的加载视图 */</div><div class="line">	private CustomTitleContentDialogView mDialogView;</div><div class="line">	...</div><div class="line">	</div><div class="line">	private class CustomTitleContentDialogView extends RelativeLayout &#123;</div><div class="line">		/*</div><div class="line">		 * 显示配置及动画配置部分</div><div class="line">		 */</div><div class="line"></div><div class="line">		/** 对话框占比 */</div><div class="line">		private static final float RATIO = 0.75f;</div><div class="line">		/** 动画执行时间 */</div><div class="line">		private static final float ANIM_DUTAION = 200;</div><div class="line">		...</div><div class="line">		/** 动画执行器 */</div><div class="line">		private AnimRunnable mAnimRunnable;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 隐藏加载</div><div class="line">		 */</div><div class="line">		public void dismiss(OnDialogDismissListener listener) &#123;</div><div class="line">			mDismissListener = listener;</div><div class="line">			mAnimRunnable.setAnimState(AnimState.DISMISSING);</div><div class="line">		&#125;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 动画执行器</div><div class="line">		 * </div><div class="line">		 * </div><div class="line">		 */</div><div class="line">		private class AnimRunnable implements Runnable &#123;</div><div class="line">			...</div><div class="line">			@Override</div><div class="line">			public void run() &#123;</div><div class="line">				...</div><div class="line">				if (mAnimState != AnimState.NORMAL) &#123;</div><div class="line">					if (mCurrentFrame &lt; mTotalFrame) &#123;</div><div class="line">						mCurrentFrame++;</div><div class="line">					&#125; else &#123;</div><div class="line">						if (mAnimState == AnimState.SHOWING) &#123;</div><div class="line">							if (mNextState == AnimState.NONE) &#123;</div><div class="line">								setAnimState(AnimState.NORMAL);</div><div class="line">							&#125; else &#123;</div><div class="line">								reset();</div><div class="line">								setAnimState(AnimState.DISMISSING);</div><div class="line">							&#125;</div><div class="line">						&#125; else if (mAnimState == AnimState.DISMISSING) &#123;</div><div class="line">							reset();</div><div class="line">							if (mDismissListener != null) &#123;</div><div class="line">								mDismissListener.onFinish();</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				...</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 消失动画结束后的回调接口</div><div class="line">	 */</div><div class="line">	private interface OnDialogDismissListener &#123;</div><div class="line">		/** 动画执行完毕 */</div><div class="line">		void onFinish();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从代码中可以看出，自定义的Dialog在执行重写的dismiss()方法时，先运行一段动画，动画执行完成后，再通过回调执行dismissImmediately()方法；<br>dismissImmediately()方法代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 立即关闭</div><div class="line">	 */</div><div class="line">	public void dismissImmediately() &#123;</div><div class="line">		if (isShowing() &amp;&amp; !mActivity.isFinishing()) &#123;</div><div class="line">			Utils.hideInputMethod(mActivity);</div><div class="line">			TitleContentDialog.super.dismiss();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>dismissImmediately()方法才会让Dialog立即消失，从而与Activity解除绑定；<br>在dismissImmediately()方法里面设置断点debug，发现程序没有执行if语句里面的代码；if条件里面的isShowing()是true，这是毫无疑问的，<br>那就是<code>!mActivity.isFinishing()</code>不满足条件，也就是说此时的Activity已经执行完网络操作，运行了finish()方法。</p>
+<p>整理一遍思绪，发现造成Dialog没有消失，而Activity已经finish的原因是Dialog消失时执行的动画，通过不断调用View.postDelayed(Runnable action,long delayMillis)方法，达到Dialog消失时渐变缩放的动画效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public boolean postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           return attachInfo.mHandler.postDelayed(action, delayMillis);</div><div class="line">       &#125;</div><div class="line">       // Assume that post will succeed later</div><div class="line">       ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>原来调用了Handler.postDelayed()方法，熟悉Android开发应该了解Handler很容易造成Activity发生内存泄漏，不知道的同学可以看我的另一篇博客<a href="http://blog.csdn.net/u012464435/article/details/50753246" target="_blank" rel="external">内存泄漏常见原因总结</a>。<br>动画一共执行了200毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/** 动画执行时间 */</div><div class="line">private static final float ANIM_DUTAION = 200;</div></pre></td></tr></table></figure>
+<p>也就是说，在Dialog执行动画的200毫秒期间，Activity执行的网络操作已经结束，Activity运行finish()方法，但是Dialog在执行动画，还没消失，仍然持有Activity的引用，从而导致内存泄漏。</p>
+<p>要解决这个问题，只要保证Activity运行finish()方法在Dialog执行完动画之后，由于网络请求的事件不确定，finish()方法只需要延迟200毫秒，就可以保证Activity的运行finish()方法在Dialog动画结束之后。</p>
+<p>下面是网络请求执行完后的回调操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">                public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                    if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                        EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                        finish();</div><div class="line">                    &#125; else &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p>finish()方法延时几百毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">            public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                    _Application.getInstance().scheduleTask(new Runnable() &#123;</div><div class="line">                        @Override</div><div class="line">                        public void run() &#123;</div><div class="line">                            EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                            finish();</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125; else &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>调用了Application里面的scheduleTask(Runnable action)方法，达到延时500毫秒的目的。</p>
+<p>启动Android studio，打开手机再次进入问题页面，执行删除操作，弹出确认Dialog，点击确认，退出，没有黑屏现象，问题终于解决了。</p>
+<p>为了确保Dialog不会再导致内存泄漏，多测试几次，反复点击确认和取消按钮，我擦，第二次点击取消按钮，居然又出现黑屏现象，继续追踪，发现问题所在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/一次dialog导致的内存泄漏/" data-id="ciqtmzoyq0005m0s64npfxh18" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-内存泄漏常见原因总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/内存泄漏常见原因总结/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="内存泄漏常见原因总结"><a href="#内存泄漏常见原因总结" class="headerlink" title="内存泄漏常见原因总结"></a>内存泄漏常见原因总结</h2><h3 id="1-非静态内部类的静态实例"><a href="#1-非静态内部类的静态实例" class="headerlink" title="1.非静态内部类的静态实例"></a>1.非静态内部类的静态实例</h3><h3 id="2-Activity的静态成员变量"><a href="#2-Activity的静态成员变量" class="headerlink" title="2.Activity的静态成员变量"></a>2.Activity的静态成员变量</h3><ol>
+<li><strong>Drawable</strong></li>
+<li><strong>Context</strong></li>
+</ol>
+<p>Drawable的对象的内部Callback持有activity的引用，当Activity finish()之后，静态成员drawable始终持有这个Activity的引用，导致内存释放不了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public class MainActivityextends Activity</div><div class="line">&#123;</div><div class="line">         static Demo sInstance = null;</div><div class="line">        </div><div class="line">    @Override</div><div class="line">    public void onCreate(BundlesavedInstanceState)</div><div class="line">    &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        if (sInstance == null)</div><div class="line">        &#123;</div><div class="line">           sInstance= new Demo();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    class Demo</div><div class="line">    &#123;</div><div class="line">    voiddoSomething()</div><div class="line">    &#123;</div><div class="line">               System.out.print(&quot;dosth.&quot;);</div><div class="line">    &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Context，Activity内部如果有一个Context的成员变量，将导致Context引用指向的Activity对象释放不了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	private static Context mContext;</div><div class="line">	</div><div class="line">	public void onCreate(Bundle savedInstanceState)&#123;</div><div class="line">		super.onCreate(savedInstanceState);</div><div class="line">		...</div><div class="line">		mContext=MainActivity.this;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-Handler造成的内存泄漏"><a href="#3-Handler造成的内存泄漏" class="headerlink" title="3.Handler造成的内存泄漏"></a>3.Handler造成的内存泄漏</h3><h4 id="3-1-Handler内存泄漏的原因"><a href="#3-1-Handler内存泄漏的原因" class="headerlink" title="3.1 Handler内存泄漏的原因"></a>3.1 Handler内存泄漏的原因</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	...</div><div class="line">	private Handler mHandler = new Handler()&#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大家平时开发中喜欢在Activity中直接new一个Handler的匿名内部类，这样造成匿名内部类持有一个外部类(通常是Activity)的引用(不然怎么更新ui)，但是Handler常常伴随着一个执行耗时操作的异步线程(如下载多张图片)，如果在完成耗时操作之前，Activity退出，异步线程持有handler的引用，handler持有Activity的引用，从而导致内存泄漏。</p>
+<h4 id="3-2-防止Handler内存泄漏的措施"><a href="#3-2-防止Handler内存泄漏的措施" class="headerlink" title="3.2 防止Handler内存泄漏的措施"></a>3.2 防止Handler内存泄漏的措施</h4><p><strong>通过程序逻辑来进行保护</strong></p>
+<ol>
+<li>在关闭Activity的时候，把线程也关了；</li>
+<li>如果Handler是被delay的Message持有的引用，在Activity的onDestroy()方法中，调用Handler响应书的removeCallbacks()方法，把消息对象从消息队列移除就行了。</li>
+</ol>
+<p><strong>将Handler声明为静态类</strong></p>
+<ul>
+<li><p>静态类不持有外部类的引用，所以Activity可以被随意回收，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>使用弱引用</strong></p>
+<p>当Activity在内存中的对象没有任何引用，使用弱引用会让Activity对象很容易被Gc回首。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">        WeakReference&lt;CrmContactActivity&gt; mReference;</div><div class="line"></div><div class="line">        public MyHandler(CrmContactActivity activity) &#123;</div><div class="line">            mReference = new WeakReference&lt;CrmContactActivity&gt;(activity);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            final CrmContactActivity activity = mReference.get();</div><div class="line">            if (activity == null || activity.isFinishing()) &#123;</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line">            if (msg.what == LOAD_MORE) &#123;</div><div class="line">                activity.getCustomersByCompanyName(activity.companyName);</div><div class="line">            &#125; else if (msg.what == THE_END) &#123;</div><div class="line">                activity.showViewIfHasCompanyName((ArrayList&lt;CustomerModel&gt;) activity.matchedCustomerList);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
+<h3 id="4-注册某个对象后没有反注册"><a href="#4-注册某个对象后没有反注册" class="headerlink" title="4.注册某个对象后没有反注册"></a>4.注册某个对象后没有反注册</h3><p>广播接收器注册后在Activity退出时忘了反注册，一些利用观察者模式的第三方开源库在使用时，忘了反注册(如EventBus)。<br>正确代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">   protected void onDestroy() &#123;</div><div class="line">       EventBus.getDefault().unregister(this);</div><div class="line">       super.onDestroy();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h3 id="5-集合对象没清理造成的内存泄漏"><a href="#5-集合对象没清理造成的内存泄漏" class="headerlink" title="5.集合对象没清理造成的内存泄漏"></a>5.集合对象没清理造成的内存泄漏</h3><p>把大量对象的引用放入集合中，但我们不需要该对象时，记得从集合中将不需要的引用清理掉，同理，当对象不需要时，记得将对象的引用设置为null。</p>
+<h3 id="6-资源文件未关闭"><a href="#6-资源文件未关闭" class="headerlink" title="6.资源文件未关闭"></a>6.资源文件未关闭</h3><p>最常见的是文件流执行完读写操作后，忘记关闭了输入流，输出流；数据库、Content Provider操作完后Cursor忘记了close等等。<br>安全一点的方式是在写代码的时候，首先写完头尾，避免尾部关闭操作忘记了谢。</p>
+<h3 id="7-代码不严谨"><a href="#7-代码不严谨" class="headerlink" title="7.代码不严谨"></a>7.代码不严谨</h3><ul>
+<li>Bitmap对象使用完后，忘记了调用recycle()方法销毁；</li>
+<li>解析图片的时候忘记了设置采样率</li>
+<li>自定义View时TypedArray使用完后忘记调用recycle()方法释放内存</li>
+<li>ListView的适配器类中没有复用convertView</li>
+<li>未采用软引用等</li>
+</ul>
+<h3 id="8-关于内存泄漏的调试"><a href="#8-关于内存泄漏的调试" class="headerlink" title="8.关于内存泄漏的调试"></a>8.关于内存泄漏的调试</h3><p>我有一篇博客介绍我开发过程中一次典型的内存泄漏案例，这个案例中介绍了内存泄漏检测工具MAT的使用，博客链接如下：</p>
+<p><a href="http://blog.csdn.net/u012464435/article/details/50034349" target="_blank" rel="external">MAT使用案例</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/内存泄漏常见原因总结/" data-id="ciqtmzoyt0006m0s6iaas0iw0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-欢迎使用_cmd_markdown_编辑阅读器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="欢迎使用-Cmd-Markdown-编辑阅读器"><a href="#欢迎使用-Cmd-Markdown-编辑阅读器" class="headerlink" title="欢迎使用 Cmd Markdown 编辑阅读器"></a>欢迎使用 Cmd Markdown 编辑阅读器</h1><hr>
+<p>我们理解您需要更便捷更高效的工具记录思想，整理笔记、知识，并将其中承载的价值传播给他人，<strong>Cmd Markdown</strong> 是我们给出的答案 —— 我们为记录思想和分享知识提供更专业的工具。 您可以使用 Cmd Markdown：</p>
+<blockquote>
+<ul>
+<li>整理知识，学习笔记</li>
+<li>发布日记，杂文，所见所想</li>
+<li>撰写发布技术文稿（代码支持）</li>
+<li>撰写发布学术论文（LaTeX 公式支持）</li>
+</ul>
+</blockquote>
+<p><img src="https://www.zybuluo.com/static/img/logo.png" alt="cmd-markdown-logo"></p>
+<p>除了您现在看到的这个 Cmd Markdown 在线版本，您还可以前往以下网址下载：</p>
+<h3 id="Windows-Mac-Linux-全平台客户端"><a href="#Windows-Mac-Linux-全平台客户端" class="headerlink" title="Windows/Mac/Linux 全平台客户端"></a><a href="https://www.zybuluo.com/cmd/" target="_blank" rel="external">Windows/Mac/Linux 全平台客户端</a></h3><blockquote>
+<p>请保留此份 Cmd Markdown 的欢迎稿兼使用说明，如需撰写新稿件，点击顶部工具栏右侧的 <i class="icon-file"></i> <strong>新文稿</strong> 或者使用快捷键 <code>Ctrl+Alt+N</code>。</p>
+</blockquote>
+<hr>
+<h2 id="什么是-Markdown"><a href="#什么是-Markdown" class="headerlink" title="什么是 Markdown"></a>什么是 Markdown</h2><p>Markdown 是一种方便记忆、书写的纯文本标记语言，用户可以使用这些标记符号以最小的输入代价生成极富表现力的文档：譬如您正在阅读的这份文档。它使用简单的符号标记不同的标题，分割不同的段落，<strong>粗体</strong> 或者 <em>斜体</em> 某些文字，更棒的是，它还可以</p>
+<h3 id="1-制作一份待办事宜-Todo-列表"><a href="#1-制作一份待办事宜-Todo-列表" class="headerlink" title="1. 制作一份待办事宜 Todo 列表"></a>1. 制作一份待办事宜 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#13-待办事宜-todo-列表" target="_blank" rel="external">Todo 列表</a></h3><ul>
+<li>[ ] 支持以 PDF 格式导出文稿</li>
+<li>[ ] 改进 Cmd 渲染算法，使用局部渲染技术提高渲染效率</li>
+<li>[x] 新增 Todo 列表功能</li>
+<li>[x] 修复 LaTex 公式渲染问题</li>
+<li>[x] 新增 LaTex 公式编号功能</li>
+</ul>
+<h3 id="2-书写一个质能守恒公式-LaTeX"><a href="#2-书写一个质能守恒公式-LaTeX" class="headerlink" title="2. 书写一个质能守恒公式[^LaTeX]"></a>2. 书写一个质能守恒公式[^LaTeX]</h3><p>$$E=mc^2$$</p>
+<h3 id="3-高亮一段代码-code"><a href="#3-高亮一段代码-code" class="headerlink" title="3. 高亮一段代码[^code]"></a>3. 高亮一段代码[^code]</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@requires_authorization</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="comment"># A comment</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'hello world'</span></div></pre></td></tr></table></figure>
+<h3 id="4-高效绘制-流程图"><a href="#4-高效绘制-流程图" class="headerlink" title="4. 高效绘制 流程图"></a>4. 高效绘制 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#7-流程图" target="_blank" rel="external">流程图</a></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: Start</div><div class="line">op=&gt;operation: Your Operation</div><div class="line">cond=&gt;condition: Yes or No?</div><div class="line">e=&gt;end</div><div class="line"></div><div class="line">st-&gt;op-&gt;cond</div><div class="line">cond(yes)-&gt;e</div><div class="line">cond(no)-&gt;op</div></pre></td></tr></table></figure>
+<h3 id="5-高效绘制-序列图"><a href="#5-高效绘制-序列图" class="headerlink" title="5. 高效绘制 序列图"></a>5. 高效绘制 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#8-序列图" target="_blank" rel="external">序列图</a></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Alice-&gt;Bob: Hello Bob, how are you?</div><div class="line">Note right of Bob: Bob thinks</div><div class="line">Bob--&gt;Alice: I am good thanks!</div></pre></td></tr></table></figure>
+<h3 id="6-绘制表格"><a href="#6-绘制表格" class="headerlink" title="6. 绘制表格"></a>6. 绘制表格</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th style="text-align:right">价格</th>
+<th style="text-align:center">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算机</td>
+<td style="text-align:right">$1600</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>手机</td>
+<td style="text-align:right">$12</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td>管线</td>
+<td style="text-align:right">$1</td>
+<td style="text-align:center">234</td>
+</tr>
+</tbody>
+</table>
+<h3 id="7-更详细语法说明"><a href="#7-更详细语法说明" class="headerlink" title="7. 更详细语法说明"></a>7. 更详细语法说明</h3><p>想要查看更详细的语法说明，可以参考我们准备的 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown" target="_blank" rel="external">Cmd Markdown 简明语法手册</a>，进阶用户可以参考 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#cmd-markdown-高阶语法手册" target="_blank" rel="external">Cmd Markdown 高阶语法手册</a> 了解更多高级功能。</p>
+<p>总而言之，不同于其它 <em>所见即所得</em> 的编辑器：你只需使用键盘专注于书写文本内容，就可以生成印刷级的排版格式，省却在键盘和工具栏之间来回切换，调整内容和格式的麻烦。<strong>Markdown 在流畅的书写和印刷级的阅读体验之间找到了平衡。</strong> 目前它已经成为世界上最大的技术分享网站 GitHub 和 技术问答网站 StackOverFlow 的御用书写格式。</p>
+<hr>
+<h2 id="什么是-Cmd-Markdown"><a href="#什么是-Cmd-Markdown" class="headerlink" title="什么是 Cmd Markdown"></a>什么是 Cmd Markdown</h2><p>您可以使用很多工具书写 Markdown，但是 Cmd Markdown 是这个星球上我们已知的、最好的 Markdown 工具——没有之一 ：）因为深信文字的力量，所以我们和你一样，对流畅书写，分享思想和知识，以及阅读体验有极致的追求，我们把对于这些诉求的回应整合在 Cmd Markdown，并且一次，两次，三次，乃至无数次地提升这个工具的体验，最终将它演化成一个 <strong>编辑/发布/阅读</strong> Markdown 的在线平台——您可以在任何地方，任何系统/设备上管理这里的文字。</p>
+<h3 id="1-实时同步预览"><a href="#1-实时同步预览" class="headerlink" title="1. 实时同步预览"></a>1. 实时同步预览</h3><p>我们将 Cmd Markdown 的主界面一分为二，左边为<strong>编辑区</strong>，右边为<strong>预览区</strong>，在编辑区的操作会实时地渲染到预览区方便查看最终的版面效果，并且如果你在其中一个区拖动滚动条，我们有一个巧妙的算法把另一个区的滚动条同步到等价的位置，超酷！</p>
+<h3 id="2-编辑工具栏"><a href="#2-编辑工具栏" class="headerlink" title="2. 编辑工具栏"></a>2. 编辑工具栏</h3><p>也许您还是一个 Markdown 语法的新手，在您完全熟悉它之前，我们在 <strong>编辑区</strong> 的顶部放置了一个如下图所示的工具栏，您可以使用鼠标在工具栏上调整格式，不过我们仍旧鼓励你使用键盘标记格式，提高书写的流畅度。</p>
+<p><img src="https://www.zybuluo.com/static/img/toolbar-editor.png" alt="tool-editor"></p>
+<h3 id="3-编辑模式"><a href="#3-编辑模式" class="headerlink" title="3. 编辑模式"></a>3. 编辑模式</h3><p>完全心无旁骛的方式编辑文字：点击 <strong>编辑工具栏</strong> 最右测的拉伸按钮或者按下 <code>Ctrl + M</code>，将 Cmd Markdown 切换到独立的编辑模式，这是一个极度简洁的写作环境，所有可能会引起分心的元素都已经被挪除，超清爽！</p>
+<h3 id="4-实时的云端文稿"><a href="#4-实时的云端文稿" class="headerlink" title="4. 实时的云端文稿"></a>4. 实时的云端文稿</h3><p>为了保障数据安全，Cmd Markdown 会将您每一次击键的内容保存至云端，同时在 <strong>编辑工具栏</strong> 的最右侧提示 <code>已保存</code> 的字样。无需担心浏览器崩溃，机器掉电或者地震，海啸——在编辑的过程中随时关闭浏览器或者机器，下一次回到 Cmd Markdown 的时候继续写作。</p>
+<h3 id="5-离线模式"><a href="#5-离线模式" class="headerlink" title="5. 离线模式"></a>5. 离线模式</h3><p>在网络环境不稳定的情况下记录文字一样很安全！在您写作的时候，如果电脑突然失去网络连接，Cmd Markdown 会智能切换至离线模式，将您后续键入的文字保存在本地，直到网络恢复再将他们传送至云端，即使在网络恢复前关闭浏览器或者电脑，一样没有问题，等到下次开启 Cmd Markdown 的时候，她会提醒您将离线保存的文字传送至云端。简而言之，我们尽最大的努力保障您文字的安全。</p>
+<h3 id="6-管理工具栏"><a href="#6-管理工具栏" class="headerlink" title="6. 管理工具栏"></a>6. 管理工具栏</h3><p>为了便于管理您的文稿，在 <strong>预览区</strong> 的顶部放置了如下所示的 <strong>管理工具栏</strong>：</p>
+<p><img src="https://www.zybuluo.com/static/img/toolbar-manager.jpg" alt="tool-manager"></p>
+<p>通过管理工具栏可以：</p>
+<p><i class="icon-share"></i> 发布：将当前的文稿生成固定链接，在网络上发布，分享<br><i class="icon-file"></i> 新建：开始撰写一篇新的文稿<br><i class="icon-trash"></i> 删除：删除当前的文稿<br><i class="icon-cloud"></i> 导出：将当前的文稿转化为 Markdown 文本或者 Html 格式，并导出到本地<br><i class="icon-reorder"></i> 列表：所有新增和过往的文稿都可以在这里查看、操作<br><i class="icon-pencil"></i> 模式：切换 普通/Vim/Emacs 编辑模式</p>
+<h3 id="7-阅读工具栏"><a href="#7-阅读工具栏" class="headerlink" title="7. 阅读工具栏"></a>7. 阅读工具栏</h3><p><img src="https://www.zybuluo.com/static/img/toolbar-reader.jpg" alt="tool-manager"></p>
+<p>通过 <strong>预览区</strong> 右上角的 <strong>阅读工具栏</strong>，可以查看当前文稿的目录并增强阅读体验。</p>
+<p>工具栏上的五个图标依次为：</p>
+<p><i class="icon-list"></i> 目录：快速导航当前文稿的目录结构以跳转到感兴趣的段落<br><i class="icon-chevron-sign-left"></i> 视图：互换左边编辑区和右边预览区的位置<br><i class="icon-adjust"></i> 主题：内置了黑白两种模式的主题，试试 <strong>黑色主题</strong>，超炫！<br><i class="icon-desktop"></i> 阅读：心无旁骛的阅读模式提供超一流的阅读体验<br><i class="icon-fullscreen"></i> 全屏：简洁，简洁，再简洁，一个完全沉浸式的写作和阅读环境</p>
+<h3 id="8-阅读模式"><a href="#8-阅读模式" class="headerlink" title="8. 阅读模式"></a>8. 阅读模式</h3><p>在 <strong>阅读工具栏</strong> 点击 <i class="icon-desktop"></i> 或者按下 <code>Ctrl+Alt+M</code> 随即进入独立的阅读模式界面，我们在版面渲染上的每一个细节：字体，字号，行间距，前背景色都倾注了大量的时间，努力提升阅读的体验和品质。</p>
+<h3 id="9-标签、分类和搜索"><a href="#9-标签、分类和搜索" class="headerlink" title="9. 标签、分类和搜索"></a>9. 标签、分类和搜索</h3><p>在编辑区任意行首位置输入以下格式的文字可以标签当前文档：</p>
+<p>标签： 未分类</p>
+<p>标签以后的文稿在【文件列表】（Ctrl+Alt+F）里会按照标签分类，用户可以同时使用键盘或者鼠标浏览查看，或者在【文件列表】的搜索文本框内搜索标题关键字过滤文稿，如下图所示：</p>
+<p><img src="https://www.zybuluo.com/static/img/file-list.png" alt="file-list"></p>
+<h3 id="10-文稿发布和分享"><a href="#10-文稿发布和分享" class="headerlink" title="10. 文稿发布和分享"></a>10. 文稿发布和分享</h3><p>在您使用 Cmd Markdown 记录，创作，整理，阅读文稿的同时，我们不仅希望它是一个有力的工具，更希望您的思想和知识通过这个平台，连同优质的阅读体验，将他们分享给有相同志趣的人，进而鼓励更多的人来到这里记录分享他们的思想和知识，尝试点击 <i class="icon-share"></i> (Ctrl+Alt+P) 发布这份文档给好友吧！</p>
+<hr>
+<p>再一次感谢您花费时间阅读这份欢迎稿，点击 <i class="icon-file"></i> (Ctrl+Alt+N) 开始撰写新的文稿吧！祝您在这里记录、阅读、分享愉快！</p>
+<p>作者 <a href="http://weibo.com/ghosert" target="_blank" rel="external">@ghosert</a><br>2015 年 06月 15日    </p>
+<p>[^LaTeX]: 支持 <strong>LaTeX</strong> 编辑显示支持，例如：$\sum_{i=1}^n a_i=0$， 访问 <a href="http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" target="_blank" rel="external">MathJax</a> 参考更多使用方法。</p>
+<p>[^code]: 代码高亮功能支持包括 Java, Python, JavaScript 在内的，<strong>四十一</strong>种主流编程语言。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" data-id="ciqtmzoyu0007m0s6lvepsnwo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -96,7 +609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/07/19/hello-world/" data-id="ciqtmac730000hrs6m8pncvf3" class="article-share-link">Partager</a>
+      <a data-url="http://yoursite.com/2016/07/19/hello-world/" data-id="ciqtmac730000hrs6m8pncvf3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -131,12 +644,28 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2016/07/19/hello-world/">Hello World</a>
+            <a href="/2016/07/19/handler:message:looper机制/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/intentservice源码分析/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/serializable_parcelable/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/serializable_parcelable_copy/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/zsh常见快捷键/">(no title)</a>
           </li>
         
       </ul>
@@ -152,7 +681,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2016 tangyiwu<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

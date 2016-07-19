@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>龙在唐朝的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="#序列化和反序列化##1 序列化的原因java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变
+##2 序列化的作用
+
+永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
+在网络上传送对象的字节序列
+通过RMI传输对象(不懂，囧)
+将对象数据在进程之间进行传递
+
+##3 序列化的实现方式
+###3.1 实现Serializable接口
+12345">
+<meta property="og:type" content="article">
+<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:url" content="http://yoursite.com/2016/07/19/serializable_parcelable/index.html">
+<meta property="og:site_name" content="龙在唐朝的博客">
+<meta property="og:description" content="#序列化和反序列化##1 序列化的原因java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变
+##2 序列化的作用
+
+永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
+在网络上传送对象的字节序列
+通过RMI传输对象(不懂，囧)
+将对象数据在进程之间进行传递
+
+##3 序列化的实现方式
+###3.1 实现Serializable接口
+12345">
+<meta property="og:image" content="http://img.blog.csdn.net/20160706170307481">
+<meta property="og:image" content="http://img.blog.csdn.net/20160706170359457">
+<meta property="og:image" content="http://img.blog.csdn.net/20160706170427358">
+<meta property="og:updated_time" content="2016-07-19T15:50:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="龙在唐朝的博客">
+<meta name="twitter:description" content="#序列化和反序列化##1 序列化的原因java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变
+##2 序列化的作用
+
+永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
+在网络上传送对象的字节序列
+通过RMI传输对象(不懂，囧)
+将对象数据在进程之间进行传递
+
+##3 序列化的实现方式
+###3.1 实现Serializable接口
+12345">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160706170307481">
+  
+    <link rel="alternate" href="/atom.xml" title="龙在唐朝的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">龙在唐朝的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-serializable_parcelable" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/19/serializable_parcelable/" class="article-date">
+  <time datetime="2016-07-19T15:50:00.000Z" itemprop="datePublished">2016-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
+<p>##2 序列化的作用</p>
+<ol>
+<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
+<li>在网络上传送对象的字节序列</li>
+<li>通过RMI传输对象(不懂，囧)</li>
+<li>将对象数据在进程之间进行传递</li>
+</ol>
+<p>##3 序列化的实现方式</p>
+<p>###3.1 实现Serializable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先查看序列化后的文件内容：<br><img src="http://img.blog.csdn.net/20160706170307481" alt="serializable_file"></p>
+<p>运行结果：<br><img src="http://img.blog.csdn.net/20160706170359457" alt="serializable_result"></p>
+<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
+<p>注释掉序列化代码后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>通过文件，反序列化，结果是：<br><img src="http://img.blog.csdn.net/20160706170427358" alt="serializable_result2"></p>
+<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
+<p>报了一个异常，说明反序列化失败；</p>
+<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
+<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
+<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
+<p>显式地定义serialVersionUID有两种用途：</p>
+<ol>
+<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
+<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
+</ol>
+<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###3.3 把对象包装成JSON字符串传输</p>
+<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
+<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
+<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/19/serializable_parcelable/" data-id="ciqtmzoyj0002m0s65e6fdqbr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/19/intentservice源码分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/19/serializable_parcelable_copy/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/07/19/handler:message:looper机制/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/intentservice源码分析/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/serializable_parcelable/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/serializable_parcelable_copy/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/19/zsh常见快捷键/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 tangyiwu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
