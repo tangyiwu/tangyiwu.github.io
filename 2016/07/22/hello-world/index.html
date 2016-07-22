@@ -84,19 +84,19 @@
 
 
 
-<meta name="description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
+<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick">
 <meta property="og:type" content="article">
-<meta property="og:title" content="龙在唐朝的博客">
-<meta property="og:url" content="http://yoursite.com/2016/07/19/intentservice源码分析/index.html">
+<meta property="og:title" content="Hello World">
+<meta property="og:url" content="http://yoursite.com/2016/07/22/hello-world/index.html">
 <meta property="og:site_name" content="龙在唐朝的博客">
-<meta property="og:description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
-<meta property="og:updated_time" content="2016-07-19T15:50:00.000Z">
+<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick">
+<meta property="og:updated_time" content="2016-07-22T09:07:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="龙在唐朝的博客">
-<meta name="twitter:description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
+<meta name="twitter:title" content="Hello World">
+<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick">
 
 
 
@@ -117,9 +117,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/07/19/intentservice源码分析/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/07/22/hello-world/"/>
 
-  <title>  | 龙在唐朝的博客 </title>
+  <title> Hello World | 龙在唐朝的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -239,7 +239,7 @@
             
             
               
-                
+                Hello World
               
             
           </h1>
@@ -251,8 +251,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
+            <time itemprop="dateCreated" datetime="2016-07-22T17:07:54+08:00" content="2016-07-22">
+              2016-07-22
             </time>
           </span>
 
@@ -279,56 +279,15 @@
       
 
       
-        <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="#IntentService源码分析"></a>#IntentService源码分析</h2><p>##1 概论<br>IntentService是一种处理异步请求的Service。客户端通过调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##2 IntentService是如何启动一个异步线程处理请求的？</div><div class="line"></div><div class="line">IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</div></pre></td></tr></table></figure></p>
-<p>@Override<br>    public void onCreate() {<br>        super.onCreate();<br>        HandlerThread thread = new HandlerThread(“IntentService[“ + mName + “]”);<br>        thread.start();<br>        mServiceLooper = thread.getLooper();<br>        mServiceHandler = new ServiceHandler(mServiceLooper);<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</div></pre></td></tr></table></figure></p>
-<p>public class HandlerThread extends Thread {<br>    int mPriority;<br>    int mTid = -1;<br>    Looper mLooper;</p>
-<pre><code>public HandlerThread(String name) {
-    super(name);
-    mPriority = Process.THREAD_PRIORITY_DEFAULT;
-}
-...
-@Override
-public void run() {
-    mTid = Process.myTid();
-    Looper.prepare();
-    synchronized (this) {
-        mLooper = Looper.myLooper();
-        notifyAll();
-    }
-    Process.setThreadPriority(mPriority);
-    onLooperPrepared();
-    Looper.loop();
-    mTid = -1;
-}
-...
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##3 IntentService是如何处理Intent的</div><div class="line">调用***Context.startService(Intent)***后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</div></pre></td></tr></table></figure></p>
-<pre><code>public void onStart(Intent intent, int startId) {
-    Message msg = mServiceHandler.obtainMessage();
-    msg.arg1 = startId;
-    msg.obj = intent;
-    mServiceHandler.sendMessage(msg);
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</div></pre></td></tr></table></figure>
-<pre><code>private final class ServiceHandler extends Handler {
-    public ServiceHandler(Looper looper) {
-        super(looper);
-    }
-
-    @Override
-    public void handleMessage(Message msg) {
-        onHandleIntent((Intent)msg.obj);
-        stopSelf(msg.arg1);
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</div><div class="line"></div><div class="line">我们来看onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
-<p>protected abstract void onHandleIntent(Intent intent);<br><code>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用</code>stopSelf()``` Service</p>
-<p>##4 总结</p>
-<ol>
-<li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
-<li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
-<li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
-<li>ServiceHandler处理消息是在异步线程里面的，onHandleIntent(Intent)也是运行在异步线程里面的，这与UI主线程里面的Handler不同；</li>
-</ol>
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
 
       
     </div>
@@ -354,17 +313,13 @@ public void run() {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/内存泄漏常见原因总结/" rel="next" title="">
+              <a href="/2016/07/19/handler:message:looper机制/" rel="next" title="">
                 <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/一次dialog导致的内存泄漏/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -464,7 +419,7 @@ public void run() {
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntentService源码分析"><span class="nav-number">1.</span> <span class="nav-text">#IntentService源码分析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

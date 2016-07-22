@@ -235,6 +235,108 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/22/hello-world/" itemprop="url">
+                  Hello World
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-22T17:07:54+08:00" content="2016-07-22">
+              2016-07-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/handler:message:looper机制/" itemprop="url">
                   未命名
                 </a>
@@ -299,6 +401,493 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void dispatchMessage(Message msg) &#123;</div><div class="line">       if (msg.callback != null) &#123;</div><div class="line">           handleCallback(msg);</div><div class="line">       &#125; else &#123;</div><div class="line">           if (mCallback != null) &#123;</div><div class="line">               if (mCallback.handleMessage(msg)) &#123;</div><div class="line">                   return;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           handleMessage(msg);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
 <p>我们终于看到熟悉的handleMessage()了</p>
 <p>##Handler消息机制UML图<br><img src="http://pic002.cnblogs.com/images/2012/328668/2012060815461921.jpg" alt="img_handler_uml"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/serializable_parcelable_copy/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
+<p>##2 序列化的作用</p>
+<ol>
+<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
+<li>在网络上传送对象的字节序列</li>
+<li>通过RMI传输对象(不懂，囧)</li>
+<li>将对象数据在进程之间进行传递</li>
+</ol>
+<p>##3 序列化的实现方式</p>
+<p>###3.1 实现Serializable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先查看序列化后的文件内容：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic1.png" alt="serializable_file"></p>
+<p>运行结果：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic2.png" alt="serializable_result"></p>
+<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
+<p>注释掉序列化代码后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>通过文件，反序列化，结果是：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic3.png" alt="serializable_result2"></p>
+<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
+<p>报了一个异常，说明反序列化失败；</p>
+<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
+<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
+<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
+<p>显式地定义serialVersionUID有两种用途：</p>
+<ol>
+<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
+<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
+</ol>
+<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###3.3 把对象包装成JSON字符串传输</p>
+<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
+<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
+<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/zsh常见快捷键/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Zsh常见快捷键"><a href="#Zsh常见快捷键" class="headerlink" title="Zsh常见快捷键"></a>Zsh常见快捷键</h2><ol>
+<li><strong>ctrl + a</strong>        到行首</li>
+<li><strong>ctrl + e</strong>        到行末</li>
+<li><strong>ctrl + u</strong>     直接清除本行</li>
+<li><strong>ctrl + f/b</strong>    前进后退，相当于左右方向键，但是显然比移开手按方向键更快</li>
+<li><strong>ctrl + p</strong>        上一条命令，相当于 <em>方向键上</em></li>
+<li><strong>ctrl + h</strong>        删除之前的字符</li>
+<li><strong>ctrl + w</strong>        删除光标前的单词</li>
+<li><strong>ctrl + k</strong>        删除到文本末尾</li>
+<li><strong>ctrl + p</strong>        搜索命令历史</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/serializable_parcelable/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
+<p>##2 序列化的作用</p>
+<ol>
+<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
+<li>在网络上传送对象的字节序列</li>
+<li>通过RMI传输对象(不懂，囧)</li>
+<li>将对象数据在进程之间进行传递</li>
+</ol>
+<p>##3 序列化的实现方式</p>
+<p>###3.1 实现Serializable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先查看序列化后的文件内容：<br><img src="http://img.blog.csdn.net/20160706170307481" alt="serializable_file"></p>
+<p>运行结果：<br><img src="http://img.blog.csdn.net/20160706170359457" alt="serializable_result"></p>
+<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
+<p>注释掉序列化代码后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>通过文件，反序列化，结果是：<br><img src="http://img.blog.csdn.net/20160706170427358" alt="serializable_result2"></p>
+<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
+<p>报了一个异常，说明反序列化失败；</p>
+<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
+<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
+<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
+<p>显式地定义serialVersionUID有两种用途：</p>
+<ol>
+<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
+<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
+</ol>
+<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###3.3 把对象包装成JSON字符串传输</p>
+<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
+<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
+<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/一次dialog导致的内存泄漏/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
+<p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
+<p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
+<p>可以看出点击确定后，dialog先是dismiss()，然后执行deleteRecord()方法，deleteRecord()里面执行请求网络的删除操作。</p>
+<p>打开浏览器，输入问题，都说是Activity finish时，Dialog仍然可见，要在Activity的onDestroy()方法中，确保已经关闭了Dialog，<br>OK，那我就在onDestroy()方法里面校验Dialog，我把Dialog提取出方法，成为Activity的一个成员变量mDeleteDialog;<br>同时重写Activity的onDestroy()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@Override</div><div class="line">protected void onDestroy() &#123;</div><div class="line">    //防止内存泄漏</div><div class="line">    if (mDeleteDialog.isShowing()) &#123;</div><div class="line">        mDeleteDialog.dismissImmediately();</div><div class="line">    &#125;</div><div class="line">    mDeleteDialog = null;</div><div class="line">    super.onDestroy();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>点击Android Studio的运行按钮，apk重新运行，再次进入问题页面，执行删除操作，黑屏事件再次发生，(^|_|^)<br>是谁？是谁？到底是谁窃取了我的Activity？</p>
+<p>冷静了几秒，首先要肯定Activity在finish的时候，Dialog仍然持有Activity引用的真相。<br>为什么Dialog还持有Activity的引用？我明明在finish之前，就调用了Dialog的dismiss()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mDeleteDialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                mDeleteDialog.dismiss();</div><div class="line">                deleteRecord();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>进入Dialog的dismiss()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">	public void dismiss() &#123;</div><div class="line">		if (mActivity.isFinishing()) &#123;</div><div class="line">			return;</div><div class="line">		&#125;</div><div class="line">		mDialogView.dismiss(new OnDialogDismissListener() &#123;</div><div class="line">			@Override</div><div class="line">			public void onFinish() &#123;</div><div class="line">				dismissImmediately();</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>mDialogView是一个自定义View，继承自RelativeLayout</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义标题、内容的Dialog容器</div><div class="line"> */</div><div class="line">public class TitleContentDialog extends Dialog &#123;</div><div class="line">	/** 宿主 */</div><div class="line">	private Activity mActivity;</div><div class="line">	/** 实际显示的加载视图 */</div><div class="line">	private CustomTitleContentDialogView mDialogView;</div><div class="line">	...</div><div class="line">	</div><div class="line">	private class CustomTitleContentDialogView extends RelativeLayout &#123;</div><div class="line">		/*</div><div class="line">		 * 显示配置及动画配置部分</div><div class="line">		 */</div><div class="line"></div><div class="line">		/** 对话框占比 */</div><div class="line">		private static final float RATIO = 0.75f;</div><div class="line">		/** 动画执行时间 */</div><div class="line">		private static final float ANIM_DUTAION = 200;</div><div class="line">		...</div><div class="line">		/** 动画执行器 */</div><div class="line">		private AnimRunnable mAnimRunnable;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 隐藏加载</div><div class="line">		 */</div><div class="line">		public void dismiss(OnDialogDismissListener listener) &#123;</div><div class="line">			mDismissListener = listener;</div><div class="line">			mAnimRunnable.setAnimState(AnimState.DISMISSING);</div><div class="line">		&#125;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 动画执行器</div><div class="line">		 * </div><div class="line">		 * </div><div class="line">		 */</div><div class="line">		private class AnimRunnable implements Runnable &#123;</div><div class="line">			...</div><div class="line">			@Override</div><div class="line">			public void run() &#123;</div><div class="line">				...</div><div class="line">				if (mAnimState != AnimState.NORMAL) &#123;</div><div class="line">					if (mCurrentFrame &lt; mTotalFrame) &#123;</div><div class="line">						mCurrentFrame++;</div><div class="line">					&#125; else &#123;</div><div class="line">						if (mAnimState == AnimState.SHOWING) &#123;</div><div class="line">							if (mNextState == AnimState.NONE) &#123;</div><div class="line">								setAnimState(AnimState.NORMAL);</div><div class="line">							&#125; else &#123;</div><div class="line">								reset();</div><div class="line">								setAnimState(AnimState.DISMISSING);</div><div class="line">							&#125;</div><div class="line">						&#125; else if (mAnimState == AnimState.DISMISSING) &#123;</div><div class="line">							reset();</div><div class="line">							if (mDismissListener != null) &#123;</div><div class="line">								mDismissListener.onFinish();</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				...</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 消失动画结束后的回调接口</div><div class="line">	 */</div><div class="line">	private interface OnDialogDismissListener &#123;</div><div class="line">		/** 动画执行完毕 */</div><div class="line">		void onFinish();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从代码中可以看出，自定义的Dialog在执行重写的dismiss()方法时，先运行一段动画，动画执行完成后，再通过回调执行dismissImmediately()方法；<br>dismissImmediately()方法代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 立即关闭</div><div class="line">	 */</div><div class="line">	public void dismissImmediately() &#123;</div><div class="line">		if (isShowing() &amp;&amp; !mActivity.isFinishing()) &#123;</div><div class="line">			Utils.hideInputMethod(mActivity);</div><div class="line">			TitleContentDialog.super.dismiss();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>dismissImmediately()方法才会让Dialog立即消失，从而与Activity解除绑定；<br>在dismissImmediately()方法里面设置断点debug，发现程序没有执行if语句里面的代码；if条件里面的isShowing()是true，这是毫无疑问的，<br>那就是<code>!mActivity.isFinishing()</code>不满足条件，也就是说此时的Activity已经执行完网络操作，运行了finish()方法。</p>
+<p>整理一遍思绪，发现造成Dialog没有消失，而Activity已经finish的原因是Dialog消失时执行的动画，通过不断调用View.postDelayed(Runnable action,long delayMillis)方法，达到Dialog消失时渐变缩放的动画效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public boolean postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           return attachInfo.mHandler.postDelayed(action, delayMillis);</div><div class="line">       &#125;</div><div class="line">       // Assume that post will succeed later</div><div class="line">       ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>原来调用了Handler.postDelayed()方法，熟悉Android开发应该了解Handler很容易造成Activity发生内存泄漏，不知道的同学可以看我的另一篇博客<a href="http://blog.csdn.net/u012464435/article/details/50753246" target="_blank" rel="external">内存泄漏常见原因总结</a>。<br>动画一共执行了200毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/** 动画执行时间 */</div><div class="line">private static final float ANIM_DUTAION = 200;</div></pre></td></tr></table></figure>
+<p>也就是说，在Dialog执行动画的200毫秒期间，Activity执行的网络操作已经结束，Activity运行finish()方法，但是Dialog在执行动画，还没消失，仍然持有Activity的引用，从而导致内存泄漏。</p>
+<p>要解决这个问题，只要保证Activity运行finish()方法在Dialog执行完动画之后，由于网络请求的事件不确定，finish()方法只需要延迟200毫秒，就可以保证Activity的运行finish()方法在Dialog动画结束之后。</p>
+<p>下面是网络请求执行完后的回调操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">                public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                    if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                        EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                        finish();</div><div class="line">                    &#125; else &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p>finish()方法延时几百毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">            public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                    _Application.getInstance().scheduleTask(new Runnable() &#123;</div><div class="line">                        @Override</div><div class="line">                        public void run() &#123;</div><div class="line">                            EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                            finish();</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125; else &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>调用了Application里面的scheduleTask(Runnable action)方法，达到延时500毫秒的目的。</p>
+<p>启动Android studio，打开手机再次进入问题页面，执行删除操作，弹出确认Dialog，点击确认，退出，没有黑屏现象，问题终于解决了。</p>
+<p>为了确保Dialog不会再导致内存泄漏，多测试几次，反复点击确认和取消按钮，我擦，第二次点击取消按钮，居然又出现黑屏现象，继续追踪，发现问题所在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
 
           
         
@@ -491,368 +1080,6 @@ public void run() {
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/serializable_parcelable/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
-<p>##2 序列化的作用</p>
-<ol>
-<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
-<li>在网络上传送对象的字节序列</li>
-<li>通过RMI传输对象(不懂，囧)</li>
-<li>将对象数据在进程之间进行传递</li>
-</ol>
-<p>##3 序列化的实现方式</p>
-<p>###3.1 实现Serializable接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>测试demo：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先查看序列化后的文件内容：<br><img src="http://img.blog.csdn.net/20160706170307481" alt="serializable_file"></p>
-<p>运行结果：<br><img src="http://img.blog.csdn.net/20160706170359457" alt="serializable_result"></p>
-<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
-<p>注释掉序列化代码后：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>通过文件，反序列化，结果是：<br><img src="http://img.blog.csdn.net/20160706170427358" alt="serializable_result2"></p>
-<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
-<p>报了一个异常，说明反序列化失败；</p>
-<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
-<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
-<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
-<p>显式地定义serialVersionUID有两种用途：</p>
-<ol>
-<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
-<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
-</ol>
-<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>###3.3 把对象包装成JSON字符串传输</p>
-<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
-<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
-<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/zsh常见快捷键/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Zsh常见快捷键"><a href="#Zsh常见快捷键" class="headerlink" title="Zsh常见快捷键"></a>Zsh常见快捷键</h2><ol>
-<li><strong>ctrl + a</strong>        到行首</li>
-<li><strong>ctrl + e</strong>        到行末</li>
-<li><strong>ctrl + u</strong>     直接清除本行</li>
-<li><strong>ctrl + f/b</strong>    前进后退，相当于左右方向键，但是显然比移开手按方向键更快</li>
-<li><strong>ctrl + p</strong>        上一条命令，相当于 <em>方向键上</em></li>
-<li><strong>ctrl + h</strong>        删除之前的字符</li>
-<li><strong>ctrl + w</strong>        删除光标前的单词</li>
-<li><strong>ctrl + k</strong>        删除到文本末尾</li>
-<li><strong>ctrl + p</strong>        搜索命令历史</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/serializable_parcelable_copy/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="#序列化和反序列化"></a>#序列化和反序列化</h2><p>##1 序列化的原因<br>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
-<p>##2 序列化的作用</p>
-<ol>
-<li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
-<li>在网络上传送对象的字节序列</li>
-<li>通过RMI传输对象(不懂，囧)</li>
-<li>将对象数据在进程之间进行传递</li>
-</ol>
-<p>##3 序列化的实现方式</p>
-<p>###3.1 实现Serializable接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>测试demo：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先查看序列化后的文件内容：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic1.png" alt="serializable_file"></p>
-<p>运行结果：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic2.png" alt="serializable_result"></p>
-<p>序列化成功后，会在当前类文件目录下生成一个person.txt文件</p>
-<p>注释掉序列化代码后：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">//		Person person = new Person();</div><div class="line">//		person.setName(&quot;周杰伦&quot;);</div><div class="line">//		person.setAge(36);</div><div class="line">//		person.setSex(&quot;男&quot;);</div><div class="line">//		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>通过文件，反序列化，结果是：<br><img src="file:///Users/tangyiwu/Desktop/serializable_pic3.png" alt="serializable_result2"></p>
-<p>我们可以看见Person类里面有个<strong><em>serialVersionUID</em></strong>,这个<strong><em>serialVersionUID</em></strong>是用来干什么的？<br>首先我们修改一下<strong><em>serialVersionUID</em></strong>，运行一下demo，看看结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread &quot;main&quot; java.io.InvalidClassException: com.haizhi.Person; local class incompatible: stream classdesc serialVersionUID = 112347861234817234, local class serialVersionUID = 112347861234817235</div><div class="line">	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:617)</div><div class="line">	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1622)</div><div class="line">	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1517)</div><div class="line">	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1771)</div><div class="line">	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1350)</div><div class="line">	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:370)</div><div class="line">	at com.haizhi.SerializableDemo.deSerializablePerson(SerializableDemo.java:55)</div><div class="line">	at com.haizhi.SerializableDemo.main(SerializableDemo.java:21)</div></pre></td></tr></table></figure>
-<p>报了一个异常，说明反序列化失败；</p>
-<p>Java序列化机制会根据serialVersionUID作序列化版本比较，反序列化时，如果发现序列化数据里面的serialVersionUID与model类的serialVersionUID不同，就会导致反序列化失败，出现序列化版本不一致的异常；</p>
-<p>当实现Serializable接口的实体类没有显示定义serialVersionUID，serialVersionUID对类的详细信息具有较高的敏感性，一个空格的修改就会导致serialVersionUID的变化，Java序列化机制会根据编译器实现的不同可能千差万别，这样在反序列化过程可能会导致意外的 InvalidClassException；</p>
-<p>为了保证serialVersionUID在不同java编译器实现的一致性，为了实现序列化接口的实体能够兼容先前版本，强烈建议显示声明serialVersionUID；</p>
-<p>显式地定义serialVersionUID有两种用途：</p>
-<ol>
-<li>在某些场合，希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有相同的serialVersionUID；</li>
-<li>在某些场合，不希望类的不同版本对序列化兼容，因此需要确保类的不同版本具有不同的serialVersionUID。</li>
-</ol>
-<p>###3.2 实现Parcelable接口<br>Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承 Parcelable.Creator 接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">public class Student implements Parcelable&#123;</div><div class="line">    private int name;</div><div class="line">    private String grade;</div><div class="line">    private int score;</div><div class="line">    public Students(Parcel source)&#123;</div><div class="line">    	name = sourece.readString();</div><div class="line">    	grade = source.readString();</div><div class="line">        score = source.readInt();</div><div class="line">    &#125;</div><div class="line">    public int getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public String getGrade() &#123;</div><div class="line">        return grade;</div><div class="line">    &#125;</div><div class="line">    public void setGrade(String grade) &#123;</div><div class="line">        this.grade = grade;</div><div class="line">    &#125;</div><div class="line">    public int getScore()&#123;</div><div class="line">    	return score;</div><div class="line">    &#125;</div><div class="line">    public void setScore(int score)&#123;</div><div class="line">    	this.score = score;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        dest.writeString(name);</div><div class="line">        dest.writeString(grade);</div><div class="line">        dest.writeInt(score);</div><div class="line">    &#125;</div><div class="line">    //Interface that must be implemented and provided as a public CREATOR field that generates instances of your Parcelable class from a Parcel. </div><div class="line">    public final static Parcelable.Creator&lt;Students&gt; CREATOR = new Parcelable.Creator&lt;Students&gt;() &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students createFromParcel(Parcel source) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Students[] newArray(int size) &#123;</div><div class="line">            // TODO Auto-generated method stub</div><div class="line">            return new Students[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>###3.3 把对象包装成JSON字符串传输</p>
-<p>##4 序列化比较<br>1、在使用内存的时候Parcelable比Serializable的性能高；</p>
-<p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
-<p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/内存泄漏常见原因总结/" itemprop="url">
                   未命名
                 </a>
@@ -934,131 +1161,6 @@ public void run() {
 </ul>
 <h3 id="8-关于内存泄漏的调试"><a href="#8-关于内存泄漏的调试" class="headerlink" title="8.关于内存泄漏的调试"></a>8.关于内存泄漏的调试</h3><p>我有一篇博客介绍我开发过程中一次典型的内存泄漏案例，这个案例中介绍了内存泄漏检测工具MAT的使用，博客链接如下：</p>
 <p><a href="http://blog.csdn.net/u012464435/article/details/50034349" target="_blank" rel="external">MAT使用案例</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/一次dialog导致的内存泄漏/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
-<p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
-<p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
-<p>可以看出点击确定后，dialog先是dismiss()，然后执行deleteRecord()方法，deleteRecord()里面执行请求网络的删除操作。</p>
-<p>打开浏览器，输入问题，都说是Activity finish时，Dialog仍然可见，要在Activity的onDestroy()方法中，确保已经关闭了Dialog，<br>OK，那我就在onDestroy()方法里面校验Dialog，我把Dialog提取出方法，成为Activity的一个成员变量mDeleteDialog;<br>同时重写Activity的onDestroy()方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@Override</div><div class="line">protected void onDestroy() &#123;</div><div class="line">    //防止内存泄漏</div><div class="line">    if (mDeleteDialog.isShowing()) &#123;</div><div class="line">        mDeleteDialog.dismissImmediately();</div><div class="line">    &#125;</div><div class="line">    mDeleteDialog = null;</div><div class="line">    super.onDestroy();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>点击Android Studio的运行按钮，apk重新运行，再次进入问题页面，执行删除操作，黑屏事件再次发生，(^|_|^)<br>是谁？是谁？到底是谁窃取了我的Activity？</p>
-<p>冷静了几秒，首先要肯定Activity在finish的时候，Dialog仍然持有Activity引用的真相。<br>为什么Dialog还持有Activity的引用？我明明在finish之前，就调用了Dialog的dismiss()方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mDeleteDialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                mDeleteDialog.dismiss();</div><div class="line">                deleteRecord();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
-<p>进入Dialog的dismiss()方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">	public void dismiss() &#123;</div><div class="line">		if (mActivity.isFinishing()) &#123;</div><div class="line">			return;</div><div class="line">		&#125;</div><div class="line">		mDialogView.dismiss(new OnDialogDismissListener() &#123;</div><div class="line">			@Override</div><div class="line">			public void onFinish() &#123;</div><div class="line">				dismissImmediately();</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>mDialogView是一个自定义View，继承自RelativeLayout</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义标题、内容的Dialog容器</div><div class="line"> */</div><div class="line">public class TitleContentDialog extends Dialog &#123;</div><div class="line">	/** 宿主 */</div><div class="line">	private Activity mActivity;</div><div class="line">	/** 实际显示的加载视图 */</div><div class="line">	private CustomTitleContentDialogView mDialogView;</div><div class="line">	...</div><div class="line">	</div><div class="line">	private class CustomTitleContentDialogView extends RelativeLayout &#123;</div><div class="line">		/*</div><div class="line">		 * 显示配置及动画配置部分</div><div class="line">		 */</div><div class="line"></div><div class="line">		/** 对话框占比 */</div><div class="line">		private static final float RATIO = 0.75f;</div><div class="line">		/** 动画执行时间 */</div><div class="line">		private static final float ANIM_DUTAION = 200;</div><div class="line">		...</div><div class="line">		/** 动画执行器 */</div><div class="line">		private AnimRunnable mAnimRunnable;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 隐藏加载</div><div class="line">		 */</div><div class="line">		public void dismiss(OnDialogDismissListener listener) &#123;</div><div class="line">			mDismissListener = listener;</div><div class="line">			mAnimRunnable.setAnimState(AnimState.DISMISSING);</div><div class="line">		&#125;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 动画执行器</div><div class="line">		 * </div><div class="line">		 * </div><div class="line">		 */</div><div class="line">		private class AnimRunnable implements Runnable &#123;</div><div class="line">			...</div><div class="line">			@Override</div><div class="line">			public void run() &#123;</div><div class="line">				...</div><div class="line">				if (mAnimState != AnimState.NORMAL) &#123;</div><div class="line">					if (mCurrentFrame &lt; mTotalFrame) &#123;</div><div class="line">						mCurrentFrame++;</div><div class="line">					&#125; else &#123;</div><div class="line">						if (mAnimState == AnimState.SHOWING) &#123;</div><div class="line">							if (mNextState == AnimState.NONE) &#123;</div><div class="line">								setAnimState(AnimState.NORMAL);</div><div class="line">							&#125; else &#123;</div><div class="line">								reset();</div><div class="line">								setAnimState(AnimState.DISMISSING);</div><div class="line">							&#125;</div><div class="line">						&#125; else if (mAnimState == AnimState.DISMISSING) &#123;</div><div class="line">							reset();</div><div class="line">							if (mDismissListener != null) &#123;</div><div class="line">								mDismissListener.onFinish();</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				...</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 消失动画结束后的回调接口</div><div class="line">	 */</div><div class="line">	private interface OnDialogDismissListener &#123;</div><div class="line">		/** 动画执行完毕 */</div><div class="line">		void onFinish();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从代码中可以看出，自定义的Dialog在执行重写的dismiss()方法时，先运行一段动画，动画执行完成后，再通过回调执行dismissImmediately()方法；<br>dismissImmediately()方法代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 立即关闭</div><div class="line">	 */</div><div class="line">	public void dismissImmediately() &#123;</div><div class="line">		if (isShowing() &amp;&amp; !mActivity.isFinishing()) &#123;</div><div class="line">			Utils.hideInputMethod(mActivity);</div><div class="line">			TitleContentDialog.super.dismiss();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>dismissImmediately()方法才会让Dialog立即消失，从而与Activity解除绑定；<br>在dismissImmediately()方法里面设置断点debug，发现程序没有执行if语句里面的代码；if条件里面的isShowing()是true，这是毫无疑问的，<br>那就是<code>!mActivity.isFinishing()</code>不满足条件，也就是说此时的Activity已经执行完网络操作，运行了finish()方法。</p>
-<p>整理一遍思绪，发现造成Dialog没有消失，而Activity已经finish的原因是Dialog消失时执行的动画，通过不断调用View.postDelayed(Runnable action,long delayMillis)方法，达到Dialog消失时渐变缩放的动画效果。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public boolean postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           return attachInfo.mHandler.postDelayed(action, delayMillis);</div><div class="line">       &#125;</div><div class="line">       // Assume that post will succeed later</div><div class="line">       ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>原来调用了Handler.postDelayed()方法，熟悉Android开发应该了解Handler很容易造成Activity发生内存泄漏，不知道的同学可以看我的另一篇博客<a href="http://blog.csdn.net/u012464435/article/details/50753246" target="_blank" rel="external">内存泄漏常见原因总结</a>。<br>动画一共执行了200毫秒</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/** 动画执行时间 */</div><div class="line">private static final float ANIM_DUTAION = 200;</div></pre></td></tr></table></figure>
-<p>也就是说，在Dialog执行动画的200毫秒期间，Activity执行的网络操作已经结束，Activity运行finish()方法，但是Dialog在执行动画，还没消失，仍然持有Activity的引用，从而导致内存泄漏。</p>
-<p>要解决这个问题，只要保证Activity运行finish()方法在Dialog执行完动画之后，由于网络请求的事件不确定，finish()方法只需要延迟200毫秒，就可以保证Activity的运行finish()方法在Dialog动画结束之后。</p>
-<p>下面是网络请求执行完后的回调操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">                public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                    if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                        EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                        finish();</div><div class="line">                    &#125; else &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
-<p>finish()方法延时几百毫秒</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">            public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                    _Application.getInstance().scheduleTask(new Runnable() &#123;</div><div class="line">                        @Override</div><div class="line">                        public void run() &#123;</div><div class="line">                            EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                            finish();</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125; else &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
-<p>调用了Application里面的scheduleTask(Runnable action)方法，达到延时500毫秒的目的。</p>
-<p>启动Android studio，打开手机再次进入问题页面，执行删除操作，弹出确认Dialog，点击确认，退出，没有黑屏现象，问题终于解决了。</p>
-<p>为了确保Dialog不会再导致内存泄漏，多测试几次，反复点击确认和取消按钮，我擦，第二次点击取消按钮，居然又出现黑屏现象，继续追踪，发现问题所在：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
 
           
         
@@ -1304,7 +1406,7 @@ public void run() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
