@@ -91,7 +91,7 @@ Context
 Drawable的对象的内部Callback持有activity的引用，当Activity finish()之后，静态成员drawable始终持有这个Activity的引用，导致内存释放不了。
 12345678910111213141516171819202122public cl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:title" content="内存泄漏常见原因总结">
 <meta property="og:url" content="http://yoursite.com/2016/07/19/内存泄漏常见原因总结/index.html">
 <meta property="og:site_name" content="龙在唐朝的博客">
 <meta property="og:description" content="内存泄漏常见原因总结1.非静态内部类的静态实例2.Activity的静态成员变量
@@ -100,9 +100,9 @@ Context
 
 Drawable的对象的内部Callback持有activity的引用，当Activity finish()之后，静态成员drawable始终持有这个Activity的引用，导致内存释放不了。
 12345678910111213141516171819202122public cl">
-<meta property="og:updated_time" content="2016-07-19T15:50:00.000Z">
+<meta property="og:updated_time" content="2016-07-22T09:36:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="龙在唐朝的博客">
+<meta name="twitter:title" content="内存泄漏常见原因总结">
 <meta name="twitter:description" content="内存泄漏常见原因总结1.非静态内部类的静态实例2.Activity的静态成员变量
 Drawable
 Context
@@ -131,7 +131,7 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
 
   <link rel="canonical" href="http://yoursite.com/2016/07/19/内存泄漏常见原因总结/"/>
 
-  <title>  | 龙在唐朝的博客 </title>
+  <title> 内存泄漏常见原因总结 | 龙在唐朝的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -251,7 +251,7 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
             
             
               
-                
+                内存泄漏常见原因总结
               
             
           </h1>
@@ -268,6 +268,25 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -353,16 +372,16 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" rel="next" title="欢迎使用 Cmd Markdown 编辑阅读器">
+                <i class="fa fa-chevron-left"></i> 欢迎使用 Cmd Markdown 编辑阅读器
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/19/一次dialog导致的内存泄漏/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/19/zsh常见快捷键/" rel="prev" title="Zsh常见快捷键">
+                Zsh常见快捷键 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -431,7 +450,7 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -439,19 +458,12 @@ Drawable的对象的内部Callback持有activity的引用，当Activity finish()
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
           
 
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/tags">
-                <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
           
 
         </nav>

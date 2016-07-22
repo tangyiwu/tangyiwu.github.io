@@ -84,18 +84,21 @@
 
 
 
-<meta name="description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
+<meta name="description" content="IntentService源码分析
+1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
 @Override    public void onCreate() {">
 <meta property="og:type" content="article">
-<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:title" content="IntentService源码分析">
 <meta property="og:url" content="http://yoursite.com/2016/07/19/intentservice源码分析/index.html">
 <meta property="og:site_name" content="龙在唐朝的博客">
-<meta property="og:description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
+<meta property="og:description" content="IntentService源码分析
+1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
 @Override    public void onCreate() {">
-<meta property="og:updated_time" content="2016-07-19T15:50:00.000Z">
+<meta property="og:updated_time" content="2016-07-22T09:37:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="龙在唐朝的博客">
-<meta name="twitter:description" content="#IntentService源码分析##1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234##2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
+<meta name="twitter:title" content="IntentService源码分析">
+<meta name="twitter:description" content="IntentService源码分析
+1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
 @Override    public void onCreate() {">
 
 
@@ -119,7 +122,7 @@
 
   <link rel="canonical" href="http://yoursite.com/2016/07/19/intentservice源码分析/"/>
 
-  <title>  | 龙在唐朝的博客 </title>
+  <title> IntentService源码分析 | 龙在唐朝的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -239,7 +242,7 @@
             
             
               
-                
+                IntentService源码分析
               
             
           </h1>
@@ -256,6 +259,25 @@
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -279,7 +301,8 @@
       
 
       
-        <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="#IntentService源码分析"></a>#IntentService源码分析</h2><p>##1 概论<br>IntentService是一种处理异步请求的Service。客户端通过调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##2 IntentService是如何启动一个异步线程处理请求的？</div><div class="line"></div><div class="line">IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</div></pre></td></tr></table></figure></p>
+        <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="IntentService源码分析"></a>IntentService源码分析</h2><hr>
+<h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><p>IntentService是一种处理异步请求的Service。客户端通过调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 2 IntentService是如何启动一个异步线程处理请求的？</div><div class="line"></div><div class="line">IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</div></pre></td></tr></table></figure></p>
 <p>@Override<br>    public void onCreate() {<br>        super.onCreate();<br>        HandlerThread thread = new HandlerThread(“IntentService[“ + mName + “]”);<br>        thread.start();<br>        mServiceLooper = thread.getLooper();<br>        mServiceHandler = new ServiceHandler(mServiceLooper);<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</div></pre></td></tr></table></figure></p>
 <p>public class HandlerThread extends Thread {<br>    int mPriority;<br>    int mTid = -1;<br>    Looper mLooper;</p>
 <pre><code>public HandlerThread(String name) {
@@ -301,7 +324,7 @@ public void run() {
     mTid = -1;
 }
 ...
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##3 IntentService是如何处理Intent的</div><div class="line">调用***Context.startService(Intent)***后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</div></pre></td></tr></table></figure></p>
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 3 IntentService是如何处理Intent的</div><div class="line">调用***Context.startService(Intent)***后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</div></pre></td></tr></table></figure></p>
 <pre><code>public void onStart(Intent intent, int startId) {
     Message msg = mServiceHandler.obtainMessage();
     msg.arg1 = startId;
@@ -322,8 +345,7 @@ public void run() {
 }
 </code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</div><div class="line"></div><div class="line">我们来看onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
 <p>protected abstract void onHandleIntent(Intent intent);<br><code>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用</code>stopSelf()``` Service</p>
-<p>##4 总结</p>
-<ol>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><ol>
 <li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
 <li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
 <li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
@@ -354,8 +376,8 @@ public void run() {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/serializable_parcelable/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2016/07/19/serializable_parcelable_copy/" rel="next" title="序列化和反序列化">
+                <i class="fa fa-chevron-left"></i> 序列化和反序列化
               </a>
             
           </div>
@@ -432,7 +454,7 @@ public void run() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -440,19 +462,12 @@ public void run() {
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
           
 
-          
-            <div class="site-state-item site-state-tags">
-              <a href="/tags">
-                <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
           
 
         </nav>
@@ -478,7 +493,7 @@ public void run() {
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntentService源码分析"><span class="nav-number">1.</span> <span class="nav-text">#IntentService源码分析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntentService源码分析"><span class="nav-number">1.</span> <span class="nav-text">IntentService源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概论"><span class="nav-number">1.1.</span> <span class="nav-text">1 概论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-number">1.2.</span> <span class="nav-text">4 总结</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
