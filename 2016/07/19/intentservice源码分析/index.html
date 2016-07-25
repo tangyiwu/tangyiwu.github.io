@@ -85,21 +85,27 @@
 
 
 <meta name="description" content="IntentService源码分析
-1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
+1 概论
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
+2 IntentService是如何启动一个异步线程处理请求的？
+IntentService">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IntentService源码分析">
 <meta property="og:url" content="http://yoursite.com/2016/07/19/intentservice源码分析/index.html">
 <meta property="og:site_name" content="龙在唐朝的博客">
 <meta property="og:description" content="IntentService源码分析
-1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
-<meta property="og:updated_time" content="2016-07-22T09:37:51.000Z">
+1 概论
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
+2 IntentService是如何启动一个异步线程处理请求的？
+IntentService">
+<meta property="og:updated_time" content="2016-07-25T08:56:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntentService源码分析">
 <meta name="twitter:description" content="IntentService源码分析
-1 概论IntentService是一种处理异步请求的Service。客户端通过调用1234### 2 IntentService是如何启动一个异步线程处理请求的？IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;
-@Override    public void onCreate() {">
+1 概论
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
+2 IntentService是如何启动一个异步线程处理请求的？
+IntentService">
 
 
 
@@ -302,50 +308,24 @@
 
       
         <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="IntentService源码分析"></a>IntentService源码分析</h2><hr>
-<h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><p>IntentService是一种处理异步请求的Service。客户端通过调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 2 IntentService是如何启动一个异步线程处理请求的？</div><div class="line"></div><div class="line">IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</div></pre></td></tr></table></figure></p>
-<p>@Override<br>    public void onCreate() {<br>        super.onCreate();<br>        HandlerThread thread = new HandlerThread(“IntentService[“ + mName + “]”);<br>        thread.start();<br>        mServiceLooper = thread.getLooper();<br>        mServiceHandler = new ServiceHandler(mServiceLooper);<br>    }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</div></pre></td></tr></table></figure></p>
-<p>public class HandlerThread extends Thread {<br>    int mPriority;<br>    int mTid = -1;<br>    Looper mLooper;</p>
-<pre><code>public HandlerThread(String name) {
-    super(name);
-    mPriority = Process.THREAD_PRIORITY_DEFAULT;
-}
-...
-@Override
-public void run() {
-    mTid = Process.myTid();
-    Looper.prepare();
-    synchronized (this) {
-        mLooper = Looper.myLooper();
-        notifyAll();
-    }
-    Process.setThreadPriority(mPriority);
-    onLooperPrepared();
-    Looper.loop();
-    mTid = -1;
-}
-...
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 3 IntentService是如何处理Intent的</div><div class="line">调用***Context.startService(Intent)***后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</div></pre></td></tr></table></figure></p>
-<pre><code>public void onStart(Intent intent, int startId) {
-    Message msg = mServiceHandler.obtainMessage();
-    msg.arg1 = startId;
-    msg.obj = intent;
-    mServiceHandler.sendMessage(msg);
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</div></pre></td></tr></table></figure>
-<pre><code>private final class ServiceHandler extends Handler {
-    public ServiceHandler(Looper looper) {
-        super(looper);
-    }
-
-    @Override
-    public void handleMessage(Message msg) {
-        onHandleIntent((Intent)msg.obj);
-        stopSelf(msg.arg1);
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</div><div class="line"></div><div class="line">我们来看onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
-<p>protected abstract void onHandleIntent(Intent intent);<br><code>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用</code>stopSelf()``` Service</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><ol>
+<h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><hr>
+<p>IntentService是一种处理异步请求的Service。客户端通过调用<strong><em>Context.startService(Intent)</em></strong>来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。</p>
+<h3 id="2-IntentService是如何启动一个异步线程处理请求的？"><a href="#2-IntentService是如何启动一个异步线程处理请求的？" class="headerlink" title="2 IntentService是如何启动一个异步线程处理请求的？"></a>2 IntentService是如何启动一个异步线程处理请求的？</h3><hr>
+<p>IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">        HandlerThread thread = new HandlerThread(&quot;IntentService[&quot; + mName + &quot;]&quot;);</div><div class="line">        thread.start();</div><div class="line">        mServiceLooper = thread.getLooper();</div><div class="line">        mServiceHandler = new ServiceHandler(mServiceLooper);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">public class HandlerThread extends Thread &#123;</div><div class="line">	int mPriority;</div><div class="line">    int mTid = -1;</div><div class="line">    Looper mLooper;</div><div class="line">    </div><div class="line">	public HandlerThread(String name) &#123;</div><div class="line">        super(name);</div><div class="line">        mPriority = Process.THREAD_PRIORITY_DEFAULT;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        mTid = Process.myTid();</div><div class="line">        Looper.prepare();</div><div class="line">        synchronized (this) &#123;</div><div class="line">            mLooper = Looper.myLooper();</div><div class="line">            notifyAll();</div><div class="line">        &#125;</div><div class="line">        Process.setThreadPriority(mPriority);</div><div class="line">        onLooperPrepared();</div><div class="line">        Looper.loop();</div><div class="line">        mTid = -1;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-IntentService是如何处理Intent的"><a href="#3-IntentService是如何处理Intent的" class="headerlink" title="3 IntentService是如何处理Intent的"></a>3 IntentService是如何处理Intent的</h3><hr>
+<p>调用<strong><em>Context.startService(Intent)</em></strong>后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public void onStart(Intent intent, int startId) &#123;</div><div class="line">       Message msg = mServiceHandler.obtainMessage();</div><div class="line">       msg.arg1 = startId;</div><div class="line">       msg.obj = intent;</div><div class="line">       mServiceHandler.sendMessage(msg);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final class ServiceHandler extends Handler &#123;</div><div class="line">       public ServiceHandler(Looper looper) &#123;</div><div class="line">           super(looper);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       @Override</div><div class="line">       public void handleMessage(Message msg) &#123;</div><div class="line">           onHandleIntent((Intent)msg.obj);</div><div class="line">           stopSelf(msg.arg1);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</p>
+<p>我们来看onHandleIntent(Intent intent);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">protected abstract void onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
+<p>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用<code>stopSelf()</code> Service</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
+<ol>
 <li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
 <li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
 <li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
@@ -384,8 +364,8 @@ public void run() {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/19/handler:message:looper机制/" rel="prev" title="Handler消息处理机制源码解析">
-                Handler消息处理机制源码解析 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/23/Monkey压力自动化测试/" rel="prev" title="Monkey压力自动化测试">
+                Monkey压力自动化测试 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -500,7 +480,7 @@ public void run() {
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntentService源码分析"><span class="nav-number">1.</span> <span class="nav-text">IntentService源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概论"><span class="nav-number">1.1.</span> <span class="nav-text">1 概论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-number">1.2.</span> <span class="nav-text">4 总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntentService源码分析"><span class="nav-number">1.</span> <span class="nav-text">IntentService源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概论"><span class="nav-number">1.1.</span> <span class="nav-text">1 概论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-IntentService是如何启动一个异步线程处理请求的？"><span class="nav-number">1.2.</span> <span class="nav-text">2 IntentService是如何启动一个异步线程处理请求的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-IntentService是如何处理Intent的"><span class="nav-number">1.3.</span> <span class="nav-text">3 IntentService是如何处理Intent的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-总结"><span class="nav-number">1.4.</span> <span class="nav-text">4 总结</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
