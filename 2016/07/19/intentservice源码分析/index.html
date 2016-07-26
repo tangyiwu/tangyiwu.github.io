@@ -88,26 +88,20 @@
 
 <meta name="description" content="IntentService源码分析
 1 概论
-IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
-2 IntentService是如何启动一个异步线程处理请求的？
-IntentService">
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IntentService源码分析">
 <meta property="og:url" content="http://yoursite.com/2016/07/19/intentservice源码分析/index.html">
 <meta property="og:site_name" content="龙在唐朝的博客">
 <meta property="og:description" content="IntentService源码分析
 1 概论
-IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
-2 IntentService是如何启动一个异步线程处理请求的？
-IntentService">
-<meta property="og:updated_time" content="2016-07-26T02:19:36.000Z">
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。">
+<meta property="og:updated_time" content="2016-07-26T07:36:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntentService源码分析">
 <meta name="twitter:description" content="IntentService源码分析
 1 概论
-IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
-2 IntentService是如何启动一个异步线程处理请求的？
-IntentService">
+IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。">
 
 
 
@@ -328,6 +322,7 @@ IntentService">
         <h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="IntentService源码分析"></a>IntentService源码分析</h2><hr>
 <h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><hr>
 <p>IntentService是一种处理异步请求的Service。客户端通过调用<strong><em>Context.startService(Intent)</em></strong>来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。</p>
+<a id="more"></a>
 <h3 id="2-IntentService是如何启动一个异步线程处理请求的？"><a href="#2-IntentService是如何启动一个异步线程处理请求的？" class="headerlink" title="2 IntentService是如何启动一个异步线程处理请求的？"></a>2 IntentService是如何启动一个异步线程处理请求的？</h3><hr>
 <p>IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">        HandlerThread thread = new HandlerThread(&quot;IntentService[&quot; + mName + &quot;]&quot;);</div><div class="line">        thread.start();</div><div class="line">        mServiceLooper = thread.getLooper();</div><div class="line">        mServiceHandler = new ServiceHandler(mServiceLooper);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>

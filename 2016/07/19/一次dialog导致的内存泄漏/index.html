@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="龙在唐朝的博客">
 <meta property="og:description" content="一次Dialog导致的内存泄漏今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进">
 <meta property="og:image" content="http://img.blog.csdn.net/20160303232609504">
-<meta property="og:updated_time" content="2016-07-22T09:54:57.000Z">
+<meta property="og:updated_time" content="2016-07-26T07:37:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一次Dialog导致的内存泄漏">
 <meta name="twitter:description" content="一次Dialog导致的内存泄漏今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进">
@@ -316,6 +316,7 @@
 
       
         <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
+<a id="more"></a>
 <p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
 <p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
@@ -382,16 +383,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" rel="next" title="欢迎使用 Cmd Markdown 编辑阅读器">
-                <i class="fa fa-chevron-left"></i> 欢迎使用 Cmd Markdown 编辑阅读器
+              <a href="/2016/07/19/内存泄漏常见原因总结/" rel="next" title="内存泄漏常见原因总结">
+                <i class="fa fa-chevron-left"></i> 内存泄漏常见原因总结
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/19/内存泄漏常见原因总结/" rel="prev" title="内存泄漏常见原因总结">
-                内存泄漏常见原因总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/19/zsh常见快捷键/" rel="prev" title="Zsh常见快捷键">
+                Zsh常见快捷键 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

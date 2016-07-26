@@ -92,9 +92,7 @@
 永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
 在网络上传送对象的字节序列
 通过RMI传输对象(不懂，囧)
-将对象数据在进程之间进行传递
-
-3 序列化的实现方式3.1 实现Serializable接口12345678910111213">
+将对象数据在进程之间进行传递">
 <meta property="og:type" content="article">
 <meta property="og:title" content="序列化和反序列化">
 <meta property="og:url" content="http://yoursite.com/2016/07/06/serializable_parcelable/index.html">
@@ -105,13 +103,11 @@
 永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
 在网络上传送对象的字节序列
 通过RMI传输对象(不懂，囧)
-将对象数据在进程之间进行传递
-
-3 序列化的实现方式3.1 实现Serializable接口12345678910111213">
+将对象数据在进程之间进行传递">
 <meta property="og:image" content="http://img.blog.csdn.net/20160706170307481">
 <meta property="og:image" content="http://img.blog.csdn.net/20160706170359457">
 <meta property="og:image" content="http://img.blog.csdn.net/20160706170427358">
-<meta property="og:updated_time" content="2016-07-22T09:49:41.000Z">
+<meta property="og:updated_time" content="2016-07-26T07:36:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="序列化和反序列化">
 <meta name="twitter:description" content="序列化和反序列化
@@ -120,9 +116,7 @@
 永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；
 在网络上传送对象的字节序列
 通过RMI传输对象(不懂，囧)
-将对象数据在进程之间进行传递
-
-3 序列化的实现方式3.1 实现Serializable接口12345678910111213">
+将对象数据在进程之间进行传递">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20160706170307481">
 
 
@@ -349,6 +343,7 @@
 <li>通过RMI传输对象(不懂，囧)</li>
 <li>将对象数据在进程之间进行传递</li>
 </ol>
+<a id="more"></a>
 <h3 id="3-序列化的实现方式"><a href="#3-序列化的实现方式" class="headerlink" title="3 序列化的实现方式"></a>3 序列化的实现方式</h3><h4 id="3-1-实现Serializable接口"><a href="#3-1-实现Serializable接口" class="headerlink" title="3.1 实现Serializable接口"></a>3.1 实现Serializable接口</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class Person implements Serializable &#123;</div><div class="line">	/**</div><div class="line">	 * 序列化id</div><div class="line">	 */</div><div class="line">	private static final long serialVersionUID = 112347861234817234L;</div><div class="line">	private int age;</div><div class="line">	private String name;</div><div class="line">	private String sex;</div><div class="line">	</div><div class="line">	public int getAge() &#123;</div><div class="line">		return age;</div><div class="line">	&#125;</div><div class="line">	public void setAge(int age) &#123;</div><div class="line">		this.age = age;</div><div class="line">	&#125;</div><div class="line">	public String getName() &#123;</div><div class="line">		return name;</div><div class="line">	&#125;</div><div class="line">	public void setName(String name) &#123;</div><div class="line">		this.name = name;</div><div class="line">	&#125;</div><div class="line">	public String getSex() &#123;</div><div class="line">		return sex;</div><div class="line">	&#125;</div><div class="line">	public void setSex(String sex) &#123;</div><div class="line">		this.sex = sex;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>测试demo：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class SerializableDemo &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		Person person = new Person();</div><div class="line">		person.setName(&quot;周杰伦&quot;);</div><div class="line">		person.setAge(36);</div><div class="line">		person.setSex(&quot;男&quot;);</div><div class="line">		serializablePerson(person);</div><div class="line"></div><div class="line">		Person newPerson = deSerializablePerson();</div><div class="line">		System.err.println(MessageFormat.format(&quot;name=&#123;0&#125;,age=&#123;1&#125;,sex=&#123;2&#125;&quot;, newPerson.getName(), newPerson.getAge(),</div><div class="line">				newPerson.getSex()));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 序列化对象</div><div class="line">	 * </div><div class="line">	 * @param person</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 */</div><div class="line">	private static void serializablePerson(Person person) throws FileNotFoundException, IOException &#123;</div><div class="line">		File file = new File(&quot;./person.txt&quot;);</div><div class="line">		if (!file.exists()) &#123;</div><div class="line">			file.createNewFile();</div><div class="line">		&#125;</div><div class="line">		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));</div><div class="line">		oos.writeObject(person);</div><div class="line">		System.out.println(&quot;Person对象序列化成功!&quot;);</div><div class="line">		oos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 反序列化得到对象</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 * @throws FileNotFoundException</div><div class="line">	 * @throws IOException</div><div class="line">	 * @throws ClassNotFoundException</div><div class="line">	 */</div><div class="line">	private static Person deSerializablePerson() throws FileNotFoundException, IOException, ClassNotFoundException &#123;</div><div class="line">		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(&quot;./person.txt&quot;)));</div><div class="line">		Person person = (Person) ois.readObject();</div><div class="line">		System.out.println(&quot;Person对象反序列化成功!&quot;);</div><div class="line">		return person;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
