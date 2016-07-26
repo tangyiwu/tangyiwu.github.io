@@ -292,6 +292,15 @@
 
           
           
+             <span id="/2016/07/23/Monkey压力自动化测试/" class="leancloud_visitors" data-flag-title="Monkey压力自动化测试">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
 
           
         </div>
@@ -470,145 +479,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/handler:message:looper机制/" itemprop="url">
-                  Handler消息处理机制源码解析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/handler:message:looper机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/handler:message:looper机制/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Handler消息处理机制源码解析"><a href="#Handler消息处理机制源码解析" class="headerlink" title="Handler消息处理机制源码解析"></a>Handler消息处理机制源码解析</h2><h3 id="Handler作用"><a href="#Handler作用" class="headerlink" title="Handler作用"></a>Handler作用</h3><p>android开发过程中，我们都知道在一个异步线程中完成一段耗时操作，利用handler把结果send到UI主线程，从而更新ui；Android应用在初始化启动时，在ActivityThread中也定义了一个Handler的派生类H，用来进行Activity和Service生命周期的管理等；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">private class H extends Handler &#123;</div><div class="line">	...//省略</div><div class="line">	public void handleMessage(Message msg) &#123;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&gt;&gt;&gt; handling: &quot; + codeToString(msg.what));</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case LAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityStart&quot;);</div><div class="line">                    final ActivityClientRecord r = (ActivityClientRecord) msg.obj;</div><div class="line">                    r.packageInfo = getPackageInfoNoCheck(</div><div class="line">                            r.activityInfo.applicationInfo, r.compatInfo);</div><div class="line">                    handleLaunchActivity(r, null);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case RELAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityRestart&quot;);</div><div class="line">                    ActivityClientRecord r = (ActivityClientRecord)msg.obj;</div><div class="line">                    handleRelaunchActivity(r);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case PAUSE_ACTIVITY:</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityPause&quot;);</div><div class="line">                    handlePauseActivity((IBinder)msg.obj, false, (msg.arg1&amp;1) != 0, msg.arg2,</div><div class="line">                            (msg.arg1&amp;2) != 0);</div><div class="line">                    maybeSnapshot();</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                    break;</div><div class="line">                ...</div><div class="line">                &#125;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&lt;&lt;&lt; done: &quot; + codeToString(msg.what));</div><div class="line">        &#125;</div><div class="line">	...//省略</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="Message的send机制"><a href="#Message的send机制" class="headerlink" title="Message的send机制"></a>Message的send机制</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessage(Message msg)</div><div class="line">   &#123;</div><div class="line">       return sendMessageDelayed(msg, 0);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>往下追踪</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessageDelayed(Message msg, long delayMillis)</div><div class="line">   &#123;</div><div class="line">       if (delayMillis &lt; 0) &#123;</div><div class="line">           delayMillis = 0;</div><div class="line">       &#125;</div><div class="line">       return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>继续往下追踪</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public boolean sendMessageAtTime(Message msg, long uptimeMillis) &#123;</div><div class="line">       MessageQueue queue = mQueue;</div><div class="line">       if (queue == null) &#123;</div><div class="line">           RuntimeException e = new RuntimeException(</div><div class="line">                   this + &quot; sendMessageAtTime() called with no mQueue&quot;);</div><div class="line">           Log.w(&quot;Looper&quot;, e.getMessage(), e);</div><div class="line">           return false;</div><div class="line">       &#125;</div><div class="line">       return enqueueMessage(queue, msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>这个方法中我们大致可以看出消息Message是进入一个队列mQueue当中，mQueue是Handler实例化时，从UI主线程里面的Looper中获取到的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public Handler(Callback callback, boolean async) &#123;</div><div class="line">       ...//省略</div><div class="line">       mLooper = Looper.myLooper();</div><div class="line">       if (mLooper == null) &#123;</div><div class="line">           throw new RuntimeException(</div><div class="line">               &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">       &#125;</div><div class="line">       mQueue = mLooper.mQueue;</div><div class="line">       mCallback = callback;</div><div class="line">       mAsynchronous = async;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>每个线程只能对应一个Looper，UI主线程中的Looper在应用中是全局的，所有Message发送后都存储在这个Looper的MessageQueue中</p>
-<p>继续往下看</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) &#123;</div><div class="line">       msg.target = this;</div><div class="line">       if (mAsynchronous) &#123;</div><div class="line">           msg.setAsynchronous(true);</div><div class="line">       &#125;</div><div class="line">       return queue.enqueueMessage(msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>以上这些都发生在Handler中，下面进入MessageQueue，看看消息Message是如何进入队列的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long when) &#123;</div><div class="line">	//处理消息msg的Handler不能为空，所有的消息最终还是交给Handler处理的</div><div class="line">       if (msg.target == null) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;Message must have a target.&quot;);</div><div class="line">       &#125;</div><div class="line">       //如果消息msg正在使用中，无需继续执行下去，同时抛出一个异常</div><div class="line">       if (msg.isInUse()) &#123;</div><div class="line">           throw new IllegalStateException(msg + &quot; This message is already in use.&quot;);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       synchronized (this) &#123;</div><div class="line">       	//判断MessageQueue是否已停止，停止抛出一个所在线程死亡的异常</div><div class="line">           if (mQuitting) &#123;</div><div class="line">               IllegalStateException e = new IllegalStateException(</div><div class="line">                       msg.target + &quot; sending message to a Handler on a dead thread&quot;);</div><div class="line">               Log.w(TAG, e.getMessage(), e);</div><div class="line">               msg.recycle();</div><div class="line">               return false;</div><div class="line">           &#125;</div><div class="line">		//标志这个消息正在使用中</div><div class="line">           msg.markInUse();</div><div class="line">           msg.when = when;</div><div class="line">           Message p = mMessages;</div><div class="line">           boolean needWake;</div><div class="line">           //如果在队列中msg前面没有其他消息或者msg不是最新的消息，把当前msg放入队列的头部，如果队列是阻塞状态就唤醒队列</div><div class="line">           if (p == null || when == 0 || when &lt; p.when) &#123;</div><div class="line">               // New head, wake up the event queue if blocked.</div><div class="line">               msg.next = p;</div><div class="line">               mMessages = msg;</div><div class="line">               needWake = mBlocked;</div><div class="line">           &#125; else &#123;//找到合适的位置把msg放入到队列中</div><div class="line">               // Inserted within the middle of the queue.  Usually we don&apos;t have to wake</div><div class="line">               // up the event queue unless there is a barrier at the head of the queue</div><div class="line">               // and the message is the earliest asynchronous message in the queue.</div><div class="line">               needWake = mBlocked &amp;&amp; p.target == null &amp;&amp; msg.isAsynchronous();</div><div class="line">               Message prev;</div><div class="line">               for (;;) &#123;</div><div class="line">                   prev = p;</div><div class="line">                   p = p.next;</div><div class="line">                   //队列中没有更多消息，跳出死循环</div><div class="line">                   if (p == null || when &lt; p.when) &#123;</div><div class="line">                       break;</div><div class="line">                   &#125;</div><div class="line">                   if (needWake &amp;&amp; p.isAsynchronous()) &#123;</div><div class="line">                       needWake = false;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">               msg.next = p; // invariant: p == prev.next</div><div class="line">               prev.next = msg;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // We can assume mPtr != 0 because mQuitting is false.</div><div class="line">           if (needWake) &#123;</div><div class="line">               nativeWake(mPtr);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h3 id="Handler是如何拿到Message的"><a href="#Handler是如何拿到Message的" class="headerlink" title="Handler是如何拿到Message的"></a>Handler是如何拿到Message的</h3><p>应用在启动初始化时，在ActivityThread中开启了一个无限循环检查的操作，当有新的Message时，就从消息队列中MessageQueue中拿出来</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public static void loop() &#123;</div><div class="line">       final Looper me = myLooper();</div><div class="line">       if (me == null) &#123;</div><div class="line">           throw new RuntimeException(&quot;No Looper; Looper.prepare() wasn&apos;t called on this thread.&quot;);</div><div class="line">       &#125;</div><div class="line">       final MessageQueue queue = me.mQueue;</div><div class="line"></div><div class="line">       // Make sure the identity of this thread is that of the local process,</div><div class="line">       // and keep track of what that identity token actually is.</div><div class="line">       Binder.clearCallingIdentity();</div><div class="line">       final long ident = Binder.clearCallingIdentity();</div><div class="line"></div><div class="line">       for (;;) &#123;</div><div class="line">           Message msg = queue.next(); // 有可能阻塞</div><div class="line">           if (msg == null) &#123;</div><div class="line">               // msg为空说明队列已经停止不可用，不执行后面的操作了</div><div class="line">               return;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // This must be in a local variable, in case a UI event sets the logger</div><div class="line">           Printer logging = me.mLogging;</div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot; +</div><div class="line">                       msg.callback + &quot;: &quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">		//把消息msg交给它的目标Handler来分配处理消息，消息在哪个页面中处理就是通过Message中的target来确定是哪个Activity中的Handler，从而在正确页面中处理msg</div><div class="line">           msg.target.dispatchMessage(msg);</div><div class="line"></div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot; + msg.target + &quot; &quot; + msg.callback);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Make sure that during the course of dispatching the</div><div class="line">           // identity of the thread wasn&apos;t corrupted.</div><div class="line">           final long newIdent = Binder.clearCallingIdentity();</div><div class="line">           if (ident != newIdent) &#123;</div><div class="line">               Log.wtf(TAG, &quot;Thread identity changed from 0x&quot;</div><div class="line">                       + Long.toHexString(ident) + &quot; to 0x&quot;</div><div class="line">                       + Long.toHexString(newIdent) + &quot; while dispatching to &quot;</div><div class="line">                       + msg.target.getClass().getName() + &quot; &quot;</div><div class="line">                       + msg.callback + &quot; what=&quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           msg.recycleUnchecked();</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>Handler调用dispatchMessage(msg)来处理消息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void dispatchMessage(Message msg) &#123;</div><div class="line">       if (msg.callback != null) &#123;</div><div class="line">           handleCallback(msg);</div><div class="line">       &#125; else &#123;</div><div class="line">           if (mCallback != null) &#123;</div><div class="line">               if (mCallback.handleMessage(msg)) &#123;</div><div class="line">                   return;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           handleMessage(msg);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>我们终于看到熟悉的handleMessage()了</p>
-<h3 id="Handler消息机制UML图"><a href="#Handler消息机制UML图" class="headerlink" title="Handler消息机制UML图"></a>Handler消息机制UML图</h3><p><img src="http://pic002.cnblogs.com/images/2012/328668/2012060815461921.jpg" alt="img_handler_uml"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/intentservice源码分析/" itemprop="url">
                   IntentService源码分析
                 </a>
@@ -663,6 +533,15 @@
           
 
           
+          
+             <span id="/2016/07/19/intentservice源码分析/" class="leancloud_visitors" data-flag-title="IntentService源码分析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -752,8 +631,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/zsh常见快捷键/" itemprop="url">
-                  Zsh常见快捷键
+                <a class="post-title-link" href="/2016/07/19/handler:message:looper机制/" itemprop="url">
+                  Handler消息处理机制源码解析
                 </a>
               
             
@@ -772,13 +651,32 @@
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/zsh常见快捷键/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/zsh常见快捷键/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/handler:message:looper机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/handler:message:looper机制/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -787,6 +685,15 @@
           
 
           
+          
+             <span id="/2016/07/19/handler:message:looper机制/" class="leancloud_visitors" data-flag-title="Handler消息处理机制源码解析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -803,17 +710,26 @@
       
         
           
-            <h2 id="Zsh常见快捷键"><a href="#Zsh常见快捷键" class="headerlink" title="Zsh常见快捷键"></a>Zsh常见快捷键</h2><ol>
-<li><strong>ctrl + a</strong>        到行首</li>
-<li><strong>ctrl + e</strong>        到行末</li>
-<li><strong>ctrl + u</strong>     直接清除本行</li>
-<li><strong>ctrl + f/b</strong>    前进后退，相当于左右方向键，但是显然比移开手按方向键更快</li>
-<li><strong>ctrl + p</strong>        上一条命令，相当于 <em>方向键上</em></li>
-<li><strong>ctrl + h</strong>        删除之前的字符</li>
-<li><strong>ctrl + w</strong>        删除光标前的单词</li>
-<li><strong>ctrl + k</strong>        删除到文本末尾</li>
-<li><strong>ctrl + p</strong>        搜索命令历史</li>
-</ol>
+            <h2 id="Handler消息处理机制源码解析"><a href="#Handler消息处理机制源码解析" class="headerlink" title="Handler消息处理机制源码解析"></a>Handler消息处理机制源码解析</h2><h3 id="Handler作用"><a href="#Handler作用" class="headerlink" title="Handler作用"></a>Handler作用</h3><p>android开发过程中，我们都知道在一个异步线程中完成一段耗时操作，利用handler把结果send到UI主线程，从而更新ui；Android应用在初始化启动时，在ActivityThread中也定义了一个Handler的派生类H，用来进行Activity和Service生命周期的管理等；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">private class H extends Handler &#123;</div><div class="line">	...//省略</div><div class="line">	public void handleMessage(Message msg) &#123;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&gt;&gt;&gt; handling: &quot; + codeToString(msg.what));</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case LAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityStart&quot;);</div><div class="line">                    final ActivityClientRecord r = (ActivityClientRecord) msg.obj;</div><div class="line">                    r.packageInfo = getPackageInfoNoCheck(</div><div class="line">                            r.activityInfo.applicationInfo, r.compatInfo);</div><div class="line">                    handleLaunchActivity(r, null);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case RELAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityRestart&quot;);</div><div class="line">                    ActivityClientRecord r = (ActivityClientRecord)msg.obj;</div><div class="line">                    handleRelaunchActivity(r);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case PAUSE_ACTIVITY:</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityPause&quot;);</div><div class="line">                    handlePauseActivity((IBinder)msg.obj, false, (msg.arg1&amp;1) != 0, msg.arg2,</div><div class="line">                            (msg.arg1&amp;2) != 0);</div><div class="line">                    maybeSnapshot();</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                    break;</div><div class="line">                ...</div><div class="line">                &#125;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&lt;&lt;&lt; done: &quot; + codeToString(msg.what));</div><div class="line">        &#125;</div><div class="line">	...//省略</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Message的send机制"><a href="#Message的send机制" class="headerlink" title="Message的send机制"></a>Message的send机制</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessage(Message msg)</div><div class="line">   &#123;</div><div class="line">       return sendMessageDelayed(msg, 0);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>往下追踪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessageDelayed(Message msg, long delayMillis)</div><div class="line">   &#123;</div><div class="line">       if (delayMillis &lt; 0) &#123;</div><div class="line">           delayMillis = 0;</div><div class="line">       &#125;</div><div class="line">       return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>继续往下追踪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public boolean sendMessageAtTime(Message msg, long uptimeMillis) &#123;</div><div class="line">       MessageQueue queue = mQueue;</div><div class="line">       if (queue == null) &#123;</div><div class="line">           RuntimeException e = new RuntimeException(</div><div class="line">                   this + &quot; sendMessageAtTime() called with no mQueue&quot;);</div><div class="line">           Log.w(&quot;Looper&quot;, e.getMessage(), e);</div><div class="line">           return false;</div><div class="line">       &#125;</div><div class="line">       return enqueueMessage(queue, msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>这个方法中我们大致可以看出消息Message是进入一个队列mQueue当中，mQueue是Handler实例化时，从UI主线程里面的Looper中获取到的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public Handler(Callback callback, boolean async) &#123;</div><div class="line">       ...//省略</div><div class="line">       mLooper = Looper.myLooper();</div><div class="line">       if (mLooper == null) &#123;</div><div class="line">           throw new RuntimeException(</div><div class="line">               &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">       &#125;</div><div class="line">       mQueue = mLooper.mQueue;</div><div class="line">       mCallback = callback;</div><div class="line">       mAsynchronous = async;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>每个线程只能对应一个Looper，UI主线程中的Looper在应用中是全局的，所有Message发送后都存储在这个Looper的MessageQueue中</p>
+<p>继续往下看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) &#123;</div><div class="line">       msg.target = this;</div><div class="line">       if (mAsynchronous) &#123;</div><div class="line">           msg.setAsynchronous(true);</div><div class="line">       &#125;</div><div class="line">       return queue.enqueueMessage(msg, uptimeMillis);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>以上这些都发生在Handler中，下面进入MessageQueue，看看消息Message是如何进入队列的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long when) &#123;</div><div class="line">	//处理消息msg的Handler不能为空，所有的消息最终还是交给Handler处理的</div><div class="line">       if (msg.target == null) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;Message must have a target.&quot;);</div><div class="line">       &#125;</div><div class="line">       //如果消息msg正在使用中，无需继续执行下去，同时抛出一个异常</div><div class="line">       if (msg.isInUse()) &#123;</div><div class="line">           throw new IllegalStateException(msg + &quot; This message is already in use.&quot;);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       synchronized (this) &#123;</div><div class="line">       	//判断MessageQueue是否已停止，停止抛出一个所在线程死亡的异常</div><div class="line">           if (mQuitting) &#123;</div><div class="line">               IllegalStateException e = new IllegalStateException(</div><div class="line">                       msg.target + &quot; sending message to a Handler on a dead thread&quot;);</div><div class="line">               Log.w(TAG, e.getMessage(), e);</div><div class="line">               msg.recycle();</div><div class="line">               return false;</div><div class="line">           &#125;</div><div class="line">		//标志这个消息正在使用中</div><div class="line">           msg.markInUse();</div><div class="line">           msg.when = when;</div><div class="line">           Message p = mMessages;</div><div class="line">           boolean needWake;</div><div class="line">           //如果在队列中msg前面没有其他消息或者msg不是最新的消息，把当前msg放入队列的头部，如果队列是阻塞状态就唤醒队列</div><div class="line">           if (p == null || when == 0 || when &lt; p.when) &#123;</div><div class="line">               // New head, wake up the event queue if blocked.</div><div class="line">               msg.next = p;</div><div class="line">               mMessages = msg;</div><div class="line">               needWake = mBlocked;</div><div class="line">           &#125; else &#123;//找到合适的位置把msg放入到队列中</div><div class="line">               // Inserted within the middle of the queue.  Usually we don&apos;t have to wake</div><div class="line">               // up the event queue unless there is a barrier at the head of the queue</div><div class="line">               // and the message is the earliest asynchronous message in the queue.</div><div class="line">               needWake = mBlocked &amp;&amp; p.target == null &amp;&amp; msg.isAsynchronous();</div><div class="line">               Message prev;</div><div class="line">               for (;;) &#123;</div><div class="line">                   prev = p;</div><div class="line">                   p = p.next;</div><div class="line">                   //队列中没有更多消息，跳出死循环</div><div class="line">                   if (p == null || when &lt; p.when) &#123;</div><div class="line">                       break;</div><div class="line">                   &#125;</div><div class="line">                   if (needWake &amp;&amp; p.isAsynchronous()) &#123;</div><div class="line">                       needWake = false;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">               msg.next = p; // invariant: p == prev.next</div><div class="line">               prev.next = msg;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // We can assume mPtr != 0 because mQuitting is false.</div><div class="line">           if (needWake) &#123;</div><div class="line">               nativeWake(mPtr);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h3 id="Handler是如何拿到Message的"><a href="#Handler是如何拿到Message的" class="headerlink" title="Handler是如何拿到Message的"></a>Handler是如何拿到Message的</h3><p>应用在启动初始化时，在ActivityThread中开启了一个无限循环检查的操作，当有新的Message时，就从消息队列中MessageQueue中拿出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public static void loop() &#123;</div><div class="line">       final Looper me = myLooper();</div><div class="line">       if (me == null) &#123;</div><div class="line">           throw new RuntimeException(&quot;No Looper; Looper.prepare() wasn&apos;t called on this thread.&quot;);</div><div class="line">       &#125;</div><div class="line">       final MessageQueue queue = me.mQueue;</div><div class="line"></div><div class="line">       // Make sure the identity of this thread is that of the local process,</div><div class="line">       // and keep track of what that identity token actually is.</div><div class="line">       Binder.clearCallingIdentity();</div><div class="line">       final long ident = Binder.clearCallingIdentity();</div><div class="line"></div><div class="line">       for (;;) &#123;</div><div class="line">           Message msg = queue.next(); // 有可能阻塞</div><div class="line">           if (msg == null) &#123;</div><div class="line">               // msg为空说明队列已经停止不可用，不执行后面的操作了</div><div class="line">               return;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // This must be in a local variable, in case a UI event sets the logger</div><div class="line">           Printer logging = me.mLogging;</div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot; +</div><div class="line">                       msg.callback + &quot;: &quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">		//把消息msg交给它的目标Handler来分配处理消息，消息在哪个页面中处理就是通过Message中的target来确定是哪个Activity中的Handler，从而在正确页面中处理msg</div><div class="line">           msg.target.dispatchMessage(msg);</div><div class="line"></div><div class="line">           if (logging != null) &#123;</div><div class="line">               logging.println(&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot; + msg.target + &quot; &quot; + msg.callback);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Make sure that during the course of dispatching the</div><div class="line">           // identity of the thread wasn&apos;t corrupted.</div><div class="line">           final long newIdent = Binder.clearCallingIdentity();</div><div class="line">           if (ident != newIdent) &#123;</div><div class="line">               Log.wtf(TAG, &quot;Thread identity changed from 0x&quot;</div><div class="line">                       + Long.toHexString(ident) + &quot; to 0x&quot;</div><div class="line">                       + Long.toHexString(newIdent) + &quot; while dispatching to &quot;</div><div class="line">                       + msg.target.getClass().getName() + &quot; &quot;</div><div class="line">                       + msg.callback + &quot; what=&quot; + msg.what);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           msg.recycleUnchecked();</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>Handler调用dispatchMessage(msg)来处理消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void dispatchMessage(Message msg) &#123;</div><div class="line">       if (msg.callback != null) &#123;</div><div class="line">           handleCallback(msg);</div><div class="line">       &#125; else &#123;</div><div class="line">           if (mCallback != null) &#123;</div><div class="line">               if (mCallback.handleMessage(msg)) &#123;</div><div class="line">                   return;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           handleMessage(msg);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>我们终于看到熟悉的handleMessage()了</p>
+<h3 id="Handler消息机制UML图"><a href="#Handler消息机制UML图" class="headerlink" title="Handler消息机制UML图"></a>Handler消息机制UML图</h3><p><img src="http://pic002.cnblogs.com/images/2012/328668/2012060815461921.jpg" alt="img_handler_uml"></p>
 
           
         
@@ -863,8 +779,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/一次dialog导致的内存泄漏/" itemprop="url">
-                  一次Dialog导致的内存泄漏
+                <a class="post-title-link" href="/2016/07/19/内存泄漏常见原因总结/" itemprop="url">
+                  内存泄漏常见原因总结
                 </a>
               
             
@@ -907,8 +823,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/一次dialog导致的内存泄漏/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/一次dialog导致的内存泄漏/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/内存泄漏常见原因总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/内存泄漏常见原因总结/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -917,6 +833,15 @@
           
 
           
+          
+             <span id="/2016/07/19/内存泄漏常见原因总结/" class="leancloud_visitors" data-flag-title="内存泄漏常见原因总结">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -933,38 +858,163 @@
       
         
           
-            <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
-<p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
-<p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
-<p>可以看出点击确定后，dialog先是dismiss()，然后执行deleteRecord()方法，deleteRecord()里面执行请求网络的删除操作。</p>
-<p>打开浏览器，输入问题，都说是Activity finish时，Dialog仍然可见，要在Activity的onDestroy()方法中，确保已经关闭了Dialog，<br>OK，那我就在onDestroy()方法里面校验Dialog，我把Dialog提取出方法，成为Activity的一个成员变量mDeleteDialog;<br>同时重写Activity的onDestroy()方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@Override</div><div class="line">protected void onDestroy() &#123;</div><div class="line">    //防止内存泄漏</div><div class="line">    if (mDeleteDialog.isShowing()) &#123;</div><div class="line">        mDeleteDialog.dismissImmediately();</div><div class="line">    &#125;</div><div class="line">    mDeleteDialog = null;</div><div class="line">    super.onDestroy();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>点击Android Studio的运行按钮，apk重新运行，再次进入问题页面，执行删除操作，黑屏事件再次发生，(^|_|^)<br>是谁？是谁？到底是谁窃取了我的Activity？</p>
-<p>冷静了几秒，首先要肯定Activity在finish的时候，Dialog仍然持有Activity引用的真相。<br>为什么Dialog还持有Activity的引用？我明明在finish之前，就调用了Dialog的dismiss()方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mDeleteDialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                mDeleteDialog.dismiss();</div><div class="line">                deleteRecord();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
-<p>进入Dialog的dismiss()方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">	public void dismiss() &#123;</div><div class="line">		if (mActivity.isFinishing()) &#123;</div><div class="line">			return;</div><div class="line">		&#125;</div><div class="line">		mDialogView.dismiss(new OnDialogDismissListener() &#123;</div><div class="line">			@Override</div><div class="line">			public void onFinish() &#123;</div><div class="line">				dismissImmediately();</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>mDialogView是一个自定义View，继承自RelativeLayout</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义标题、内容的Dialog容器</div><div class="line"> */</div><div class="line">public class TitleContentDialog extends Dialog &#123;</div><div class="line">	/** 宿主 */</div><div class="line">	private Activity mActivity;</div><div class="line">	/** 实际显示的加载视图 */</div><div class="line">	private CustomTitleContentDialogView mDialogView;</div><div class="line">	...</div><div class="line">	</div><div class="line">	private class CustomTitleContentDialogView extends RelativeLayout &#123;</div><div class="line">		/*</div><div class="line">		 * 显示配置及动画配置部分</div><div class="line">		 */</div><div class="line"></div><div class="line">		/** 对话框占比 */</div><div class="line">		private static final float RATIO = 0.75f;</div><div class="line">		/** 动画执行时间 */</div><div class="line">		private static final float ANIM_DUTAION = 200;</div><div class="line">		...</div><div class="line">		/** 动画执行器 */</div><div class="line">		private AnimRunnable mAnimRunnable;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 隐藏加载</div><div class="line">		 */</div><div class="line">		public void dismiss(OnDialogDismissListener listener) &#123;</div><div class="line">			mDismissListener = listener;</div><div class="line">			mAnimRunnable.setAnimState(AnimState.DISMISSING);</div><div class="line">		&#125;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 动画执行器</div><div class="line">		 * </div><div class="line">		 * </div><div class="line">		 */</div><div class="line">		private class AnimRunnable implements Runnable &#123;</div><div class="line">			...</div><div class="line">			@Override</div><div class="line">			public void run() &#123;</div><div class="line">				...</div><div class="line">				if (mAnimState != AnimState.NORMAL) &#123;</div><div class="line">					if (mCurrentFrame &lt; mTotalFrame) &#123;</div><div class="line">						mCurrentFrame++;</div><div class="line">					&#125; else &#123;</div><div class="line">						if (mAnimState == AnimState.SHOWING) &#123;</div><div class="line">							if (mNextState == AnimState.NONE) &#123;</div><div class="line">								setAnimState(AnimState.NORMAL);</div><div class="line">							&#125; else &#123;</div><div class="line">								reset();</div><div class="line">								setAnimState(AnimState.DISMISSING);</div><div class="line">							&#125;</div><div class="line">						&#125; else if (mAnimState == AnimState.DISMISSING) &#123;</div><div class="line">							reset();</div><div class="line">							if (mDismissListener != null) &#123;</div><div class="line">								mDismissListener.onFinish();</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				...</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 消失动画结束后的回调接口</div><div class="line">	 */</div><div class="line">	private interface OnDialogDismissListener &#123;</div><div class="line">		/** 动画执行完毕 */</div><div class="line">		void onFinish();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从代码中可以看出，自定义的Dialog在执行重写的dismiss()方法时，先运行一段动画，动画执行完成后，再通过回调执行dismissImmediately()方法；<br>dismissImmediately()方法代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 立即关闭</div><div class="line">	 */</div><div class="line">	public void dismissImmediately() &#123;</div><div class="line">		if (isShowing() &amp;&amp; !mActivity.isFinishing()) &#123;</div><div class="line">			Utils.hideInputMethod(mActivity);</div><div class="line">			TitleContentDialog.super.dismiss();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>dismissImmediately()方法才会让Dialog立即消失，从而与Activity解除绑定；<br>在dismissImmediately()方法里面设置断点debug，发现程序没有执行if语句里面的代码；if条件里面的isShowing()是true，这是毫无疑问的，<br>那就是<code>!mActivity.isFinishing()</code>不满足条件，也就是说此时的Activity已经执行完网络操作，运行了finish()方法。</p>
-<p>整理一遍思绪，发现造成Dialog没有消失，而Activity已经finish的原因是Dialog消失时执行的动画，通过不断调用View.postDelayed(Runnable action,long delayMillis)方法，达到Dialog消失时渐变缩放的动画效果。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public boolean postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           return attachInfo.mHandler.postDelayed(action, delayMillis);</div><div class="line">       &#125;</div><div class="line">       // Assume that post will succeed later</div><div class="line">       ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>原来调用了Handler.postDelayed()方法，熟悉Android开发应该了解Handler很容易造成Activity发生内存泄漏，不知道的同学可以看我的另一篇博客<a href="http://blog.csdn.net/u012464435/article/details/50753246" target="_blank" rel="external">内存泄漏常见原因总结</a>。<br>动画一共执行了200毫秒</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/** 动画执行时间 */</div><div class="line">private static final float ANIM_DUTAION = 200;</div></pre></td></tr></table></figure>
-<p>也就是说，在Dialog执行动画的200毫秒期间，Activity执行的网络操作已经结束，Activity运行finish()方法，但是Dialog在执行动画，还没消失，仍然持有Activity的引用，从而导致内存泄漏。</p>
-<p>要解决这个问题，只要保证Activity运行finish()方法在Dialog执行完动画之后，由于网络请求的事件不确定，finish()方法只需要延迟200毫秒，就可以保证Activity的运行finish()方法在Dialog动画结束之后。</p>
-<p>下面是网络请求执行完后的回调操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">                public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                    if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                        EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                        finish();</div><div class="line">                    &#125; else &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
-<p>finish()方法延时几百毫秒</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">            public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                    _Application.getInstance().scheduleTask(new Runnable() &#123;</div><div class="line">                        @Override</div><div class="line">                        public void run() &#123;</div><div class="line">                            EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                            finish();</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125; else &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
-<p>调用了Application里面的scheduleTask(Runnable action)方法，达到延时500毫秒的目的。</p>
-<p>启动Android studio，打开手机再次进入问题页面，执行删除操作，弹出确认Dialog，点击确认，退出，没有黑屏现象，问题终于解决了。</p>
-<p>为了确保Dialog不会再导致内存泄漏，多测试几次，反复点击确认和取消按钮，我擦，第二次点击取消按钮，居然又出现黑屏现象，继续追踪，发现问题所在：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
+            <h2 id="内存泄漏常见原因总结"><a href="#内存泄漏常见原因总结" class="headerlink" title="内存泄漏常见原因总结"></a>内存泄漏常见原因总结</h2><h3 id="1-非静态内部类的静态实例"><a href="#1-非静态内部类的静态实例" class="headerlink" title="1.非静态内部类的静态实例"></a>1.非静态内部类的静态实例</h3><h3 id="2-Activity的静态成员变量"><a href="#2-Activity的静态成员变量" class="headerlink" title="2.Activity的静态成员变量"></a>2.Activity的静态成员变量</h3><ol>
+<li><strong>Drawable</strong></li>
+<li><strong>Context</strong></li>
+</ol>
+<p>Drawable的对象的内部Callback持有activity的引用，当Activity finish()之后，静态成员drawable始终持有这个Activity的引用，导致内存释放不了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public class MainActivityextends Activity</div><div class="line">&#123;</div><div class="line">         static Demo sInstance = null;</div><div class="line">        </div><div class="line">    @Override</div><div class="line">    public void onCreate(BundlesavedInstanceState)</div><div class="line">    &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        if (sInstance == null)</div><div class="line">        &#123;</div><div class="line">           sInstance= new Demo();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    class Demo</div><div class="line">    &#123;</div><div class="line">    voiddoSomething()</div><div class="line">    &#123;</div><div class="line">               System.out.print(&quot;dosth.&quot;);</div><div class="line">    &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Context，Activity内部如果有一个Context的成员变量，将导致Context引用指向的Activity对象释放不了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	private static Context mContext;</div><div class="line">	</div><div class="line">	public void onCreate(Bundle savedInstanceState)&#123;</div><div class="line">		super.onCreate(savedInstanceState);</div><div class="line">		...</div><div class="line">		mContext=MainActivity.this;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-Handler造成的内存泄漏"><a href="#3-Handler造成的内存泄漏" class="headerlink" title="3.Handler造成的内存泄漏"></a>3.Handler造成的内存泄漏</h3><h4 id="3-1-Handler内存泄漏的原因"><a href="#3-1-Handler内存泄漏的原因" class="headerlink" title="3.1 Handler内存泄漏的原因"></a>3.1 Handler内存泄漏的原因</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	...</div><div class="line">	private Handler mHandler = new Handler()&#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大家平时开发中喜欢在Activity中直接new一个Handler的匿名内部类，这样造成匿名内部类持有一个外部类(通常是Activity)的引用(不然怎么更新ui)，但是Handler常常伴随着一个执行耗时操作的异步线程(如下载多张图片)，如果在完成耗时操作之前，Activity退出，异步线程持有handler的引用，handler持有Activity的引用，从而导致内存泄漏。</p>
+<h4 id="3-2-防止Handler内存泄漏的措施"><a href="#3-2-防止Handler内存泄漏的措施" class="headerlink" title="3.2 防止Handler内存泄漏的措施"></a>3.2 防止Handler内存泄漏的措施</h4><p><strong>通过程序逻辑来进行保护</strong></p>
+<ol>
+<li>在关闭Activity的时候，把线程也关了；</li>
+<li>如果Handler是被delay的Message持有的引用，在Activity的onDestroy()方法中，调用Handler响应书的removeCallbacks()方法，把消息对象从消息队列移除就行了。</li>
+</ol>
+<p><strong>将Handler声明为静态类</strong></p>
+<ul>
+<li><p>静态类不持有外部类的引用，所以Activity可以被随意回收，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>使用弱引用</strong></p>
+<p>当Activity在内存中的对象没有任何引用，使用弱引用会让Activity对象很容易被Gc回首。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">        WeakReference&lt;CrmContactActivity&gt; mReference;</div><div class="line"></div><div class="line">        public MyHandler(CrmContactActivity activity) &#123;</div><div class="line">            mReference = new WeakReference&lt;CrmContactActivity&gt;(activity);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            final CrmContactActivity activity = mReference.get();</div><div class="line">            if (activity == null || activity.isFinishing()) &#123;</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line">            if (msg.what == LOAD_MORE) &#123;</div><div class="line">                activity.getCustomersByCompanyName(activity.companyName);</div><div class="line">            &#125; else if (msg.what == THE_END) &#123;</div><div class="line">                activity.showViewIfHasCompanyName((ArrayList&lt;CustomerModel&gt;) activity.matchedCustomerList);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
+<h3 id="4-注册某个对象后没有反注册"><a href="#4-注册某个对象后没有反注册" class="headerlink" title="4.注册某个对象后没有反注册"></a>4.注册某个对象后没有反注册</h3><p>广播接收器注册后在Activity退出时忘了反注册，一些利用观察者模式的第三方开源库在使用时，忘了反注册(如EventBus)。<br>正确代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">   protected void onDestroy() &#123;</div><div class="line">       EventBus.getDefault().unregister(this);</div><div class="line">       super.onDestroy();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h3 id="5-集合对象没清理造成的内存泄漏"><a href="#5-集合对象没清理造成的内存泄漏" class="headerlink" title="5.集合对象没清理造成的内存泄漏"></a>5.集合对象没清理造成的内存泄漏</h3><p>把大量对象的引用放入集合中，但我们不需要该对象时，记得从集合中将不需要的引用清理掉，同理，当对象不需要时，记得将对象的引用设置为null。</p>
+<h3 id="6-资源文件未关闭"><a href="#6-资源文件未关闭" class="headerlink" title="6.资源文件未关闭"></a>6.资源文件未关闭</h3><p>最常见的是文件流执行完读写操作后，忘记关闭了输入流，输出流；数据库、Content Provider操作完后Cursor忘记了close等等。<br>安全一点的方式是在写代码的时候，首先写完头尾，避免尾部关闭操作忘记了谢。</p>
+<h3 id="7-代码不严谨"><a href="#7-代码不严谨" class="headerlink" title="7.代码不严谨"></a>7.代码不严谨</h3><ul>
+<li>Bitmap对象使用完后，忘记了调用recycle()方法销毁；</li>
+<li>解析图片的时候忘记了设置采样率</li>
+<li>自定义View时TypedArray使用完后忘记调用recycle()方法释放内存</li>
+<li>ListView的适配器类中没有复用convertView</li>
+<li>未采用软引用等</li>
+</ul>
+<h3 id="8-关于内存泄漏的调试"><a href="#8-关于内存泄漏的调试" class="headerlink" title="8.关于内存泄漏的调试"></a>8.关于内存泄漏的调试</h3><p>我有一篇博客介绍我开发过程中一次典型的内存泄漏案例，这个案例中介绍了内存泄漏检测工具MAT的使用，博客链接如下：</p>
+<p><a href="http://blog.csdn.net/u012464435/article/details/50034349" target="_blank" rel="external">MAT使用案例</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/zsh常见快捷键/" itemprop="url">
+                  Zsh常见快捷键
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/zsh常见快捷键/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/zsh常见快捷键/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/19/zsh常见快捷键/" class="leancloud_visitors" data-flag-title="Zsh常见快捷键">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Zsh常见快捷键"><a href="#Zsh常见快捷键" class="headerlink" title="Zsh常见快捷键"></a>Zsh常见快捷键</h2><ol>
+<li><strong>ctrl + a</strong>        到行首</li>
+<li><strong>ctrl + e</strong>        到行末</li>
+<li><strong>ctrl + u</strong>     直接清除本行</li>
+<li><strong>ctrl + f/b</strong>    前进后退，相当于左右方向键，但是显然比移开手按方向键更快</li>
+<li><strong>ctrl + p</strong>        上一条命令，相当于 <em>方向键上</em></li>
+<li><strong>ctrl + h</strong>        删除之前的字符</li>
+<li><strong>ctrl + w</strong>        删除光标前的单词</li>
+<li><strong>ctrl + k</strong>        删除到文本末尾</li>
+<li><strong>ctrl + p</strong>        搜索命令历史</li>
+</ol>
 
           
         
@@ -1049,6 +1099,15 @@
           
 
           
+          
+             <span id="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" class="leancloud_visitors" data-flag-title="欢迎使用 Cmd Markdown 编辑阅读器">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -1197,8 +1256,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/内存泄漏常见原因总结/" itemprop="url">
-                  内存泄漏常见原因总结
+                <a class="post-title-link" href="/2016/07/19/一次dialog导致的内存泄漏/" itemprop="url">
+                  一次Dialog导致的内存泄漏
                 </a>
               
             
@@ -1241,8 +1300,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/内存泄漏常见原因总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/内存泄漏常见原因总结/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/一次dialog导致的内存泄漏/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/一次dialog导致的内存泄漏/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1251,6 +1310,15 @@
           
 
           
+          
+             <span id="/2016/07/19/一次dialog导致的内存泄漏/" class="leancloud_visitors" data-flag-title="一次Dialog导致的内存泄漏">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -1267,43 +1335,38 @@
       
         
           
-            <h2 id="内存泄漏常见原因总结"><a href="#内存泄漏常见原因总结" class="headerlink" title="内存泄漏常见原因总结"></a>内存泄漏常见原因总结</h2><h3 id="1-非静态内部类的静态实例"><a href="#1-非静态内部类的静态实例" class="headerlink" title="1.非静态内部类的静态实例"></a>1.非静态内部类的静态实例</h3><h3 id="2-Activity的静态成员变量"><a href="#2-Activity的静态成员变量" class="headerlink" title="2.Activity的静态成员变量"></a>2.Activity的静态成员变量</h3><ol>
-<li><strong>Drawable</strong></li>
-<li><strong>Context</strong></li>
-</ol>
-<p>Drawable的对象的内部Callback持有activity的引用，当Activity finish()之后，静态成员drawable始终持有这个Activity的引用，导致内存释放不了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public class MainActivityextends Activity</div><div class="line">&#123;</div><div class="line">         static Demo sInstance = null;</div><div class="line">        </div><div class="line">    @Override</div><div class="line">    public void onCreate(BundlesavedInstanceState)</div><div class="line">    &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        if (sInstance == null)</div><div class="line">        &#123;</div><div class="line">           sInstance= new Demo();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    class Demo</div><div class="line">    &#123;</div><div class="line">    voiddoSomething()</div><div class="line">    &#123;</div><div class="line">               System.out.print(&quot;dosth.&quot;);</div><div class="line">    &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Context，Activity内部如果有一个Context的成员变量，将导致Context引用指向的Activity对象释放不了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	private static Context mContext;</div><div class="line">	</div><div class="line">	public void onCreate(Bundle savedInstanceState)&#123;</div><div class="line">		super.onCreate(savedInstanceState);</div><div class="line">		...</div><div class="line">		mContext=MainActivity.this;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="3-Handler造成的内存泄漏"><a href="#3-Handler造成的内存泄漏" class="headerlink" title="3.Handler造成的内存泄漏"></a>3.Handler造成的内存泄漏</h3><h4 id="3-1-Handler内存泄漏的原因"><a href="#3-1-Handler内存泄漏的原因" class="headerlink" title="3.1 Handler内存泄漏的原因"></a>3.1 Handler内存泄漏的原因</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	...</div><div class="line">	private Handler mHandler = new Handler()&#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>大家平时开发中喜欢在Activity中直接new一个Handler的匿名内部类，这样造成匿名内部类持有一个外部类(通常是Activity)的引用(不然怎么更新ui)，但是Handler常常伴随着一个执行耗时操作的异步线程(如下载多张图片)，如果在完成耗时操作之前，Activity退出，异步线程持有handler的引用，handler持有Activity的引用，从而导致内存泄漏。</p>
-<h4 id="3-2-防止Handler内存泄漏的措施"><a href="#3-2-防止Handler内存泄漏的措施" class="headerlink" title="3.2 防止Handler内存泄漏的措施"></a>3.2 防止Handler内存泄漏的措施</h4><p><strong>通过程序逻辑来进行保护</strong></p>
-<ol>
-<li>在关闭Activity的时候，把线程也关了；</li>
-<li>如果Handler是被delay的Message持有的引用，在Activity的onDestroy()方法中，调用Handler响应书的removeCallbacks()方法，把消息对象从消息队列移除就行了。</li>
-</ol>
-<p><strong>将Handler声明为静态类</strong></p>
-<ul>
-<li><p>静态类不持有外部类的引用，所以Activity可以被随意回收，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">		@Override</div><div class="line">		public void handleMessage(Message msg) &#123;</div><div class="line">			...</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p><strong>使用弱引用</strong></p>
-<p>当Activity在内存中的对象没有任何引用，使用弱引用会让Activity对象很容易被Gc回首。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">private static class MyHandler extends Handler &#123;</div><div class="line">        WeakReference&lt;CrmContactActivity&gt; mReference;</div><div class="line"></div><div class="line">        public MyHandler(CrmContactActivity activity) &#123;</div><div class="line">            mReference = new WeakReference&lt;CrmContactActivity&gt;(activity);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            final CrmContactActivity activity = mReference.get();</div><div class="line">            if (activity == null || activity.isFinishing()) &#123;</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line">            if (msg.what == LOAD_MORE) &#123;</div><div class="line">                activity.getCustomersByCompanyName(activity.companyName);</div><div class="line">            &#125; else if (msg.what == THE_END) &#123;</div><div class="line">                activity.showViewIfHasCompanyName((ArrayList&lt;CustomerModel&gt;) activity.matchedCustomerList);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
-<h3 id="4-注册某个对象后没有反注册"><a href="#4-注册某个对象后没有反注册" class="headerlink" title="4.注册某个对象后没有反注册"></a>4.注册某个对象后没有反注册</h3><p>广播接收器注册后在Activity退出时忘了反注册，一些利用观察者模式的第三方开源库在使用时，忘了反注册(如EventBus)。<br>正确代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">   protected void onDestroy() &#123;</div><div class="line">       EventBus.getDefault().unregister(this);</div><div class="line">       super.onDestroy();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h3 id="5-集合对象没清理造成的内存泄漏"><a href="#5-集合对象没清理造成的内存泄漏" class="headerlink" title="5.集合对象没清理造成的内存泄漏"></a>5.集合对象没清理造成的内存泄漏</h3><p>把大量对象的引用放入集合中，但我们不需要该对象时，记得从集合中将不需要的引用清理掉，同理，当对象不需要时，记得将对象的引用设置为null。</p>
-<h3 id="6-资源文件未关闭"><a href="#6-资源文件未关闭" class="headerlink" title="6.资源文件未关闭"></a>6.资源文件未关闭</h3><p>最常见的是文件流执行完读写操作后，忘记关闭了输入流，输出流；数据库、Content Provider操作完后Cursor忘记了close等等。<br>安全一点的方式是在写代码的时候，首先写完头尾，避免尾部关闭操作忘记了谢。</p>
-<h3 id="7-代码不严谨"><a href="#7-代码不严谨" class="headerlink" title="7.代码不严谨"></a>7.代码不严谨</h3><ul>
-<li>Bitmap对象使用完后，忘记了调用recycle()方法销毁；</li>
-<li>解析图片的时候忘记了设置采样率</li>
-<li>自定义View时TypedArray使用完后忘记调用recycle()方法释放内存</li>
-<li>ListView的适配器类中没有复用convertView</li>
-<li>未采用软引用等</li>
-</ul>
-<h3 id="8-关于内存泄漏的调试"><a href="#8-关于内存泄漏的调试" class="headerlink" title="8.关于内存泄漏的调试"></a>8.关于内存泄漏的调试</h3><p>我有一篇博客介绍我开发过程中一次典型的内存泄漏案例，这个案例中介绍了内存泄漏检测工具MAT的使用，博客链接如下：</p>
-<p><a href="http://blog.csdn.net/u012464435/article/details/50034349" target="_blank" rel="external">MAT使用案例</a></p>
+            <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
+<p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
+<p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">final TitleContentDialog dialog = new TitleContentDialog(ReceivableMoneyRecordActivity.this);</div><div class="line">                        dialog.setContentView(getContentViewForDialog(&quot;确认删除此回款记录?&quot;));</div><div class="line">                        dialog.setTitle(null);</div><div class="line">                        dialog.setCancelButton(&quot;取消&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">                            @Override</div><div class="line">                            public void onClick(View v) &#123;</div><div class="line">                                dialog.dismiss();</div><div class="line">                                deleteRecord();</div><div class="line">                            &#125;</div><div class="line">                        &#125;);</div><div class="line">                        dialog.show();</div></pre></td></tr></table></figure>
+<p>可以看出点击确定后，dialog先是dismiss()，然后执行deleteRecord()方法，deleteRecord()里面执行请求网络的删除操作。</p>
+<p>打开浏览器，输入问题，都说是Activity finish时，Dialog仍然可见，要在Activity的onDestroy()方法中，确保已经关闭了Dialog，<br>OK，那我就在onDestroy()方法里面校验Dialog，我把Dialog提取出方法，成为Activity的一个成员变量mDeleteDialog;<br>同时重写Activity的onDestroy()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">@Override</div><div class="line">protected void onDestroy() &#123;</div><div class="line">    //防止内存泄漏</div><div class="line">    if (mDeleteDialog.isShowing()) &#123;</div><div class="line">        mDeleteDialog.dismissImmediately();</div><div class="line">    &#125;</div><div class="line">    mDeleteDialog = null;</div><div class="line">    super.onDestroy();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>点击Android Studio的运行按钮，apk重新运行，再次进入问题页面，执行删除操作，黑屏事件再次发生，(^|_|^)<br>是谁？是谁？到底是谁窃取了我的Activity？</p>
+<p>冷静了几秒，首先要肯定Activity在finish的时候，Dialog仍然持有Activity引用的真相。<br>为什么Dialog还持有Activity的引用？我明明在finish之前，就调用了Dialog的dismiss()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mDeleteDialog.setConfirmButton(&quot;确定&quot;, new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                mDeleteDialog.dismiss();</div><div class="line">                deleteRecord();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>进入Dialog的dismiss()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">	public void dismiss() &#123;</div><div class="line">		if (mActivity.isFinishing()) &#123;</div><div class="line">			return;</div><div class="line">		&#125;</div><div class="line">		mDialogView.dismiss(new OnDialogDismissListener() &#123;</div><div class="line">			@Override</div><div class="line">			public void onFinish() &#123;</div><div class="line">				dismissImmediately();</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>mDialogView是一个自定义View，继承自RelativeLayout</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义标题、内容的Dialog容器</div><div class="line"> */</div><div class="line">public class TitleContentDialog extends Dialog &#123;</div><div class="line">	/** 宿主 */</div><div class="line">	private Activity mActivity;</div><div class="line">	/** 实际显示的加载视图 */</div><div class="line">	private CustomTitleContentDialogView mDialogView;</div><div class="line">	...</div><div class="line">	</div><div class="line">	private class CustomTitleContentDialogView extends RelativeLayout &#123;</div><div class="line">		/*</div><div class="line">		 * 显示配置及动画配置部分</div><div class="line">		 */</div><div class="line"></div><div class="line">		/** 对话框占比 */</div><div class="line">		private static final float RATIO = 0.75f;</div><div class="line">		/** 动画执行时间 */</div><div class="line">		private static final float ANIM_DUTAION = 200;</div><div class="line">		...</div><div class="line">		/** 动画执行器 */</div><div class="line">		private AnimRunnable mAnimRunnable;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 隐藏加载</div><div class="line">		 */</div><div class="line">		public void dismiss(OnDialogDismissListener listener) &#123;</div><div class="line">			mDismissListener = listener;</div><div class="line">			mAnimRunnable.setAnimState(AnimState.DISMISSING);</div><div class="line">		&#125;</div><div class="line">		...</div><div class="line">		/**</div><div class="line">		 * 动画执行器</div><div class="line">		 * </div><div class="line">		 * </div><div class="line">		 */</div><div class="line">		private class AnimRunnable implements Runnable &#123;</div><div class="line">			...</div><div class="line">			@Override</div><div class="line">			public void run() &#123;</div><div class="line">				...</div><div class="line">				if (mAnimState != AnimState.NORMAL) &#123;</div><div class="line">					if (mCurrentFrame &lt; mTotalFrame) &#123;</div><div class="line">						mCurrentFrame++;</div><div class="line">					&#125; else &#123;</div><div class="line">						if (mAnimState == AnimState.SHOWING) &#123;</div><div class="line">							if (mNextState == AnimState.NONE) &#123;</div><div class="line">								setAnimState(AnimState.NORMAL);</div><div class="line">							&#125; else &#123;</div><div class="line">								reset();</div><div class="line">								setAnimState(AnimState.DISMISSING);</div><div class="line">							&#125;</div><div class="line">						&#125; else if (mAnimState == AnimState.DISMISSING) &#123;</div><div class="line">							reset();</div><div class="line">							if (mDismissListener != null) &#123;</div><div class="line">								mDismissListener.onFinish();</div><div class="line">							&#125;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				...</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 消失动画结束后的回调接口</div><div class="line">	 */</div><div class="line">	private interface OnDialogDismissListener &#123;</div><div class="line">		/** 动画执行完毕 */</div><div class="line">		void onFinish();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从代码中可以看出，自定义的Dialog在执行重写的dismiss()方法时，先运行一段动画，动画执行完成后，再通过回调执行dismissImmediately()方法；<br>dismissImmediately()方法代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 立即关闭</div><div class="line">	 */</div><div class="line">	public void dismissImmediately() &#123;</div><div class="line">		if (isShowing() &amp;&amp; !mActivity.isFinishing()) &#123;</div><div class="line">			Utils.hideInputMethod(mActivity);</div><div class="line">			TitleContentDialog.super.dismiss();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>dismissImmediately()方法才会让Dialog立即消失，从而与Activity解除绑定；<br>在dismissImmediately()方法里面设置断点debug，发现程序没有执行if语句里面的代码；if条件里面的isShowing()是true，这是毫无疑问的，<br>那就是<code>!mActivity.isFinishing()</code>不满足条件，也就是说此时的Activity已经执行完网络操作，运行了finish()方法。</p>
+<p>整理一遍思绪，发现造成Dialog没有消失，而Activity已经finish的原因是Dialog消失时执行的动画，通过不断调用View.postDelayed(Runnable action,long delayMillis)方法，达到Dialog消失时渐变缩放的动画效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public boolean postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           return attachInfo.mHandler.postDelayed(action, delayMillis);</div><div class="line">       &#125;</div><div class="line">       // Assume that post will succeed later</div><div class="line">       ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);</div><div class="line">       return true;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>原来调用了Handler.postDelayed()方法，熟悉Android开发应该了解Handler很容易造成Activity发生内存泄漏，不知道的同学可以看我的另一篇博客<a href="http://blog.csdn.net/u012464435/article/details/50753246" target="_blank" rel="external">内存泄漏常见原因总结</a>。<br>动画一共执行了200毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/** 动画执行时间 */</div><div class="line">private static final float ANIM_DUTAION = 200;</div></pre></td></tr></table></figure>
+<p>也就是说，在Dialog执行动画的200毫秒期间，Activity执行的网络操作已经结束，Activity运行finish()方法，但是Dialog在执行动画，还没消失，仍然持有Activity的引用，从而导致内存泄漏。</p>
+<p>要解决这个问题，只要保证Activity运行finish()方法在Dialog执行完动画之后，由于网络请求的事件不确定，finish()方法只需要延迟200毫秒，就可以保证Activity的运行finish()方法在Dialog动画结束之后。</p>
+<p>下面是网络请求执行完后的回调操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">                public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                    if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                        EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                        finish();</div><div class="line">                    &#125; else &#123;</div><div class="line">                        Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p>finish()方法延时几百毫秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">            public void OnRemoteApiFinish(BasicResponse response) &#123;</div><div class="line">                if (response.status == BasicResponse.SUCCESS) &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, &quot;删除回款记录成功&quot;, Toast.LENGTH_SHORT).show();</div><div class="line">                    _Application.getInstance().scheduleTask(new Runnable() &#123;</div><div class="line">                        @Override</div><div class="line">                        public void run() &#123;</div><div class="line">                            EventBus.getDefault().post(new OnReceivableRecordListChangedEvent());</div><div class="line">                            finish();</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125; else &#123;</div><div class="line">                    Toast.makeText(ReceivableMoneyRecordActivity.this, response.msg, Toast.LENGTH_SHORT).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>调用了Application里面的scheduleTask(Runnable action)方法，达到延时500毫秒的目的。</p>
+<p>启动Android studio，打开手机再次进入问题页面，执行删除操作，弹出确认Dialog，点击确认，退出，没有黑屏现象，问题终于解决了。</p>
+<p>为了确保Dialog不会再导致内存泄漏，多测试几次，反复点击确认和取消按钮，我擦，第二次点击取消按钮，居然又出现黑屏现象，继续追踪，发现问题所在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
 
           
         
@@ -1407,6 +1470,15 @@
           
 
           
+          
+             <span id="/2016/07/06/serializable_parcelable/" class="leancloud_visitors" data-flag-title="序列化和反序列化">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -1758,6 +1830,113 @@
   
 
   
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("Y42uBGy2t2qQ3tkWbSbeQa5t-gzGzoHsz", "5fuz8Ikzf4NKJWwGDVsIRlVG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
 
   
 
