@@ -98,7 +98,7 @@ IntentService">
 IntentService是一种处理异步请求的Service。客户端通过调用Context.startService(Intent)来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。
 2 IntentService是如何启动一个异步线程处理请求的？
 IntentService">
-<meta property="og:updated_time" content="2016-07-25T08:56:02.000Z">
+<meta property="og:updated_time" content="2016-07-26T02:19:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntentService源码分析">
 <meta name="twitter:description" content="IntentService源码分析
@@ -323,7 +323,7 @@ IntentService">
 <p>ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</p>
 <p>我们来看onHandleIntent(Intent intent);</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">protected abstract void onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
-<p>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用<code>stopSelf()</code> Service</p>
+<p>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用<code>stopSelf()</code>来停止Service。</p>
 <h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
 <ol>
 <li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
@@ -356,16 +356,16 @@ IntentService">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/handler:message:looper机制/" rel="next" title="Handler消息处理机制源码解析">
-                <i class="fa fa-chevron-left"></i> Handler消息处理机制源码解析
+              <a href="/2016/07/19/zsh常见快捷键/" rel="next" title="Zsh常见快捷键">
+                <i class="fa fa-chevron-left"></i> Zsh常见快捷键
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/23/Monkey压力自动化测试/" rel="prev" title="Monkey压力自动化测试">
-                Monkey压力自动化测试 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/19/handler:message:looper机制/" rel="prev" title="Handler消息处理机制源码解析">
+                Handler消息处理机制源码解析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
