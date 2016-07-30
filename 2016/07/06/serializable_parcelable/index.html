@@ -140,7 +140,13 @@
 
   <link rel="canonical" href="http://yoursite.com/2016/07/06/serializable_parcelable/"/>
 
-  <title> 序列化和反序列化 | 龙在唐朝的博客 </title>
+  <title>
+  
+
+  
+    序列化和反序列化 | 龙在唐朝的博客
+  
+</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -161,7 +167,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -241,107 +247,8 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                序列化和反序列化
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-06T16:54:15+08:00" content="2016-07-06">
-              2016-07-06
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/06/serializable_parcelable/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/06/serializable_parcelable/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-      	 <span id="/2016/07/06/serializable_parcelable/"class="leancloud_visitors"  data-flag-title="序列化和反序列化">
-              |   阅读次数
-            </span>
-      	
-
-          
-          
-             <span id="/2016/07/06/serializable_parcelable/" class="leancloud_visitors" data-flag-title="序列化和反序列化">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h2><hr>
+      <h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h2><hr>
 <h3 id="1-序列化的原因"><a href="#1-序列化的原因" class="headerlink" title="1 序列化的原因"></a>1 序列化的原因</h3><p>java序列化主要是为了跨平台，实现对象的一致性，可在不同的平台上，保持自己原有的属性和方法不变</p>
 <h3 id="2-序列化的作用"><a href="#2-序列化的作用" class="headerlink" title="2 序列化的作用"></a>2 序列化的作用</h3><ol>
 <li>永久的保存对象数据（将对象数据保存在文件当中，活着是磁盘中）；</li>
@@ -376,52 +283,7 @@
 <p>2、Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）；</p>
 <p>3、Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性；</p>
 
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/欢迎使用_cmd_markdown_编辑阅读器/" rel="prev" title="欢迎使用 Cmd Markdown 编辑阅读器">
-                欢迎使用 Cmd Markdown 编辑阅读器 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
 
 
@@ -468,17 +330,8 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/default_avatar.jpg"
@@ -583,17 +436,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       </section>
 
       
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化和反序列化"><span class="nav-number">1.</span> <span class="nav-text">序列化和反序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-序列化的原因"><span class="nav-number">1.1.</span> <span class="nav-text">1 序列化的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-序列化的作用"><span class="nav-number">1.2.</span> <span class="nav-text">2 序列化的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-序列化的实现方式"><span class="nav-number">1.3.</span> <span class="nav-text">3 序列化的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-实现Serializable接口"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 实现Serializable接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-实现Parcelable接口"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 实现Parcelable接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-把对象包装成JSON字符串传输"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 把对象包装成JSON字符串传输</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-序列化比较"><span class="nav-number">1.4.</span> <span class="nav-text">4 序列化比较</span></a></li></ol></li></ol></div>
-            
-          </div>
-        </section>
-      
 
     </div>
   </aside>
@@ -689,10 +531,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 

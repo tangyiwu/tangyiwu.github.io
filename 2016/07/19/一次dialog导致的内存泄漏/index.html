@@ -120,7 +120,13 @@
 
   <link rel="canonical" href="http://yoursite.com/2016/07/19/一次dialog导致的内存泄漏/"/>
 
-  <title> 一次Dialog导致的内存泄漏 | 龙在唐朝的博客 </title>
+  <title>
+  
+
+  
+    一次Dialog导致的内存泄漏 | 龙在唐朝的博客
+  
+</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -141,7 +147,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -221,107 +227,8 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                一次Dialog导致的内存泄漏
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/一次dialog导致的内存泄漏/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/一次dialog导致的内存泄漏/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-      	 <span id="/2016/07/19/一次dialog导致的内存泄漏/"class="leancloud_visitors"  data-flag-title="一次Dialog导致的内存泄漏">
-              |   阅读次数
-            </span>
-      	
-
-          
-          
-             <span id="/2016/07/19/一次dialog导致的内存泄漏/" class="leancloud_visitors" data-flag-title="一次Dialog导致的内存泄漏">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
+      <h2 id="一次Dialog导致的内存泄漏"><a href="#一次Dialog导致的内存泄漏" class="headerlink" title="一次Dialog导致的内存泄漏"></a>一次Dialog导致的内存泄漏</h2><p>今天上午10：30来到公司后，一头扎进了张鸿洋大神所写的OkHttpUtils源码中去，继续昨晚未完成的任务，11:30后，终于对整个框架有了一个比较全局、清晰的了解，心里更是对大神充满满满的崇拜和敬意；然后回到公司的工作，打开jira，发现距离我两个工位的美女测试姐姐给我提了一个页面刷新bug，卧槽，居然还有bug，赶紧拿起数据线，插上Mac电脑和华为荣耀6手机，进入bug页面，执行相关操作，程序按正常逻辑自动退出进入上一层页面，检查应该刷新的两个页面，发现通过EventBus通知刷新的页面都刷新了，没问题啊，嗯嗯…?好像刚才执行点击操作时，在页面退出之前，手机屏幕好像出现了短暂的黑屏现象，确认应该没看错，赶紧打开Android Studio的log日志，发现如下：</p>
 <a id="more"></a>
 <p><img src="http://img.blog.csdn.net/20160303232609504" alt="error_log"></p>
 <p>我靠，居然发生了内存泄漏，按照日志调用栈的信息，应该是Activity在退出finish后，Dialog仍然持有Activity的引用，从而导致内存泄漏。<br>但是我明明已经调用了dialog.dismiss()方法了，这个Dialog与Activity应该没有关联引用了，怎么仍然持有引用？<br>下面是执行点击操作，弹出Dialog的代码</p>
@@ -355,66 +262,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public void show() &#123;</div><div class="line">	if (mActivity.isFinishing()) &#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	super.show();</div><div class="line"></div><div class="line">	new Handler().postDelayed(new Runnable() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void run() &#123;</div><div class="line">			if (!mActivity.isFinishing())</div><div class="line">				mDialogView.show();</div><div class="line">		&#125;</div><div class="line">	&#125;, 200);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>定位到Handler.postDelayed()方法，这里发生了内存泄漏，这里为什么发生内存泄漏？暂时没找到确切原因，把Activity里面的全局变量Dialog还原，每次点击删除的时候，再new一个Dialog，这个问题又没了，现在猜测跟Message有关，但还是没想明白是哪个对象需要释放内存，但又被引用。<br>困…,已经到晚上11点了，明天再弄清原因。<br>明天打算把<a href="http://blog.csdn.net/u012464435/article/details/50774580" target="_blank" rel="external">一个内存泄漏引发的血案</a>给阅读一下，彻底理清这里面的缘由。</p>
 
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Android/" rel="tag">#Android</a>
-          
-            <a href="/tags/Dialog/" rel="tag">#Dialog</a>
-          
-            <a href="/tags/内存泄漏/" rel="tag">#内存泄漏</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/07/19/内存泄漏常见原因总结/" rel="next" title="内存泄漏常见原因总结">
-                <i class="fa fa-chevron-left"></i> 内存泄漏常见原因总结
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/zsh常见快捷键/" rel="prev" title="Zsh常见快捷键">
-                Zsh常见快捷键 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
 
 
@@ -461,17 +309,8 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/default_avatar.jpg"
@@ -576,17 +415,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       </section>
 
       
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一次Dialog导致的内存泄漏"><span class="nav-number">1.</span> <span class="nav-text">一次Dialog导致的内存泄漏</span></a></li></ol></div>
-            
-          </div>
-        </section>
-      
 
     </div>
   </aside>
@@ -682,10 +510,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 

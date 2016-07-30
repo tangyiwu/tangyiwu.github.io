@@ -123,7 +123,13 @@
 
   <link rel="canonical" href="http://yoursite.com/2016/07/19/handler:message:looper机制/"/>
 
-  <title> Handler消息处理机制源码解析 | 龙在唐朝的博客 </title>
+  <title>
+  
+
+  
+    Handler消息处理机制源码解析 | 龙在唐朝的博客
+  
+</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -144,7 +150,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,107 +230,8 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Handler消息处理机制源码解析
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T23:50:00+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/handler:message:looper机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/handler:message:looper机制/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-      	 <span id="/2016/07/19/handler:message:looper机制/"class="leancloud_visitors"  data-flag-title="Handler消息处理机制源码解析">
-              |   阅读次数
-            </span>
-      	
-
-          
-          
-             <span id="/2016/07/19/handler:message:looper机制/" class="leancloud_visitors" data-flag-title="Handler消息处理机制源码解析">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="Handler消息处理机制源码解析"><a href="#Handler消息处理机制源码解析" class="headerlink" title="Handler消息处理机制源码解析"></a>Handler消息处理机制源码解析</h2><h3 id="Handler作用"><a href="#Handler作用" class="headerlink" title="Handler作用"></a>Handler作用</h3><p>android开发过程中，我们都知道在一个异步线程中完成一段耗时操作，利用handler把结果send到UI主线程，从而更新ui；Android应用在初始化启动时，在ActivityThread中也定义了一个Handler的派生类H，用来进行Activity和Service生命周期的管理等；</p>
+      <h2 id="Handler消息处理机制源码解析"><a href="#Handler消息处理机制源码解析" class="headerlink" title="Handler消息处理机制源码解析"></a>Handler消息处理机制源码解析</h2><h3 id="Handler作用"><a href="#Handler作用" class="headerlink" title="Handler作用"></a>Handler作用</h3><p>android开发过程中，我们都知道在一个异步线程中完成一段耗时操作，利用handler把结果send到UI主线程，从而更新ui；Android应用在初始化启动时，在ActivityThread中也定义了一个Handler的派生类H，用来进行Activity和Service生命周期的管理等；</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;!--more--&gt;</div><div class="line"></div><div class="line">private class H extends Handler &#123;</div><div class="line">	...//省略</div><div class="line">	public void handleMessage(Message msg) &#123;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&gt;&gt;&gt; handling: &quot; + codeToString(msg.what));</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case LAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityStart&quot;);</div><div class="line">                    final ActivityClientRecord r = (ActivityClientRecord) msg.obj;</div><div class="line">                    r.packageInfo = getPackageInfoNoCheck(</div><div class="line">                            r.activityInfo.applicationInfo, r.compatInfo);</div><div class="line">                    handleLaunchActivity(r, null);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case RELAUNCH_ACTIVITY: &#123;</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityRestart&quot;);</div><div class="line">                    ActivityClientRecord r = (ActivityClientRecord)msg.obj;</div><div class="line">                    handleRelaunchActivity(r);</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                &#125; break;</div><div class="line">                case PAUSE_ACTIVITY:</div><div class="line">                    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;activityPause&quot;);</div><div class="line">                    handlePauseActivity((IBinder)msg.obj, false, (msg.arg1&amp;1) != 0, msg.arg2,</div><div class="line">                            (msg.arg1&amp;2) != 0);</div><div class="line">                    maybeSnapshot();</div><div class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                    break;</div><div class="line">                ...</div><div class="line">                &#125;</div><div class="line">            if (DEBUG_MESSAGES) Slog.v(TAG, &quot;&lt;&lt;&lt; done: &quot; + codeToString(msg.what));</div><div class="line">        &#125;</div><div class="line">	...//省略</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="Message的send机制"><a href="#Message的send机制" class="headerlink" title="Message的send机制"></a>Message的send机制</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessage(Message msg)</div><div class="line">   &#123;</div><div class="line">       return sendMessageDelayed(msg, 0);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
 <p>往下追踪</p>
@@ -345,56 +252,7 @@
 <p>我们终于看到熟悉的handleMessage()了</p>
 <h3 id="Handler消息机制UML图"><a href="#Handler消息机制UML图" class="headerlink" title="Handler消息机制UML图"></a>Handler消息机制UML图</h3><p><img src="http://pic002.cnblogs.com/images/2012/328668/2012060815461921.jpg" alt="img_handler_uml"></p>
 
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/07/19/zsh常见快捷键/" rel="next" title="Zsh常见快捷键">
-                <i class="fa fa-chevron-left"></i> Zsh常见快捷键
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/intentservice源码分析/" rel="prev" title="IntentService源码分析">
-                IntentService源码分析 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
 
 
@@ -441,17 +299,8 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/default_avatar.jpg"
@@ -556,17 +405,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
       </section>
 
       
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Handler消息处理机制源码解析"><span class="nav-number">1.</span> <span class="nav-text">Handler消息处理机制源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Handler作用"><span class="nav-number">1.1.</span> <span class="nav-text">Handler作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Message的send机制"><span class="nav-number">1.2.</span> <span class="nav-text">Message的send机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handler是如何拿到Message的"><span class="nav-number">1.3.</span> <span class="nav-text">Handler是如何拿到Message的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handler消息机制UML图"><span class="nav-number">1.4.</span> <span class="nav-text">Handler消息机制UML图</span></a></li></ol></li></ol></div>
-            
-          </div>
-        </section>
-      
 
     </div>
   </aside>
@@ -662,10 +500,6 @@ var duoshuoQuery = {short_name:"tangyiwublog"};
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 
