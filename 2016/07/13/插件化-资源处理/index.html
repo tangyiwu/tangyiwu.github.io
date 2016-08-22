@@ -1,0 +1,761 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="龙在唐朝的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="插件化-资源处理写的比较长，可以选择跳过前面2节，直接从0x03实例分析开始。如有错误，请不吝指正。
+0x00 aapt编译流程在之前的Apk编译打包过程分析中，我们使用了一个google提供的一个工具，aapt。主要有两个用途，第一，在编译代码之前通过aapt生成R.java文件。第二，在编译完成代码之后，通过aapt打包所有的资源生成apk。下面我们来简单分析一下aapt是如何进行这两项工作的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:url" content="http://yoursite.com/2016/07/13/插件化-资源处理/index.html">
+<meta property="og:site_name" content="龙在唐朝的博客">
+<meta property="og:description" content="插件化-资源处理写的比较长，可以选择跳过前面2节，直接从0x03实例分析开始。如有错误，请不吝指正。
+0x00 aapt编译流程在之前的Apk编译打包过程分析中，我们使用了一个google提供的一个工具，aapt。主要有两个用途，第一，在编译代码之前通过aapt生成R.java文件。第二，在编译完成代码之后，通过aapt打包所有的资源生成apk。下面我们来简单分析一下aapt是如何进行这两项工作的">
+<meta property="og:image" content="http://i4.piimg.com/567571/b3837e2058d1ca27.png">
+<meta property="og:image" content="http://img.my.csdn.net/uploads/201304/03/1364933259_8915.jpg">
+<meta property="og:image" content="http://img.my.csdn.net/uploads/201304/08/1365361779_6191.jpg">
+<meta property="og:image" content="http://i4.piimg.com/567571/73da640476d2320f.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/37daaaf2f46c5107.png">
+<meta property="og:image" content="http://i2.piimg.com/567571/3efd8cca9f242183.png">
+<meta property="og:image" content="http://i4.piimg.com/567571/5a0c8aed9fd9b402.png">
+<meta property="og:image" content="http://i4.piimg.com/567571/7425928853951073.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/bb165e5dccfd9f62.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/b57ad2249b26d40a.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/434052c0f6b26d50.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/e892a4b8db6553d4.png">
+<meta property="og:updated_time" content="2016-07-12T14:51:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="龙在唐朝的博客">
+<meta name="twitter:description" content="插件化-资源处理写的比较长，可以选择跳过前面2节，直接从0x03实例分析开始。如有错误，请不吝指正。
+0x00 aapt编译流程在之前的Apk编译打包过程分析中，我们使用了一个google提供的一个工具，aapt。主要有两个用途，第一，在编译代码之前通过aapt生成R.java文件。第二，在编译完成代码之后，通过aapt打包所有的资源生成apk。下面我们来简单分析一下aapt是如何进行这两项工作的">
+<meta name="twitter:image" content="http://i4.piimg.com/567571/b3837e2058d1ca27.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/13/插件化-资源处理/"/>
+
+  <title>
+  
+
+  
+     | 龙在唐朝的博客
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">龙在唐朝的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+      <h2 id="插件化-资源处理"><a href="#插件化-资源处理" class="headerlink" title="插件化-资源处理"></a>插件化-资源处理</h2><p>写的比较长，可以选择跳过前面2节，直接从<strong>0x03实例分析</strong>开始。如有错误，请不吝指正。</p>
+<h3 id="0x00-aapt编译流程"><a href="#0x00-aapt编译流程" class="headerlink" title="0x00 aapt编译流程"></a>0x00 aapt编译流程</h3><p>在之前的Apk编译打包过程分析中，我们使用了一个google提供的一个工具，aapt。主要有两个用途，第一，在编译代码之前通过aapt生成R.java文件。第二，在编译完成代码之后，通过aapt打包所有的资源生成apk。下面我们来简单分析一下aapt是如何进行这两项工作的。</p>
+<h4 id="aapt需要干什么？"><a href="#aapt需要干什么？" class="headerlink" title="aapt需要干什么？"></a>aapt需要干什么？</h4><p>aapt主要需要做以下这些事情：</p>
+<p><em>1.编译xml文件</em> </p>
+<p>编译成二进制的xml文件会加快运行时的解析速度。</p>
+<p><em>2.生成R.java/R.txt</em> </p>
+<p>aapt在编译的过程中分析收集所有的资源文件，除了assets文件夹下的文件外，其他所有的资源都会分配一个唯一的id，并写入R文件中，这样我们就可以通过R.xx.xxxx的方法在代码中访问资源了。</p>
+<p><em>3.生成resource.arsc</em> </p>
+<p>arsc文件其实就是一份资源文件的索引，因为在资源中除了文本形式的xml文件以外还有很多非文本类型的资源，例如图片，要获取这些资源，我们需要通过arsc找到他们的存储路径。</p>
+<h4 id="Aapt的编译流程"><a href="#Aapt的编译流程" class="headerlink" title="Aapt的编译流程"></a>Aapt的编译流程</h4><p>如果我们略过aapt实际运行时复杂的流程，那么资源处理可以简化成以下过程</p>
+<p><img src="http://i4.piimg.com/567571/b3837e2058d1ca27.png" alt=""></p>
+<p>其中涉及到了两个关键的数据结构，<code>AaptAssets</code>和<code>ResourceTable</code>，从源码中可以得到这两个结构以及相关类的UML图，如下：</p>
+<p><img src="http://img.my.csdn.net/uploads/201304/03/1364933259_8915.jpg" alt="AaptAssets"></p>
+<p><img src="http://img.my.csdn.net/uploads/201304/08/1365361779_6191.jpg" alt="ResourceTable"></p>
+<p>上面的图可能有些抽象，我们通过一个例子看一下，假设<code>res</code>目录下有一下资源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">-drawable</div><div class="line">    -a.png</div><div class="line">-drawable-xhdpi</div><div class="line">    -a.png</div><div class="line">-drawable-xxhdpi</div><div class="line">    -a.png</div><div class="line">-layout</div><div class="line">    -main_layout.xml</div><div class="line">    -detail_layout.xml</div><div class="line">-values</div><div class="line">    -attrs.xml</div><div class="line">    -strings.xml</div></pre></td></tr></table></figure>
+<p>那么，在收集资源阶段AaptAssets的结构类似下面的json字符串</p>
+<p><img src="http://i4.piimg.com/567571/73da640476d2320f.png" alt="AaptAssets的结构示意图"></p>
+<p>接下来，aapt为每一个收集到资源分配资源id，这个过程中有以下几个地方需要注意：</p>
+<ol>
+<li>values文件下的资源会被编译成最终值放入resource.arsc。例如colors.xml中，<code>&lt;color name=&quot;background&quot;&gt;#2888e5&lt;/color&gt;</code>会被编译成类似<code>[typeoffset:0x02,keyoffset:0x12,value:0xff2888e5]</code>这样的三元组用来在resource.arsc中定位它的值</li>
+<li>类似drawable这样的非文本类型的资源，它的值是它在res目录下的相对路径，并不是它的二进制值</li>
+<li>attr中的内容会被编译成带有层级的结构，类似<code>[typeoffset:0x01,keyoffset:0x14,parentStart:0x3f,valueoffset=0x0f2]</code></li>
+</ol>
+<p>我们还是通过上面提到的例子来看一下ResourceTable的结构，如图</p>
+<p><img src="http://i1.piimg.com/567571/37daaaf2f46c5107.png" alt="ResourceTable的结构示意图"></p>
+<p>我们知道一个资源的id是一个32位整数，其中前8位是packageID，之后的8位是typeID，最后16位是具体资源的ID，也就是如下的形式：</p>
+<p><code>0xPPTTEEEE</code></p>
+<p>其中，packageID和typeID在resources.arsc中是确实存在的，但是具体资源ID在arsc中并不存在，它的含义其实是某一个具体资源在当前package，当前Type下的index值。packageId的取值范围是[0x01,0x7f],其中，0x01是系统资源的packageId，应用程序的packageId始终是0x7f，这个特性需要重点关注一下，因为接下来的一些黑科技就是从这里诞生的。typeID虽然在arsc文件中真是存在，但是不要认为它的取值是一个枚举，它和具体资源id一样，表示一个资源类型在当前package下的index值，它的值是从1开始的。</p>
+<p>分配完资源id后，接下来要对所有的xml文件进行编译，这里的xml文件不包括values中的文件。编译的具体过程，这里略过不谈，只简单的分析一下思路，大致是这样的，首先读取一个xml文件，在内存中，这个xml文件以一棵树的形式存在，然后遍历这棵树，将所有具有资源id的属性名和属性值换成id，然后收集所有的字符串，写入字符串常量池，xml中对字符串的引用全部换成对常量池的索引，之后压平这棵将树，最后将处理后的结构写入文件就完成了一个xml文件的编译，具体的过程当然要比这个复杂很多，但是我们要理解这样做的原因，第一，通过字符串常量池处理所有的字符串能够过滤重复的字符串，减少xml的体积。第二，对于有资源id的属性名和属性值直接替换成id之后能够加快运行时对xml文件的解析。对xml文件的处理有点类似dex文件压缩class文件的方式，都是抽取重复的内容，然后通过索引来引用这些重复的内容。</p>
+<p>将所有的xml文件都编译完成后，就可以输出resources.arsc 和 R.java 文件了，由于在之前的步骤中，我们已经将所有的资源保存在了ResourceTable这个结构中，那么接下来只需要遍历这个结构，按照资源出现的顺序将最终的资源id写入R.java,然后按照arsc文件的结构把ResourceTable中的内容写入文件就得到了resource.arsc文件。需要注意一点，arsc文件的结构并不是aapt定义的，而是由Android系统源码中的AssetManager定义，因为这份文件最终是由AssetManager来读取和解析的。</p>
+<h3 id="0x01-resources-arsc-结构分析"><a href="#0x01-resources-arsc-结构分析" class="headerlink" title="0x01 resources.arsc 结构分析"></a>0x01 resources.arsc 结构分析</h3><p>我们通过ResourceTypes.h 的定义来分析arsc的结构，为什么不通过aapt创建它的过程来分析呢，因为aapt的代码实在太难读。。。</p>
+<p>arsc文件的结构如图所示</p>
+<p><img src="http://i2.piimg.com/567571/3efd8cca9f242183.png" alt="arsc文件结构"></p>
+<p>其中ResTable_typeSpec结构描述了资源的类型，例如drawable，layout。<br>ResTable_type结构描述了不同相同类型的资源在不同的维度下的配置，这里的维度指的就是Android平台提供的资源适配机制，比如drawable-xhdpi,drawable-xxhdpi描述的是屏幕密度，layout-v19,layout-v21描述的是系统版本，Android系统一共提供了18个维度来进行资源适配，具体的内容可以参考文档。AssetManager会根据实际运行时的设备信息匹配到最合适的资源。entry结构描述的是具体的资源项，在不同的 <code>ResTable_type</code>下的一组entry是同名资源在不同维度下的不同文件。理论上每一个<br><code>ResTable_type</code>下包含有相同个数的entry，但是实际上并不会这样，因为我们往往只针对部分资源做了不同维度的区分，这意味着每一个type下的entry数组是不等长的，对于这样的情况，AssetManager有一套机制来对维度进行剪裁，具体算法可以参考文档。</p>
+<p>注意一点，值字符串常量池没有根据包名进行区分，所有包中的资源的值字符串都会进入这个区域。而其他的区域是根据包名进行区分的，但是很奇怪的一点是，在我的测试中，无论是使用gradle进行构建，还是直接使用aapt打包，都无法做到在resource.arsc中包含多个package。使用gradle时只包含一个包这个很好理解，因为gradle在调用aapt之前已经将多个包中的资源进行合并，aapt接受到的参数中只有一个包。但是使用aapt的–auto-overlay和–extra-packages参数依然只包含一个包，让我很困惑，后续还会继续阅读aapt的代码查找原因。</p>
+<p>对于编译时资源文件的处理就分析到这，省略了很多细节，对具体的细节感兴趣的话，可以参考老罗的系列博客，写的很详细。</p>
+<h3 id="0x02-运行时资源寻找过程"><a href="#0x02-运行时资源寻找过程" class="headerlink" title="0x02 运行时资源寻找过程"></a>0x02 运行时资源寻找过程</h3><p>首先我们回想一下在Activity中我们是如何获取定义在strings.xml文件中的字符串的，就是以下方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//MainActivity.java</div><div class="line">String str = getResources().getString(R.string.app_string_2_1);</div></pre></td></tr></table></figure>
+<p>我们来分析一下调用链，<br>首先getResources()方法是在Context中定义的抽象方法，Context的继承关系如图所示：</p>
+<p><img src="http://i4.piimg.com/567571/5a0c8aed9fd9b402.png" alt="Context继承关系"></p>
+<p>在Activity中的getResources()方法会走到ContextWrapper的实现上，而ContextWrapper顾名思义它只是一个包装类，最终的调用是ContextWrapper的实际类ContextImpl中的方法。</p>
+<p>ContextImpl中getResources()方法返回了它的成员变量mResource,我们看一下ContextImpl的构造函数，其中mResources被第一次赋值是通过下面的函数调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Resources resources = packageInfo.getResources(mainThread);</div></pre></td></tr></table></figure>
+<p>packageInfo是一个LoadedApk类型的参数，mainThread是ActivityThread类型的参数，mainThread就是当前Apk运行的主进程类，我们继续看LoadedApk中的方法，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Resources getResources(ActivityThread mainThread) &#123;</div><div class="line">    if (mResources == null) &#123;</div><div class="line">        mResources = mainThread.getTopLevelResources(mResDir, mSplitResDirs, mOverlayDirs,</div><div class="line">                mApplicationInfo.sharedLibraryFiles, Display.DEFAULT_DISPLAY, null, this);</div><div class="line">    &#125;</div><div class="line">    return mResources;</div></pre></td></tr></table></figure>
+<p>继续往下走到AcitvityThread中，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Creates the top level resources for the given package.</div><div class="line"> */</div><div class="line">Resources getTopLevelResources(String resDir, String[] splitResDirs, String[] overlayDirs,</div><div class="line">        String[] libDirs, int displayId, Configuration overrideConfiguration,</div><div class="line">        LoadedApk pkgInfo) &#123;</div><div class="line">    return mResourcesManager.getTopLevelResources(resDir, splitResDirs, overlayDirs, libDirs,</div><div class="line">            displayId, overrideConfiguration, pkgInfo.getCompatibilityInfo(), null);</div></pre></td></tr></table></figure>
+<p>mResourceManager是一个ResourceManager类型的成员变量，当我们戳开ResourceManager的代码时，惊喜的发现这个类是一个单例，然后定位到getTopLevelResources方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">这个方法有点长，我删减了一些不太关键的逻辑</div><div class="line">ResourcesKey key = new ResourcesKey(resDir, displayId, overrideConfiguration, scale, token);</div><div class="line">Resources r;</div><div class="line">WeakReference&lt;Resources&gt; wr = mActiveResources.get(key);</div><div class="line">r = wr != null ? wr.get() : null;</div><div class="line">if (r != null &amp;&amp; r.getAssets().isUpToDate()) &#123;</div><div class="line">    return r;</div><div class="line">&#125;</div><div class="line">AssetManager assets = new AssetManager();</div><div class="line">if (resDir != null) &#123;</div><div class="line">      if (assets.addAssetPath(resDir) == 0) &#123;</div><div class="line">          return null;</div><div class="line">      &#125;</div><div class="line">&#125;</div><div class="line">r = new Resources(assets, dm, config, compatInfo, token);</div><div class="line">WeakReference&lt;Resources&gt; wr = mActiveResources.get(key);</div><div class="line">Resources existing = wr != null ? wr.get() : null;</div><div class="line">if (existing != null &amp;&amp; existing.getAssets().isUpToDate()) &#123;</div><div class="line">    r.getAssets().close();</div><div class="line">    return existing;</div><div class="line">&#125;</div><div class="line">mActiveResources.put(key, new WeakReference&lt;Resources&gt;(r));</div><div class="line">return r;</div></pre></td></tr></table></figure>
+<p>最终我们找到了Resources对象创建的地方，接下来我们看获取到Resources后如何找到对应id的资源，在Resources中定位到getString(int id)方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@NonNull</div><div class="line">public String getString(@StringRes int id) throws NotFoundException &#123;</div><div class="line">    final CharSequence res = getText(id);</div><div class="line">    if (res != null) &#123;</div><div class="line">        return res.toString();</div><div class="line">    &#125;</div><div class="line">    throw new NotFoundException(&quot;String resource ID #0x&quot;</div><div class="line">                                + Integer.toHexString(id));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着往下，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public CharSequence getText(@StringRes int id) throws NotFoundException &#123;</div><div class="line">     CharSequence res = mAssets.getResourceText(id);</div><div class="line">     if (res != null) &#123;</div><div class="line">         return res;</div><div class="line">     &#125;</div><div class="line">     throw new NotFoundException(&quot;String resource ID #0x&quot;</div><div class="line">                                 + Integer.toHexString(id));</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>注意到寻找资源的调用是有AssetManager来执行的。这个AssetManager对象是在ResourceManager中创建并传递给Resources中的，java层的AssetManager只是Native层AssetManager的一个代理，其中初始化，获取资源的方法都是native实现，java层的AssetManager通过持有Native对象的内存地址来和Native对象进行通信。我们再来看ResourceManager中对AssetManager的使用方式，发现ResourceManager只为AssetManager设置了资源路径，这个路径实际就是Apk文件的路径。</p>
+<p>分析到这里，我们其实已经找到了在运行时注入资源的方式，有两个思路，第一，当我们需要加载插件中的资源时，替换掉当前Context的ContextImpl中的Resource对象。第二，由于ResourceManager是一个单例类，并且持有了当前App的Resource缓存，那么我们直接在App启动时手动替换掉ResourceManager中的Resource缓存，就可以在当前App中添加插件的资源，并且全局有效。</p>
+<h3 id="0x03-实例分析"><a href="#0x03-实例分析" class="headerlink" title="0x03 实例分析"></a>0x03 实例分析</h3><p>下面我们来实验一下刚刚得到思路，这里我们采用第一个思路，也就是只替换当前Context的Resource对象。</p>
+<h4 id="创建plugin"><a href="#创建plugin" class="headerlink" title="创建plugin"></a>创建plugin</h4><p>首先创建接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//ILib.java</div><div class="line">public interface ILib &#123;</div><div class="line">    String getLibString();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接口的实现类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//LibComponent.java</div><div class="line">public class LibComponent implements ILib&#123;</div><div class="line">    private Context context;</div><div class="line">    public LibComponent(Context context)&#123;</div><div class="line">        this.context = context;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public String getLibString() &#123;</div><div class="line">        Log.e(&quot;lib_plugin&quot;,Integer.toHexString(R.string.app_1_string));</div><div class="line">        return context.getString(R.string.app_1_string);//输出的内容是&quot;111111ypp1&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="创建host"><a href="#创建host" class="headerlink" title="创建host"></a>创建host</h4><p>App启动时将Asset目录下的插件拷贝到App的存储目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">//HostApplication.java</div><div class="line">private void installPluginApk()&#123;</div><div class="line">       new Thread(new Runnable() &#123;</div><div class="line">           @Override</div><div class="line">           public void run() &#123;</div><div class="line">               try &#123;</div><div class="line">                   InputStream inputStream = getResources().getAssets().open(&quot;lib_plugin.apk&quot;);</div><div class="line">                   File apkFile = new File(getFilesDir(),&quot;lib_plugin.apk&quot;);</div><div class="line">                   OutputStream out = new FileOutputStream(apkFile);</div><div class="line">                   byte[] buf = new byte[1024];</div><div class="line">                   int len;</div><div class="line">                   while((len=inputStream.read(buf))&gt;0)&#123;</div><div class="line">                       out.write(buf,0,len);</div><div class="line">                   &#125;</div><div class="line">                   inputStream.close();</div><div class="line">                   out.close();</div><div class="line">                   installSuccess.set(true);</div><div class="line">               &#125;catch (IOException e)&#123;</div><div class="line">                   e.printStackTrace();</div><div class="line">                   installSuccess.set(false);</div><div class="line">               &#125;</div><div class="line"></div><div class="line">           &#125;</div><div class="line">       &#125;).start();</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>修改当前Context的Resource，注入插件的资源<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//MainActivity.java</div><div class="line">private void injectContextResource()&#123;</div><div class="line">    AssetManager assetManager = ReflectAccelerator.newAssetManager();</div><div class="line">    String[] paths = new String[2];</div><div class="line">    paths[0] = getPackageResourcePath();</div><div class="line">    paths[1] = getFilesDir()+File.separator+&quot;lib_plugin.apk&quot;;</div><div class="line">    ReflectAccelerator.addAssetPaths(assetManager,paths);</div><div class="line">    Resources base = getResources();</div><div class="line">    DisplayMetrics displayMetrics = base.getDisplayMetrics();</div><div class="line">    Configuration configuration = base.getConfiguration();</div><div class="line">    Resources injectResource = new Resources(</div><div class="line">            assetManager,</div><div class="line">            displayMetrics,</div><div class="line">            configuration</div><div class="line">            );</div><div class="line">    ReflectAccelerator.setResources(getBaseContext(),injectResource);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>创建ClassLoader加载插件中的类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//MainActivity.java</div><div class="line">private String getLibText()&#123;</div><div class="line">    File source = new File(getFilesDir()+File.separator+&quot;lib_plugin.apk&quot;);</div><div class="line">    DexClassLoader cl = new DexClassLoader(</div><div class="line">            source.getAbsolutePath(),</div><div class="line">            this.getCacheDir().getPath(),</div><div class="line">            null,</div><div class="line">            getClassLoader()</div><div class="line">    );</div><div class="line">    Class libPlugin = null;</div><div class="line">    //省略异常处理</div><div class="line">        libPlugin = cl.loadClass(&quot;com.haizhi.oa.restest.LibComponent&quot;);</div><div class="line">        Class[] paramTypes = new Class[]&#123;</div><div class="line">                Context.class</div><div class="line">        &#125;;</div><div class="line">        Constructor constructor = libPlugin.getConstructor(paramTypes);</div><div class="line">        injectContextResource();//注入资源</div><div class="line">        ILib iLib = (ILib)constructor.newInstance(getBaseContext());</div><div class="line">        String res = iLib.getLibString();</div><div class="line">        return res;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>反射工具类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">//ReflectAccelerator.java</div><div class="line">public static AssetManager newAssetManager() &#123;</div><div class="line">       AssetManager assets;</div><div class="line">       try &#123;</div><div class="line">           assets = AssetManager.class.newInstance();</div><div class="line">       &#125; catch (InstantiationException e1) &#123;</div><div class="line">           e1.printStackTrace();</div><div class="line">           return null;</div><div class="line">       &#125; catch (IllegalAccessException e1) &#123;</div><div class="line">           e1.printStackTrace();</div><div class="line">           return null;</div><div class="line">       &#125;</div><div class="line">       return assets;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public static int[] addAssetPaths(AssetManager assets, String[] paths) &#123;</div><div class="line">       if (sAssetManager_addAssetPaths_method == null) &#123;</div><div class="line">           sAssetManager_addAssetPaths_method = getMethod(AssetManager.class,</div><div class="line">                   &quot;addAssetPaths&quot;, new Class[]&#123;String[].class&#125;);</div><div class="line">       &#125;</div><div class="line">       if (sAssetManager_addAssetPaths_method == null) return null;</div><div class="line">       return invoke(sAssetManager_addAssetPaths_method, assets, new Object[]&#123;paths&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public static void setResources(Context context, Resources resources) &#123;</div><div class="line">       if (sContextImpl_mResources_field == null) &#123;</div><div class="line"></div><div class="line">           sContextImpl_mResources_field = getDeclaredField(</div><div class="line">                   context.getClass(), &quot;mResources&quot;);</div><div class="line">           if (sContextImpl_mResources_field == null) return;</div><div class="line">       &#125;</div><div class="line">       setValue(sContextImpl_mResources_field, context, resources);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="资源冲突的现象"><a href="#资源冲突的现象" class="headerlink" title="资源冲突的现象"></a>资源冲突的现象</h4><p>实际运行一下，结果如下：</p>
+<p><img src="http://i4.piimg.com/567571/7425928853951073.png" alt=""></p>
+<p>呃，非常的尴尬，没有按照我们设想的那样输出”111111ypp1”,这是为什么呢？</p>
+<p>猜测一下原因，我们在注入资源的时候放入了两个path路径，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">paths[0] = getPackageResourcePath();</div><div class="line">paths[1] = getFilesDir()+File.separator+&quot;lib_plugin.apk&quot;;</div></pre></td></tr></table></figure>
+<p>path[0]是宿主的资源，path[1]是插件资源，假如宿主和插件的资源id相同，由于宿主的资源路径在插件的前面，那么AssetManager会首先命中宿主的资源，于是返回了宿主的资源。<br>我们调整一下path的顺序，验证一下我们的猜测。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">paths[1] = getPackageResourcePath();</div><div class="line">paths[0] = getFilesDir()+File.separator+&quot;lib_plugin.apk&quot;;</div></pre></td></tr></table></figure>
+<p>调整顺序后，正确返回了插件的资源。</p>
+<p><img src="http://i1.piimg.com/567571/bb165e5dccfd9f62.png" alt=""></p>
+<p>对比一下插件和宿主的R.java文件，我们发现插件中R.string.app_1_string的资源id是0x7f040000,在宿主中，同样id对应的资源为R.layout.abc_action_bar_title_item 它的值是res/layout/abc_action_bar_title_item，再次验证了我们的猜测。</p>
+<h4 id="如何解决资源冲突"><a href="#如何解决资源冲突" class="headerlink" title="如何解决资源冲突"></a>如何解决资源冲突</h4><p>要解决资源冲突，目前有很多插件化框架都提出了自己的解决方案</p>
+<ol>
+<li>宿主和插件隔离</li>
+</ol>
+<p>我们在加载插件Activity时，只在当前上下文注入插件的资源，这样宿主和插件之间是完全隔离的，也就无所谓资源id冲突了。</p>
+<ol>
+<li>通过public.xml锁死宿主资源id</li>
+</ol>
+<p>在编译宿主时，手动指定宿主中所有资源的id，然后在编译插件时，通过在public.xml中设定padding，避免分配到宿主的资源id</p>
+<ol>
+<li>修改aapt,增加packageId参数</li>
+</ol>
+<p>在前文的分析中，我们知道资源id是通过0xPPTTEEEE的形式指定的，如果在编译插件资源时，指定插件的packageId不是0x7f，而是指定的值，那么即使TTEEEE重复，也能保证整个资源id不重复。</p>
+<ol>
+<li>修改resource.arsc</li>
+</ol>
+<p>这种方案和第三种是同样的原理，都是修改packageId，只是是从resources.arsc文件出发。</p>
+<p>下面我们尝试一下直接修改resource.arsc的方案。由于需要修改aapt生成的R.java文件，因此我们不使用gradle构建，使用appt,javac,dx手动打包。</p>
+<p>首先修改R.java,指定packageId为0x7e</p>
+<p><img src="http://i1.piimg.com/567571/b57ad2249b26d40a.png" alt=""></p>
+<p>然后修改resource.arsc中的packageId</p>
+<p><img src="http://i1.piimg.com/567571/434052c0f6b26d50.png" alt=""></p>
+<p>解释一下这几个值的含义：</p>
+<p><em>Chunk_Type</em> 由于resource.arsc中的内容是分块的，chunk_type表示当前数据块的类型。</p>
+<p><em>Header_Size</em> 每一种类型的数据块都有一个头部，header_size表示当前数据块头部的大小</p>
+<p><em>Chunk_Size</em> 当前数据块的大小</p>
+<p><em>Package_ID</em> 当前package的ID</p>
+<p>理论上要修改packageid不仅仅需要修改resources.arsc中的packageid，还要修改所有编译后的xml中的相关内容，这里我们先考虑最简单的情况，在插件资源中只包含values类型。我们将编译好的resource.arsc文件中的0x7f000000修改为0x7e000000。</p>
+<p>然后按照正常的步骤打包插件。在宿主中运行，R.string.app_1_string对应的资源id变为0x7e040002,同时正确输出了”111111ypp1”。</p>
+<p><img src="http://i1.piimg.com/567571/e892a4b8db6553d4.png" alt=""></p>
+<h3 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h3><p>上述的分析其实只回答了我们一个问题，为什么我们在做插件化开发的时候，要对资源id进行特殊的处理。除开宿主和插件隔离的方案，无论是携程的实现还是Small的实现，都采用了手动分配PP段，保证资源id不重复。</p>
+<p>我对这个问题的理解是这样的，宿主和插件，插件和插件之间进行资源共享对于插件化开发而言并不是必须的，假设宿主和插件之间隔离，带来的问题是同样的资源会在多个插件中重复出现，导致应用的整体体积膨胀，但是我们可以规避复杂的资源id处理部分，不做，就不会有bug。</p>
+<p>如果我们整体采用Small作为我们的插件化框架，就必然要接受Small对于所有插件共享同一个classloader，共享同一个AssetManager的方案，同时要接受Small提供的一系列资源处理的gradle插件，那么Small会做的处理就不仅仅是分配PP段，同时还会对插件进行资源裁剪，过滤掉重复的资源，对依赖裁剪，过滤掉重复的依赖，这些事情当然是非常好的，但是作为一个新的开源框架，直接应用到生产环境是有风险的，我们要对Small的代码有足够深入的理解才能保证在出bug时能够及时修复。</p>
+<p>综上，我建议前期我们的插件化开发可以采用宿主和插件隔离的方案规避资源id的问题，把重点放在插件间的通信上，同时确保能够兼容nuwa的热修复框架以及deepLink的schema跳转。这样的方案我们有可能遇到以下的问题，</p>
+<ol>
+<li>根据Small的wiki，有可能会遇到Activity 主题相关的一系列问题，这个我需要尝试一下。</li>
+<li>从现有代码剥离插件的时候需要将模块自有的资源和依赖的公共资源一起剥离到插件工程。这个我可以尝试通过脚本分析代码对资源的引用关系，一定程度上做到自动化。</li>
+<li>apk体积膨胀。由于公共资源在插件中被多次打包，会带来apk体积膨胀的问题，这个问题在这种方案下是必然的，也许只能接受。</li>
+</ol>
+
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/13/插件化-资源处理/"
+           data-title="" data-url="http://yoursite.com/2016/07/13/插件化-资源处理/">
+           <script type="text/javascript">
+var duoshuoQuery = {short_name:"tangyiwublog"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="tangyiwu" />
+          <p class="site-author-name" itemprop="name">tangyiwu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangyiwu" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tyw2534" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2678956242" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100007998490980" target="_blank" title="Facebook">
+                  
+                    <i class="fa fa-fw fa-facebook-square"></i>
+                  
+                  Facebook
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/3348df18c0a8/latest_articles" target="_blank" title="JianShu">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>
+                  
+                  JianShu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tangyiwu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangyiwublog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("Y42uBGy2t2qQ3tkWbSbeQa5t-gzGzoHsz", "5fuz8Ikzf4NKJWwGDVsIRlVG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>

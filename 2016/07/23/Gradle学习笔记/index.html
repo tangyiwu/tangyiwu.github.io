@@ -1,0 +1,787 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="龙在唐朝的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Gradle 学习笔记
+以下内容，理论部分大部分是gradle和groovy的官方文档的解释，实例部分是自己的尝试，如有错误，请不吝指正，谢谢！
+
+0x00 groovy 基本知识groovy与javagroovy 是一个jvm语言，这意味着除了groovy编译器提供的语法糖和groovy标准库以外，它和java没有区别，我们来看一个Hello World
+g2j.groovy
+123456789">
+<meta property="og:type" content="article">
+<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:url" content="http://yoursite.com/2016/07/23/Gradle学习笔记/index.html">
+<meta property="og:site_name" content="龙在唐朝的博客">
+<meta property="og:description" content="Gradle 学习笔记
+以下内容，理论部分大部分是gradle和groovy的官方文档的解释，实例部分是自己的尝试，如有错误，请不吝指正，谢谢！
+
+0x00 groovy 基本知识groovy与javagroovy 是一个jvm语言，这意味着除了groovy编译器提供的语法糖和groovy标准库以外，它和java没有区别，我们来看一个Hello World
+g2j.groovy
+123456789">
+<meta property="og:image" content="http://i4.piimg.com/567571/8fc903bd2332edb1.png">
+<meta property="og:image" content="http://i4.piimg.com/567571/702f33541e214027.png">
+<meta property="og:image" content="http://i4.piimg.com/567571/74c39fb6f563fb56.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/cbde5ab22c332e0a.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/ff64eaf370e198df.png">
+<meta property="og:image" content="http://i2.piimg.com/567571/e976e2c97a4237ab.png">
+<meta property="og:updated_time" content="2016-07-05T04:00:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="龙在唐朝的博客">
+<meta name="twitter:description" content="Gradle 学习笔记
+以下内容，理论部分大部分是gradle和groovy的官方文档的解释，实例部分是自己的尝试，如有错误，请不吝指正，谢谢！
+
+0x00 groovy 基本知识groovy与javagroovy 是一个jvm语言，这意味着除了groovy编译器提供的语法糖和groovy标准库以外，它和java没有区别，我们来看一个Hello World
+g2j.groovy
+123456789">
+<meta name="twitter:image" content="http://i4.piimg.com/567571/8fc903bd2332edb1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/23/Gradle学习笔记/"/>
+
+  <title>
+  
+
+  
+     | 龙在唐朝的博客
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">龙在唐朝的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+      <h2 id="Gradle-学习笔记"><a href="#Gradle-学习笔记" class="headerlink" title="Gradle 学习笔记"></a>Gradle 学习笔记</h2><blockquote>
+<p>以下内容，理论部分大部分是gradle和groovy的官方文档的解释，实例部分是自己的尝试，如有错误，请不吝指正，谢谢！</p>
+</blockquote>
+<h3 id="0x00-groovy-基本知识"><a href="#0x00-groovy-基本知识" class="headerlink" title="0x00 groovy 基本知识"></a>0x00 groovy 基本知识</h3><h4 id="groovy与java"><a href="#groovy与java" class="headerlink" title="groovy与java"></a>groovy与java</h4><p>groovy 是一个jvm语言，这意味着除了groovy编译器提供的语法糖和groovy标准库以外，它和java没有区别，我们来看一个Hello World</p>
+<p>g2j.groovy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def author = &apos;chenlong&apos;</div><div class="line">def getAuthorName()&#123;</div><div class="line">    //return author  思考一下为什么这里不能访问到author变量</div><div class="line">    return &apos;chenlong&apos;</div><div class="line">&#125;</div><div class="line">def sayHello()&#123;</div><div class="line">    println &apos;Hello &apos;+getAuthorName()</div><div class="line">&#125;</div><div class="line">sayHello()</div></pre></td></tr></table></figure>
+<p>看一下编译成jvm字节码后的结果</p>
+<p>g2j.class</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">import groovy.lang.Binding;</div><div class="line">import groovy.lang.Script;</div><div class="line">import org.codehaus.groovy.runtime.BytecodeInterface8;</div><div class="line">import org.codehaus.groovy.runtime.InvokerHelper;</div><div class="line">import org.codehaus.groovy.runtime.callsite.CallSite;</div><div class="line"></div><div class="line">public class g2j extends Script</div><div class="line">&#123;</div><div class="line">  public g2j()</div><div class="line">  &#123;</div><div class="line">    g2j this;</div><div class="line">    CallSite[] arrayOfCallSite = $getCallSiteArray();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public g2j(Binding context)</div><div class="line">  &#123;</div><div class="line">    super(context);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public static void main(String[] args)</div><div class="line">  &#123;</div><div class="line">    CallSite[] arrayOfCallSite = $getCallSiteArray();</div><div class="line">    arrayOfCallSite[0].call(InvokerHelper.class, g2j.class, args);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public Object run()</div><div class="line">  &#123;</div><div class="line">    CallSite[] arrayOfCallSite = $getCallSiteArray(); </div><div class="line">    Object author = &quot;chenlong&quot;;//注意这里，author并不是d2j类的成员变量，所以无法在方法内部访问</div><div class="line">    if ((__$stMC) || (BytecodeInterface8.disabledStandardMetaClass()))     </div><div class="line">        return arrayOfCallSite[1].callCurrent(this); </div><div class="line">    else </div><div class="line">        return sayHello(); </div><div class="line">    return null;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  public Object getAuthorName()</div><div class="line">  &#123;</div><div class="line">    CallSite[] arrayOfCallSite = $getCallSiteArray(); </div><div class="line">    return &quot;chenlong&quot;; </div><div class="line">    return null;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  public Object sayHello() &#123;</div><div class="line">    CallSite[] arrayOfCallSite = $getCallSiteArray(); </div><div class="line">    if ((__$stMC) || (BytecodeInterface8.disabledStandardMetaClass())) </div><div class="line">        return arrayOfCallSite[2].callCurrent(</div><div class="line">                                this, </div><div class="line">                                arrayOfCallSite[3].call(&quot;Hello &quot;, arrayOfCallSite[4].callCurrent(this))); </div><div class="line">    else </div><div class="line">        return arrayOfCallSite[5].callCurrent(</div><div class="line">                                this,                                 </div><div class="line">                                arrayOfCallSite[6].call(&quot;Hello &quot;, getAuthorName()));</div><div class="line">    return null;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h4><p>闭包的概念也许我们稍微陌生一点，但是实际上，我们可以简单把它当做一个匿名类，只是编译器提供了更加简单的语法来实现它的功能。</p>
+<p>groovy的闭包是一种表示可执行代码块的方法，闭包也是对象，可以像方法一样传递参数，并且可以在需要的地方执行。一个最简单的闭包形如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def clos = &#123; params -&gt;</div><div class="line">    println &quot;Hello $&#123;params&#125;&quot;</div><div class="line">&#125;</div><div class="line">clos(&quot;World&quot;)</div></pre></td></tr></table></figure>
+<p>同时，闭包可以作为参数传递，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">def clos = &#123; it -&gt;</div><div class="line">    return it%2 == 0</div><div class="line">&#125;</div><div class="line">def list = [1,2,3,4,5,6]</div><div class="line">def filter(list,closure)&#123;</div><div class="line">    def res = []</div><div class="line">    for(i in list)&#123;</div><div class="line">        if(clos(i))</div><div class="line">            res.add()</div><div class="line">    &#125;</div><div class="line">    return res</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>闭包有三个很重要的属性分别是：<code>this</code>,<code>owner</code>,<code>delegate</code>，分别代表以下概念：</p>
+<p>this: 表示定义该闭包的类的实例对象（实例闭包）或者类本身（静态闭包）</p>
+<p>owner: 它的含义基本上跟this的含义一样，只是除了一种情况，如果该闭包是在其他的闭包中定义的，那么owner是指向定义它的闭包对象</p>
+<p>delegate: 它的含义大多数情况下是跟owner的含义一样，除非它被显示的修改（通过Closure.setDelegate()方法进行修改）</p>
+<h4 id="DSL"><a href="#DSL" class="headerlink" title="DSL"></a>DSL</h4><p>借助闭包的特性，我们可以尝试写一个简单的DSL。下面的代码展示了如何借助groovy的语法特性来实现一个DSL，这些特性我们稍后会在gradle的脚本中看到。</p>
+<p>BookDSL.groovy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">class Book &#123;</div><div class="line">    def _name = &apos;&apos;</div><div class="line">    def _price = 0.0</div><div class="line">    def shop = []</div><div class="line">    def static config(config)&#123;</div><div class="line">        Book book = new Book(shop:[&apos;A&apos;,&apos;B&apos;])</div><div class="line">        config.delegate = book</div><div class="line">        config()</div><div class="line">    &#125;</div><div class="line">    def name(name)&#123;</div><div class="line">        this._name = name</div><div class="line">    &#125;</div><div class="line">    def price(price)&#123;</div><div class="line">        this._price = price</div><div class="line">    &#125;</div><div class="line">    def getDetail()&#123;</div><div class="line">        println &quot;name : $&#123;_name&#125;&quot;</div><div class="line">        println &quot;price : $&#123;_price&#125;&quot;</div><div class="line">        println &quot;shop : $&#123;shop&#125;&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">Book.config &#123;</div><div class="line">    name &apos;test&apos;</div><div class="line">    price  1.2</div><div class="line">    detail</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="0x01-Gradle-基本概念"><a href="#0x01-Gradle-基本概念" class="headerlink" title="0x01 Gradle 基本概念"></a>0x01 Gradle 基本概念</h3><h4 id="1-基本元素"><a href="#1-基本元素" class="headerlink" title="1. 基本元素"></a>1. 基本元素</h4><p><strong>Project</strong> : 需要完成的工作，这里的工作不一定是构建，可以是任何一件事情，当然我们也可以简单的理解它就是我们需要构建的工程。</p>
+<p><strong>Script</strong> : gradle的脚本文件，通过脚本，我们可以定义一个Project</p>
+<p><strong>Task</strong> : Project中的具体执行的原子性工作，以构建一个工程为例，它可以是 <em>编译</em>,<em>执行单元测试</em>,<em>发布</em> 等。</p>
+<h4 id="2-Script元素"><a href="#2-Script元素" class="headerlink" title="2. Script元素"></a>2. Script元素</h4><p><strong>Init Script</strong></p>
+<p>似乎从来没有使用过，但是在每一次构建开始之前，都会执行init script，用来设置一些全局变量，有多个位置可以存放init script如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">USER_HOME/.gradle/ </div><div class="line">USER_HOME/.gradle/init.d/</div><div class="line">GRADLE_HOME/init.d/</div></pre></td></tr></table></figure>
+<p><strong>Settings Script</strong></p>
+<p>用来在组织多工程的构建，存在于root工程下，settings.gradle</p>
+<p>上述script在运行时都会被编译成一个实现了Script接口的class，同时每一个script都有一个委托对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Build Script -&gt; Project</div><div class="line"></div><div class="line">Init Script  -&gt; Gradle</div><div class="line"></div><div class="line">Settings Script -&gt; Settings</div></pre></td></tr></table></figure></p>
+<p>任何没有在脚本中定义的方法或者属性，都会被委托给这个脚本的委托对象执行。</p>
+<p><strong>Build Script</strong></p>
+<p>每一个build.gradle都是一个Build Scrpit,它由两种元素组成。</p>
+<p><em>statement</em></p>
+<p>可以包含方法调用，属性赋值，局部变量定义等</p>
+<p><em>script blocks</em></p>
+<p>block的概念稍微复杂一点，首先我们先要理解一个groovy的元素，闭包。可以参考上面对<strong>闭包</strong>的解释</p>
+<p>有了闭包的概念，那么理解script block就没有障碍了，我们直接看文档中的定义：</p>
+<blockquote>
+<p>A script block is a method call which takes a closure as a parameter. The closure is treated as a configuration closure which configures some delegate object as it executes. </p>
+</blockquote>
+<p>翻译一下就是</p>
+<blockquote>
+<p>一个脚本块是一个接受一个闭包作为参数的方法，这个闭包在执行的时候配置它的委托对象。</p>
+</blockquote>
+<p>文档描述的比较抽象，我们看一个例子：</p>
+<p>build.gradle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def buildVersion = &apos;1.2.0&apos;</div><div class="line">def author = &apos;chenlong&apos;</div><div class="line">allprojects &#123;</div><div class="line">    println &apos;this project is created by $&#123;author&#125;&apos;</div><div class="line">    setVersion(buildVersion)</div><div class="line">&#125;</div><div class="line">getAllprojects().each&#123;</div><div class="line">    println it.getVersion()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先我们定义了两个变量分别是<code>buildVersion</code>和<code>author</code>,在执行时，这个两个变量会成为Script Class的属性。然后，我们使用了一个script block，根据定义，这个block对应着一个同名方法<code>allprojects</code>，可是我们并没有在脚本中定义这样一个方法，那它如何执行呢？回想一下我们刚刚看到的build script的委托对象，没错，这个方法被委托给了Project对象执行，查看文档，我们确实在Project中找到了这个同名方法.</p>
+<p>接下来，我们在块中写了两行代码,这就是这个闭包需要执行的代码，首先打印一行文字，其次setVersion()。同样的，我们没有定义setVersion这个方法，这就涉及到闭包的一些概念，我们换一种写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">delegate.setVersion(buildVersion)</div></pre></td></tr></table></figure>
+<p>setVersion 这个方法实际上是由闭包的委托对象执行的，那委托对象是什么呢？我们查阅一下allprojects这个方法的Api，如下</p>
+<p><img src="http://i4.piimg.com/567571/8fc903bd2332edb1.png" alt=""></p>
+<p>这个闭包的委托对象是当前的project和它的子project,也就是对于一个包含子工程的工程，这个闭包会执行多次,是不是这样呢，我们实验一下，我创建了一个结构如下的工程</p>
+<p><img src="http://i4.piimg.com/567571/702f33541e214027.png" alt=""></p>
+<p>在root工程下执行上述脚本，结果如下:</p>
+<p><img src="http://i4.piimg.com/567571/74c39fb6f563fb56.png" alt=""></p>
+<h4 id="3-Project-对象"><a href="#3-Project-对象" class="headerlink" title="3. Project 对象"></a>3. Project 对象</h4><p>每一个build.gradle文件和一个Project对象一一对应，在执行构建的时候，gradle通过以下方式为每一个工程创建一个Project对象：</p>
+<ol>
+<li>创建一个Settings对象，</li>
+<li>根据settings.gradle文件配置它</li>
+<li>根据Settings对象中定义的工程的父子关系创建Project对象</li>
+<li>执行每一个工程的build.gradle文件配置上一步中创建的Project对</li>
+</ol>
+<p>在build.gradle文件中定义的属性和方法会委托给Project对象执行，每一个project对象在寻找一个属性的时候有5个作用域作为范围，分别是：</p>
+<p><strong>属性可见范围</strong></p>
+<ol>
+<li>Project 本身</li>
+<li>Project的<em>extra</em>属性</li>
+<li>通过<em>plugin</em>添加的<em>extension</em>，每一个extension通过一个和extension同名的只读属性访问</li>
+<li>通过<em>plugin</em>添加的属性。一个<em>plugin</em>可以通过Project的Convention对象为project添加属性和方法。</li>
+<li>project中的task,一个task对象可以通过project中的同名属性访问，但是它是只读的</li>
+<li>当前project的父工程的<em>extra</em>属性和<em>convention</em>属性</li>
+</ol>
+<p><strong>方法可见范围</strong></p>
+<ol>
+<li>Project对象本身</li>
+<li>build.gradle文件中定义的方法</li>
+<li>通过<em>plugin</em>添加的extension，每一个extension都作为一个接受一个闭包/Action作为参数的方法被访问</li>
+<li>通过<em>plugin</em>添加的方法。一个<em>plugin</em>可以通过Project的Convention对象为project添加属性和方法。</li>
+<li>project中的<em>task</em>,每一个task 都会在当前project中存在一个接受一个闭包或者/Action作为参数的方法，这个闭包会在task的configure(closure)方法中调用。</li>
+<li>当前工程的父工程中的方法</li>
+<li>当前工程的属性可见范围中所有的闭包属性都可以作为方法访问</li>
+</ol>
+<h4 id="4-构建的生命周期"><a href="#4-构建的生命周期" class="headerlink" title="4. 构建的生命周期"></a>4. 构建的生命周期</h4><p>一次gradle的构建有三个过程</p>
+<p><em>初始化</em></p>
+<p>gradle支持单工程和多工程构建，在初始化的过程中，gradle决定了这次构建包含哪些工程，并且为每一个工程创建一个Project对象。需要注意一点，对于一个多工程的项目，即使通过传入的参数指定了需要构建的子工程，但是，所有在Settings script中包含的工程的build script仍然会执行，因为gradle需要为每一个Project对象配置完整的信息。</p>
+<p><em>配置</em></p>
+<p>在配置的过程中，本次构建包含的所有工程的build script 都会执行一次，同时每个工程的Project对象都会被配置，运行时需要的信息在这个过程中被配置到Projec对象中。最重要的是，在build script中定义的task将在这个过程创建，并被初始化。需要注意的是，在一般情况下，只要在初始化阶段创建的Project对象都会被配置，即使这个工程没有参与本次构建。但是，在1.4之后，一个新的特性被引入，<em>Configuration on demand</em> 如果开启这个选项，那么即使在setting.gradle中包含了工程，但是这个工程不参与本次构建，那么它的Project对象会被创建，但是不会被配置。这也就解释了为什么gradle在多工程构建时运行缓慢了，因为默认情况下，每一个工程的build script都会执行。</p>
+<p><em>执行</em></p>
+<p>gradle通过传入的参数来决定哪些任务会被执行，并生成任务的依赖图(DAG)，这意味着，即使在build Script中定义了一个task，但是在构建时这个任务并不会执行，那么这个task对象虽然会被创建，但是不会在任务依赖图中出现。</p>
+<p>下面我们通过一个例子来看看gradle的构建生命周期究竟是怎么样的。</p>
+<p>工程结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">root Project:gradleStudy</div><div class="line">    -- lib</div><div class="line">        build.gradle</div><div class="line">    -- sub</div><div class="line">        build.gradle</div><div class="line">    build.gradle</div><div class="line">    settings.gradle</div></pre></td></tr></table></figure>
+<p>root/settings.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">println &quot;setting srcipt execute &quot;</div><div class="line">rootProject.name = &apos;gradleStudy&apos;</div><div class="line">include &apos;:lib&apos;</div><div class="line">include &apos;:sub&apos;</div></pre></td></tr></table></figure></p>
+<p>root/build.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">println &quot;root build srcipt execute&quot;</div><div class="line">allprojects &#123;</div><div class="line">    afterEvaluate &#123; project -&gt;</div><div class="line">        println &quot;define in root project : after $&#123;project.name&#125; evaluate&quot;</div><div class="line">    &#125;</div><div class="line">    beforeEvaluate &#123; project -&gt;</div><div class="line">        println &quot;define in root project : before $&#123;project.name&#125; evaluate&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.settingsEvaluated &#123; settings -&gt;</div><div class="line">    println &quot;emit by gradle : Setting evaluated&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.projectsLoaded &#123; gradle -&gt;</div><div class="line">    println &quot;emit by gradle : project loaded&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.beforeProject &#123; project -&gt;</div><div class="line">    println &quot;emit by gradle : before $&#123;project.name&#125; evaluate &quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.afterProject &#123; project -&gt;</div><div class="line">    println &quot;emit by gradle : after $&#123;project.name&#125; evaluate &quot;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.projectsEvaluated &#123; gradle -&gt;</div><div class="line">    println &quot;emit by gradle : all project evaluated &quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.taskGraph.whenReady &#123; graph -&gt;</div><div class="line">    println &quot;task graph is ready&quot;</div><div class="line">    graph.getAllTasks().each &#123;</div><div class="line">        println &quot;task $&#123;it.name&#125; will execute&quot;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.taskGraph.beforeTask &#123; task -&gt;</div><div class="line">   println &quot;before $&#123;task.name&#125; execute&quot; </div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.taskGraph.afterTask &#123; task -&gt;</div><div class="line">    println &quot;after $&#123;task.name&#125; execute&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">gradle.buildFinished &#123; buildResult -&gt;</div><div class="line">    println &quot;emit by gradle : build finished&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">println &quot;all project size : $&#123;allprojects.size()&#125;&quot;</div></pre></td></tr></table></figure></p>
+<p>lib/build.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">println &apos;lib build script execute&apos;</div><div class="line">task libTask0 &lt;&lt;&#123;</div><div class="line">    println &quot;$&#123;name&#125; execute&quot;</div><div class="line">&#125;</div><div class="line">task libTask1 &lt;&lt; &#123;</div><div class="line">   println &quot;$&#123;name&#125; execute&quot; </div><div class="line">&#125;</div><div class="line">task libTask2(dependsOn:&apos;libTask1&apos;)&lt;&lt;&#123;</div><div class="line">   println &quot;$&#123;name&#125; execute&quot; </div><div class="line">&#125;</div><div class="line"></div><div class="line">beforeEvaluate &#123; project -&gt;</div><div class="line">    println &quot;define in lib : before $&#123;project.name&#125; evaluate&quot;</div><div class="line">&#125;</div><div class="line">afterEvaluate &#123; project -&gt;</div><div class="line">    println &quot;define in lib : after $&#123;project.name&#125; evaluate&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">println &quot;lib project has $&#123;tasks.size()&#125; tasks&quot;</div></pre></td></tr></table></figure></p>
+<p>sub/build.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">println &apos;sub build script execute&apos;</div><div class="line">task subTask1 &lt;&lt; &#123;</div><div class="line">   println &quot;$&#123;name&#125; execute&quot; </div><div class="line">&#125;</div><div class="line">task subTask2(dependsOn:&apos;libTask1&apos;)&lt;&lt;&#123;</div><div class="line">   println &quot;$&#123;name&#125; execute&quot; </div><div class="line">&#125;</div><div class="line">beforeEvaluate &#123; project -&gt;</div><div class="line">    println &quot;define in sub : $&#123;project.name&#125; evaluate&quot;</div><div class="line">&#125;</div><div class="line">afterEvaluate &#123; project -&gt;</div><div class="line">    println &quot;define in sub : $&#123;project.name&#125; evaluate&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在根目录下执行 <code>gradle -q :lib:libTask2 --configure-on-demand</code></p>
+<p><img src="http://i1.piimg.com/567571/cbde5ab22c332e0a.png" alt=""></p>
+<p>在根目录下执行 <code>gradle -q :lib:libTask2</code></p>
+<p><img src="http://i1.piimg.com/567571/ff64eaf370e198df.png" alt=""></p>
+<p>从上述例子中我们验证了以下结果：</p>
+<ol>
+<li>在configuration demand 模式下执行构建时，虽然sub 工程的Project对象会创建，但是sub/build.gradle并不会执行，并且sub工程的Project不会被配置</li>
+<li>如果一个task在build.gradle中定义，但是在构建中不会执行，那么它的Task对象会创建，但是不会在任务图中出现。</li>
+<li>我们可以通过Gradle或者Project对象中定义的方法获取生命周期中每一个过程在执行中的回调。这里注意一下，我们定义的一些回调在实际执行中似乎并没有被触发，例如，<code>settingsEvaluated</code>,<code>projectsLoaded</code>。这个问题，似乎和gradle的版本更新有关，我正在尝试获取官方的解释。</li>
+</ol>
+<h3 id="0x02-写一个简单的插件"><a href="#0x02-写一个简单的插件" class="headerlink" title="0x02 写一个简单的插件"></a>0x02 写一个简单的插件</h3><p>我跳过了一些比较简单的内容，例如如何在Build Script中定义一个Task，有兴趣的可以参考文档。</p>
+<p>首先看一下工程结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">gradleStudy                      //root工程</div><div class="line">    lib                          //子工程</div><div class="line">    repo                         //本地maven目录</div><div class="line">    simplePlugin                 //plugin工程</div><div class="line">    build.gradle                 //root工程的build script</div><div class="line">    settings.gradle              //root工程的setting script</div></pre></td></tr></table></figure>
+<p>simplePlugin工程的目录结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">simplePlugin</div><div class="line">    src</div><div class="line">        main</div><div class="line">            groovy</div><div class="line">                com</div><div class="line">                    haizhi</div><div class="line">                        oa</div><div class="line">                            GreetingExtension.groovy     //Extension Model</div><div class="line">                            GreetingPlugin.groovy        //插件类</div><div class="line">                            SayHelloTask.groovy          //任务类</div><div class="line">            resources</div><div class="line">                META-INF</div><div class="line">                    gralde-plugins</div><div class="line">                        greeting-plugin.properties       //插件名</div><div class="line">    build.gradle</div></pre></td></tr></table></figure>
+<p>首先，插件工程可以用任意的jvm语言编写，例如，scala，groovy，java等，最终每一个插件都会打包成一个jar包，其中META-INF文件下中每一个.properties文件代表一个Plugin，里面指明了插件类的全类名，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">implementation-class=com.haizhi.oa.GreetingPlugin</div></pre></td></tr></table></figure>
+<p>GreetingExtension.groovy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package com.haizhi.oa</div><div class="line"></div><div class="line">//定义一个属性类，其中包含message和showAuthorName</div><div class="line">class GreetingExtension &#123;</div><div class="line">    def message = &apos;&apos;</div><div class="line">    def showAuthorName = false</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>GreetingPlugin.groovy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">package com.haizhi.oa</div><div class="line">import org.gradle.api.Project</div><div class="line">import org.gradle.api.Plugin</div><div class="line"></div><div class="line">class GreetingPlugin implements Plugin&lt;Project&gt;&#123;</div><div class="line">    @Override</div><div class="line">    public void apply(Project project)&#123;</div><div class="line">        //创建一个类型为GreetingExtension,名称为greeting的属性</div><div class="line">        project.extensions.create(&apos;greeting&apos;,GreetingExtension) </div><div class="line">        //创建一个类型为SayHelloTask，名称为sayHello的任务</div><div class="line">        project.task(&apos;sayHello&apos;,type:SayHelloTask)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>SayHellTask.groovy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.haizhi.oa</div><div class="line">import org.gradle.api.DefaultTask</div><div class="line">import org.gradle.api.tasks.TaskAction</div><div class="line"></div><div class="line">class SayHelloTask extends DefaultTask&#123;</div><div class="line">    //定义一个属性</div><div class="line">    def author = &apos;&apos;</div><div class="line">    @TaskAction</div><div class="line">    public void sayHello()  &#123;</div><div class="line">        //从Project中获取greeting属性</div><div class="line">        if(project.greeting.showAuthorName)&#123;</div><div class="line">            println &quot;Hello $&#123;author&#125; $&#123;project.greeting.message&#125;&quot;   </div><div class="line">        &#125;else&#123;</div><div class="line">            println &quot;Hello $&#123;project.greeting.message&#125;&quot; </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>build.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">apply plugin: &apos;groovy&apos;</div><div class="line">apply plugin: &apos;maven&apos;</div><div class="line"></div><div class="line">//定义发布到maven的版本,group,name</div><div class="line">version = &apos;1.0.0&apos;</div><div class="line">group = &apos;com.haizhi.oa&apos;</div><div class="line">archivesBaseName=&apos;greeting-plugin&apos;</div><div class="line"></div><div class="line">repositories &#123;</div><div class="line">    mavenCentral()</div><div class="line">&#125;</div><div class="line"></div><div class="line">dependencies &#123;</div><div class="line">    compile &apos;org.codehaus.groovy:groovy-all:2.4.4&apos;</div><div class="line">    compile gradleApi()</div><div class="line">    compile localGroovy()</div><div class="line">&#125;</div><div class="line">uploadArchives&#123;</div><div class="line">    repositories.mavenDeployer&#123;</div><div class="line">        repository(url : &apos;file:../repo&apos;)//定义本地maven地址</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在simplePlugin的根目录下执行，<code>gralde uploadArchives</code>，编译插件工程，并发布到<code>../repo</code>目录。</p>
+<p>以上，我们就创建好了一个gradle plugin，那么如何使用它呢？</p>
+<p>首先，在root工程下，我们通过<code>buildscript</code>引入插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">buildscript&#123;</div><div class="line">    repositories&#123;</div><div class="line">        mavenCentral()</div><div class="line">        maven &#123;</div><div class="line">            url uri(&apos;./repo&apos;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    dependencies &#123;</div><div class="line">        classpath &apos;com.haizhi.oa:greeting-plugin:1.0.0&apos;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后，在lib工程下，我们应用这个插件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">apply plugin : &apos;greeting-plugin&apos;</div><div class="line">greeting.message = &apos;this is a simple plugin&apos; //为greeting属性赋值</div><div class="line">greeting.showAuthorName = true               //为greeting属性赋值</div><div class="line">sayHello.author = &apos;chenlong&apos;                 //为sayHello任务的author属性赋值</div></pre></td></tr></table></figure>
+<p>似乎和我们通常看到的插件配置方式不太一样，我们换一种配置方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">apply plugin : &apos;greeting-plugin&apos;</div><div class="line">greeting &#123;</div><div class="line">    message &apos;this is a simple plugin&apos;   </div><div class="line">    showAuthorName true</div><div class="line">&#125;</div><div class="line">sayHello &#123;</div><div class="line">    author &apos;chenlong&apos;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看上去是不是熟悉了很多</p>
+<p>下面，在lib或者根目录下执行，<code>gradle sayHello</code>，执行结果如下：</p>
+<p><img src="http://i2.piimg.com/567571/e976e2c97a4237ab.png" alt=""></p>
+<p>以上就是一个自定义插件的创建和应用过程，虽然很简单，但是可以帮助我们理解gradle是如何通过plugin完成很多复杂的工作的。</p>
+<h3 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h3><p>gradle在定义一个构建工作的时候，主要是围绕着它的两个核心类，Project和Task,在这两个类的基础上，gradle定义了它的规则，例如它的生命周期，例如task的依赖图。在保证了这些核心功能后，所有外围的功能都是通过Plugin来进行的，这一点非常值得我们学习。同时，task的依赖图这个功能也是gradle的一个很强大的功能，它让我们有机会在任务执行之前就能对本次构建有一个全局的理解，同时也提供了接口让我们hook到task的执行过程中，完成一些非常酷炫的功能。</p>
+
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/23/Gradle学习笔记/"
+           data-title="" data-url="http://yoursite.com/2016/07/23/Gradle学习笔记/">
+           <script type="text/javascript">
+var duoshuoQuery = {short_name:"tangyiwublog"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="tangyiwu" />
+          <p class="site-author-name" itemprop="name">tangyiwu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangyiwu" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tyw2534" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2678956242" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100007998490980" target="_blank" title="Facebook">
+                  
+                    <i class="fa fa-fw fa-facebook-square"></i>
+                  
+                  Facebook
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/3348df18c0a8/latest_articles" target="_blank" title="JianShu">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>
+                  
+                  JianShu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tangyiwu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangyiwublog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("Y42uBGy2t2qQ3tkWbSbeQa5t-gzGzoHsz", "5fuz8Ikzf4NKJWwGDVsIRlVG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>

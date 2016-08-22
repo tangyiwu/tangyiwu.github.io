@@ -1,0 +1,722 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="龙在唐朝的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="插件化-Apk编译过程概述###0x00
+大致的看了一下目前插件化的开源实现，或多或少都会对Apk的编译过程做出改动，因此尝试分析了一下Apk的打包过程。一个Apk文件实际上就是一个zip压缩包，我们把一个Apk解压后，里面的内容类似下图。
+
+里面每个文件是什么含义，我们待会再看。那么，如何生成一个Apk文件呢？通常情况下，我们使用一些构建工具来编译我们的工程，例如古老的Ant，maven，我们正">
+<meta property="og:type" content="article">
+<meta property="og:title" content="龙在唐朝的博客">
+<meta property="og:url" content="http://yoursite.com/2016/07/23/插件化-apk编译过程概述/index.html">
+<meta property="og:site_name" content="龙在唐朝的博客">
+<meta property="og:description" content="插件化-Apk编译过程概述###0x00
+大致的看了一下目前插件化的开源实现，或多或少都会对Apk的编译过程做出改动，因此尝试分析了一下Apk的打包过程。一个Apk文件实际上就是一个zip压缩包，我们把一个Apk解压后，里面的内容类似下图。
+
+里面每个文件是什么含义，我们待会再看。那么，如何生成一个Apk文件呢？通常情况下，我们使用一些构建工具来编译我们的工程，例如古老的Ant，maven，我们正">
+<meta property="og:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/97858102.jpg">
+<meta property="og:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/38695044.jpg">
+<meta property="og:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/51680697.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/74311666jw1f55mpfwxfrj20fa0cn3z3.jpg">
+<meta property="og:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-24/85094739.jpg">
+<meta property="og:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-24/57725398.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/74311666jw1f55phg8m51j20g00ic75h.jpg">
+<meta property="og:updated_time" content="2016-07-23T07:19:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="龙在唐朝的博客">
+<meta name="twitter:description" content="插件化-Apk编译过程概述###0x00
+大致的看了一下目前插件化的开源实现，或多或少都会对Apk的编译过程做出改动，因此尝试分析了一下Apk的打包过程。一个Apk文件实际上就是一个zip压缩包，我们把一个Apk解压后，里面的内容类似下图。
+
+里面每个文件是什么含义，我们待会再看。那么，如何生成一个Apk文件呢？通常情况下，我们使用一些构建工具来编译我们的工程，例如古老的Ant，maven，我们正">
+<meta name="twitter:image" content="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/97858102.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/23/插件化-apk编译过程概述/"/>
+
+  <title>
+  
+
+  
+     | 龙在唐朝的博客
+  
+</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">龙在唐朝的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+      <h2 id="插件化-Apk编译过程概述"><a href="#插件化-Apk编译过程概述" class="headerlink" title="插件化-Apk编译过程概述"></a>插件化-Apk编译过程概述</h2><p>###0x00</p>
+<p>大致的看了一下目前插件化的开源实现，或多或少都会对Apk的编译过程做出改动，因此尝试分析了一下Apk的打包过程。一个Apk文件实际上就是一个zip压缩包，我们把一个Apk解压后，里面的内容类似下图。</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/97858102.jpg" alt=""></p>
+<p>里面每个文件是什么含义，我们待会再看。那么，如何生成一个Apk文件呢？通常情况下，我们使用一些构建工具来编译我们的工程，例如古老的Ant，maven，我们正在使用的gradle，以及更加黑科技的buck等，但是，这些构建工具并不直接作用于编译过程，打开sdk中的build-tools目录，如下</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/38695044.jpg" alt=""></p>
+<p>这些就是google为我们提供的工具，通过它们，我们得以将代码编译成Apk，构建工具只是这些的工具的封装。</p>
+<p>###0x01 HelloWorld</p>
+<p>下面我们来尝试手动编译一个最简单的Apk。开始之前，先简单介绍一下我们要使用的工具。</p>
+<ol>
+<li>aapt[Android Asset Packaging Tool]这个工具主要帮助我们处理资源文件，以及创建，更新，查看一个Apk文件。</li>
+<li>dx，这个工具帮助我们把.class文件转换成一个dex文件，dex[Dalvik Executable]文件就是Dalvik虚拟机的可执行文件，这个文件的具体格式稍后会做简单的介绍。</li>
+<li>zipalign，这个工具用来优化我们生成的apk文件，它将资源文件进行4字节对齐，当资源文件映射进内存时，对齐到4字节边界可以加快资源文件的访问速度。</li>
+</ol>
+<p>还有两个我们使用的工具并没有出现这里，而是存在于JDK中。</p>
+<ol>
+<li>javac,很常用的工具，用来将java源码文件编译成字节码文件</li>
+<li>keytool，创建签名的工具 </li>
+<li>jarsigner，用来对生成的apk进行签名的工具</li>
+</ol>
+<p>下面我们来开始编译helloWorld，首先我们编写了一个最简单的Apk。</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-23/51680697.jpg" alt=""></p>
+<p>这个工程只有一个Activity,并且不依赖任何库。</p>
+<p><strong>Step 1: 生成R.java文件</strong></p>
+<p>R.java是我们访问资源的必需品，R文件是一个普通的类，其中根据资源的类型有不同的静态内部类，每个静态内部类中的静态常量分别定义一条资源标示符，这个类并不是我们编写的而是由aapt工具生成的。<br>在工程的根目录，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">aapt package \   #打包资源文件</div><div class="line">-f \             #强制覆盖已有文件</div><div class="line">-m \             #使R文件在-J参数指定的位置生成</div><div class="line">-S res \         #资源目录</div><div class="line">-J gen \         #R.java的位置</div><div class="line">-I $ANDROID_HOME/platforms/android-23/android.jar \ #base-package</div><div class="line">-M AndroidManifest.xml                              #清单文件的路径</div></pre></td></tr></table></figure>
+<p><strong>Step 2: 编译代码</strong></p>
+<p>生成后的文件存放在gen目录下，有了R.java 我们就可以使用javac来编译我们的代码了，继续执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">javac -classpath \                          #添加依赖包，多个jar包用:分割</div><div class="line">$ANDROID_HOME/platforms/android-23/android.jar \ #sdk-23</div><div class="line">-source 1.7 -target 1.7 \                        #指明源码版本和字节码版本</div><div class="line">-d ./build \                                     #编译后的class文件的路径</div><div class="line">./java/com/haizhi/oa/buildtest/*.java \          #源码1，这是我们写的Activity</div><div class="line">./gen/com/haizhi/oa/buildtest/R.java             #源码2，R.java</div></pre></td></tr></table></figure>
+<p><strong>Step 3: 编译为dex文件</strong></p>
+<p>在上一步中，我们将代码编译成了字节码，但是dalvik并不能直接执行字节码，需要进一步的将class文件编译成dex文件，这个过程是通过<code>dx</code>这个工具实现的，在build目录下，我们继续执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dx --dex --output=classes.dex .   #指定输出为classes.dex 输入为当前目录</div></pre></td></tr></table></figure>
+<p>至此，我们已经获得了生成一个Apk需要的所有东西。</p>
+<p><strong>Step 4: 打包所有的资源文件</strong></p>
+<p>在工程的根目录，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">aapt package \</div><div class="line">-f \</div><div class="line">-S res \</div><div class="line">-I $ANDROID_HOME/platforms/android-23/android.jar \</div><div class="line">-M AndroidManifest.xml \</div><div class="line">-F test.apk.u                       #生成apk文件</div></pre></td></tr></table></figure>
+<p>此时，我们已经获得了一个apk文件，下面我们要对它签名，首先需要使用keytool工具生成一个签名文件，这个步骤可以自行百度。</p>
+<p><strong>Step 5: 将classes.dex文件加入apk中</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aapt add -f test.apk.u classes.dex</div></pre></td></tr></table></figure>
+<p><strong>Step 6: 签名，对齐</strong><br>在工程的根目录，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">签名：</div><div class="line">jarsigner -storepass **密*码** -keystore ../chenlong.keystore test.apk.u chenlong</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">对齐：</div><div class="line">zipalign 4 test.apk.u test.apk</div></pre></td></tr></table></figure>
+<p>经过上述5个步骤，我们生成了一个apk，下面安装到模拟器上执行一下，如图：</p>
+<p><img src="http://ww1.sinaimg.cn/large/74311666jw1f55mpfwxfrj20fa0cn3z3.jpg" alt=""></p>
+<p>以上，就是一个最简单的Apk的编译过程，其中Apk最重要的两个部分，资源和代码被编译成了resources.arsc+res以及dex文件。res是实际的资源，resources.arsc则是一个索引，AssetManager通过这个索引获取资源的实际内容，这其中的过程比较复杂，暂时还没有太多的分析，至于dex文件，倒是可以啰嗦两句。</p>
+<p>我们知道，java源码文件编译后生成了字节码文件，然后被jvm执行，字节码文件中有一个非常重要的区域是常量池，编译的过程中，字节码文件并不会保存方法和字段的最终内存布局信息，也就是说，方法和字段并不像C/C++那样被编译成地址，jvm在加载Class文件的时候，需要从常量池获取对应的符号引用，再在类创建时或运行时解析并翻译到具体的内存地址中【参考：深入理解Java虚拟机-JVM高级特性与最佳实践】。一个字节码文件中，除了方法体中的内容被编译为字节码指令外，大部分的信息都保存在常量池中，通过索引来访问，包括类的名称，类的字段，类的继承关系，类中方法的定义等。</p>
+<p>那么，dex文件和class文件有什么区别呢？</p>
+<p>首先，dalvik虚拟机的字节码指令是16位，而jvm是8位，因此，java 字节码被转换成dex 字节码；其次，dex文件将多个class文件合并成一个，合并了这些class文件的常量池，并作出了其他的优化，让dex文件执行的更快，更节省内存。对于dex文件的详细格式，可以参考 <a href="https://source.android.com/devices/tech/dalvik/dex-format.html" target="_blank" rel="external">dex-format</a>，我尝试了一下直接阅读dex文件，讲真，不是很好读。。下图是我们刚刚编译出的dex文件的16进制格式，加了一些简单的标注和分块，一共3012个字节。</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-24/85094739.jpg" alt=""></p>
+<p>###0x02 进阶-编译一个带依赖的工程</p>
+<p>在实际的编码过程中，我们往往会去依赖一些子工程，子工程有两种，一种是java工程，一种是Android Lib工程。java工程中不包含资源文件，编译后的输出是jar包，而Android Lib工程包含资源文件，编译后的输出为aar文件。</p>
+<p>对于jar包，我们只需要在编译apk的java代码时，将jar包加入classpath，然后在编译dex文件时，将jar包一起编译进去就可以了，但是对于aar文件，就稍微有点复杂了。</p>
+<p>首先，我们还是创建一个工程，如图：</p>
+<p><img src="http://7xrn7f.com1.z0.glb.clouddn.com/16-6-24/57725398.jpg" alt=""></p>
+<p>这个工程依赖了design包，v7包中的appcompat，同时，上述这些包又依赖了v4包，，recyclerview，support-vector-drawable，animated-vector-drawable，support-annotations。</p>
+<p>上述这些依赖都是Android Lib工程，因此我们需要处理依赖包中的资源。首先，我们需要这些依赖的aar文件作为输入，到哪里去找aar文件呢？最初，我在sdk下找到了这些依赖的jar包和相应的资源目录，但是，当我尝试编译的时候，总是提示我找不到资源，我很苦恼，后来在高旭大神的指点下，我看了一下gradle的实现方式，发现gradle并不使用jar包+资源来重新编译这些依赖库而是直接使用了google提供的这些依赖库的aar文件，于是我尝试将编译好的aar文件解包，再使用解包后的资源和jar包进行编译。</p>
+<p><strong>Step 1: 生成R.java文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">aapt package -f -m --auto-add-overlay \</div><div class="line">-S res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.3.0/aarEx/res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.3.0/aarEx/res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/design/23.3.0/aarEx/res \</div><div class="line">-J gen \</div><div class="line">--extra-packages android.support.v7.appcompat:android.support.v7.recyclerview:android.support.design \</div><div class="line">-I $ANDROID_HOME/platforms/android-23/android.jar -M ./AndroidManifest.xml</div></pre></td></tr></table></figure>
+<p>其中，<code>--auto-add-overlay</code> 参数用来加载多个资源目录，按照从左向右的顺序，如果后面的资源重复则跳过，如果不重复则新增。<br><code>--extra-packages</code>用来对不同的资源目录生成包名不同的R文件，多个包名通过<code>:</code>分割。</p>
+<p><strong>Step 2: 编译代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">javac -classpath $ANDROID_HOME/extras/android/support/v7/appcompat/libs/android-support-v4.jar:\</div><div class="line">$ANDORID_HOME/extras/android/support/annotations/android-support-annotations.jar:\</div><div class="line">$ANDROID_HOME/platforms/android-23/android.jar:\</div><div class="line">$ANDROID_HOME/extras/android/support/design/libs/android-support-design.jar:\</div><div class="line">$ANDROID_HOME/extras/android/support/v7/appcompat/libs/android-support-v7-appcompat.jar:\</div><div class="line">$ANDROID_HOME/extras/android/support/v7/recyclerview/libs/android-support-v7-recyclerview.jar \</div><div class="line">-source 1.7 -target 1.7 \</div><div class="line">-d ./build \</div><div class="line">./java/com/haizhi/oa/buildtest/*.java \</div><div class="line">./gen/com/haizhi/oa/buildtest/R.java \</div><div class="line">./gen/android/support/design/R.java \</div><div class="line">./gen/android/support/v7/appcompat/R.java \</div><div class="line">./gen/android/support/v7/recyclerview/R.java</div></pre></td></tr></table></figure>
+<p><strong>Step 3: 编译dex文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dx --dex --output=classes.dex . \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/support-v4/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/support-v4/23.3.0/aarEx/libs/internal_impl-23.3.0.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/design/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/support-vector-drawable/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/animated-vector-drawable/23.3.0/aarEx/classes.jar \</div><div class="line">/Users/chenlong/sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar</div></pre></td></tr></table></figure>
+<p><strong>Step 4: 生成apk文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">aapt package -f -m --auto-add-overlay \</div><div class="line">-S res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.3.0/aarEx/res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.3.0/aarEx/res \</div><div class="line">-S /Users/chenlong/sdk/extras/android/m2repository/com/android/support/design/23.3.0/aarEx/res \</div><div class="line">-I $ANDROID_HOME/platforms/android-23/android.jar -M ./AndroidManifest.xml \</div><div class="line">-F test.apk.u</div></pre></td></tr></table></figure>
+<p><strong>Step 5: 将classes.dex文件加入apk中</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">aapt add -f test.apk.u classes.dex</div></pre></td></tr></table></figure>
+<p>后面的签名、对齐操作和之前一样</p>
+<p>最后，我们在模拟器上运行一下打包后的apk文件，如图：</p>
+<p><img src="http://ww1.sinaimg.cn/large/74311666jw1f55phg8m51j20g00ic75h.jpg" alt=""></p>
+<p>###0x03 总结</p>
+<p>编译流程的简单分析就是这些，在上述流程中我们可以看到，主要过程是资源处理和dex文件生成上，其中对资源的处理是插件化的一个难点，我的分析并不是很全面，比如对于多个资源目录合并的过程，aapt自身提供的机制和gradle的实现就不太一样，gradle在最终调用aapt之前已经将资源合并，传入aapt的只有一个合并后的资源目录，可以参考<a href="http://tools.android.com/tech-docs/new-build-system/resource-merging" target="_blank" rel="external">gradle 资源合并机制</a>，后续我会针对资源文件的处理做单独的分析。</p>
+<p>上述内容如有错误，恳请指正，我会继续分析插件化的相关技术实现，敬请期待。</p>
+
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/23/插件化-apk编译过程概述/"
+           data-title="" data-url="http://yoursite.com/2016/07/23/插件化-apk编译过程概述/">
+           <script type="text/javascript">
+var duoshuoQuery = {short_name:"tangyiwublog"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="tangyiwu" />
+          <p class="site-author-name" itemprop="name">tangyiwu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangyiwu" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tyw2534" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2678956242" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100007998490980" target="_blank" title="Facebook">
+                  
+                    <i class="fa fa-fw fa-facebook-square"></i>
+                  
+                  Facebook
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/3348df18c0a8/latest_articles" target="_blank" title="JianShu">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>
+                  
+                  JianShu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tangyiwu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangyiwublog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("Y42uBGy2t2qQ3tkWbSbeQa5t-gzGzoHsz", "5fuz8Ikzf4NKJWwGDVsIRlVG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
