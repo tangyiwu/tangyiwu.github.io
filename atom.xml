@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-07-26T07:34:04.000Z</updated>
+  <updated>2016-08-09T03:56:17.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>View绘制原理</title>
+    <link href="http://yoursite.com/2016/08/09/View%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86/"/>
+    <id>http://yoursite.com/2016/08/09/View绘制原理/</id>
+    <published>2016-08-09T02:52:03.000Z</published>
+    <updated>2016-08-09T03:56:17.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>  看过许多讲Android View绘制原理的博客，也写过许多自定义View，但一直感觉停留在了解、使用的程度，只是有个大流程的理解。我们都知道View的绘制原理主要有3大步:Measure-&gt;Layout-&gt;Draw。网络上有许多技术大牛对这个有着非常深入的讲解，看别人写的博客，有的地方总是难以理解或者比较抽象，而且看过后，过了一段时间，又会忘了许多细节的地方，因此，这几天把View绘制流程的源码仔细过了一边，重新捋一下。</p>
+<a id="more"></a>
+<h2 id="measure流程"><a href="#measure流程" class="headerlink" title="measure流程"></a>measure流程</h2><p>  View的绘制从ViewRootImpl中的performTraversals()方法开始，当需要执行measure流程的时候：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">if (!mStopped || mReportNextDraw) &#123;</div><div class="line">              boolean focusChangedDueToTouchMode = ensureTouchModeLocally(</div><div class="line">                      (relayoutResult&amp;WindowManagerGlobal.RELAYOUT_RES_IN_TOUCH_MODE) != 0);</div><div class="line">              if (focusChangedDueToTouchMode || mWidth != host.getMeasuredWidth()</div><div class="line">                      || mHeight != host.getMeasuredHeight() || contentInsetsChanged) &#123;</div><div class="line">                  int childWidthMeasureSpec = getRootMeasureSpec(mWidth, lp.width);</div><div class="line">                  int childHeightMeasureSpec = getRootMeasureSpec(mHeight, lp.height);</div><div class="line"></div><div class="line">                  if (DEBUG_LAYOUT) Log.v(TAG, &quot;Ooops, something changed!  mWidth=&quot;</div><div class="line">                          + mWidth + &quot; measuredWidth=&quot; + host.getMeasuredWidth()</div><div class="line">                          + &quot; mHeight=&quot; + mHeight</div><div class="line">                          + &quot; measuredHeight=&quot; + host.getMeasuredHeight()</div><div class="line">                          + &quot; coveredInsetsChanged=&quot; + contentInsetsChanged);</div><div class="line"></div><div class="line">                   // 询问要绘制的View想要多大</div><div class="line">                  performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</div><div class="line"></div><div class="line">                  // Implementation of weights from WindowManager.LayoutParams</div><div class="line">                  // We just grow the dimensions as needed and re-measure if</div><div class="line">                  // needs be</div><div class="line">                  int width = host.getMeasuredWidth();</div><div class="line">                  int height = host.getMeasuredHeight();</div><div class="line">                  boolean measureAgain = false;</div><div class="line"></div><div class="line">                  if (lp.horizontalWeight &gt; 0.0f) &#123;</div><div class="line">                      width += (int) ((mWidth - width) * lp.horizontalWeight);</div><div class="line">                      childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width,</div><div class="line">                              MeasureSpec.EXACTLY);</div><div class="line">                      measureAgain = true;</div><div class="line">                  &#125;</div><div class="line">                  if (lp.verticalWeight &gt; 0.0f) &#123;</div><div class="line">                      height += (int) ((mHeight - height) * lp.verticalWeight);</div><div class="line">                      childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height,</div><div class="line">                              MeasureSpec.EXACTLY);</div><div class="line">                      measureAgain = true;</div><div class="line">                  &#125;</div><div class="line"></div><div class="line">                  if (measureAgain) &#123;</div><div class="line">                      if (DEBUG_LAYOUT) Log.v(TAG,</div><div class="line">                              &quot;And hey let&apos;s measure once more: width=&quot; + width</div><div class="line">                              + &quot; height=&quot; + height);</div><div class="line">                      performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</div><div class="line">                  &#125;</div><div class="line"></div><div class="line">                  layoutRequested = true;</div><div class="line">              &#125;</div><div class="line">          &#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>  这里可以得到以下几点信息：</p>
+<ol>
+<li>measure从performMeasure()方法开始</li>
+<li>measure可能执行两次，当我们给View设置Weight时就会执行两次，例如LinearLayout设置Weight时，就会执行两次。</li>
+</ol>
+<p>下面看一下performMeasure()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">private void performMeasure(int childWidthMeasureSpec, int childHeightMeasureSpec) &#123;</div><div class="line">        Trace.traceBegin(Trace.TRACE_TAG_VIEW, &quot;measure&quot;);</div><div class="line">        try &#123;</div><div class="line">            mView.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div><div class="line">        &#125; finally &#123;</div><div class="line">            Trace.traceEnd(Trace.TRACE_TAG_VIEW);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>  mView就是整个布局里面的Root View，熟悉的人都知道Android Activity里面的Root View是叫DecorView，实际上是一个FrameLayout。<br>  进入measure方法，这个方法的初始实现是在View这个类里面，我们知道所有其他控件类或直接或间接继承这个类。View的measure()方法的实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">public final void measure(int widthMeasureSpec, int heightMeasureSpec) &#123;</div><div class="line">        ...</div><div class="line"></div><div class="line">        // Suppress sign extension for the low bytes</div><div class="line">        long key = (long) widthMeasureSpec &lt;&lt; 32 | (long) heightMeasureSpec &amp; 0xffffffffL;</div><div class="line">        if (mMeasureCache == null) mMeasureCache = new LongSparseLongArray(2);</div><div class="line"></div><div class="line">        if ((mPrivateFlags &amp; PFLAG_FORCE_LAYOUT) == PFLAG_FORCE_LAYOUT ||</div><div class="line">                widthMeasureSpec != mOldWidthMeasureSpec ||</div><div class="line">                heightMeasureSpec != mOldHeightMeasureSpec) &#123;</div><div class="line"></div><div class="line">            // first clears the measured dimension flag</div><div class="line">            mPrivateFlags &amp;= ~PFLAG_MEASURED_DIMENSION_SET;</div><div class="line"></div><div class="line">            resolveRtlPropertiesIfNeeded();</div><div class="line"></div><div class="line">            int cacheIndex = (mPrivateFlags &amp; PFLAG_FORCE_LAYOUT) == PFLAG_FORCE_LAYOUT ? -1 :</div><div class="line">                    mMeasureCache.indexOfKey(key);</div><div class="line">            if (cacheIndex &lt; 0 || sIgnoreMeasureCache) &#123;</div><div class="line">                // measure ourselves, this should set the measured dimension flag back</div><div class="line">                onMeasure(widthMeasureSpec, heightMeasureSpec);</div><div class="line">                mPrivateFlags3 &amp;= ~PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT;</div><div class="line">            &#125; else &#123;</div><div class="line">                long value = mMeasureCache.valueAt(cacheIndex);</div><div class="line">                // Casting a long to int drops the high 32 bits, no mask needed</div><div class="line">                setMeasuredDimensionRaw((int) (value &gt;&gt; 32), (int) value);</div><div class="line">                mPrivateFlags3 |= PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            // flag not set, setMeasuredDimension() was not invoked, we raise</div><div class="line">            // an exception to warn the developer</div><div class="line">            if ((mPrivateFlags &amp; PFLAG_MEASURED_DIMENSION_SET) != PFLAG_MEASURED_DIMENSION_SET) &#123;</div><div class="line">                throw new IllegalStateException(&quot;View with id &quot; + getId() + &quot;: &quot;</div><div class="line">                        + getClass().getName() + &quot;#onMeasure() did not set the&quot;</div><div class="line">                        + &quot; measured dimension by calling&quot;</div><div class="line">                        + &quot; setMeasuredDimension()&quot;);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            mPrivateFlags |= PFLAG_LAYOUT_REQUIRED;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mOldWidthMeasureSpec = widthMeasureSpec;</div><div class="line">        mOldHeightMeasureSpec = heightMeasureSpec;</div><div class="line"></div><div class="line">        mMeasureCache.put(key, ((long) mMeasuredWidth) &lt;&lt; 32 |</div><div class="line">                (long) mMeasuredHeight &amp; 0xffffffffL); // suppress sign extension</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</div><div class="line">        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),</div><div class="line">                getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    private void setMeasuredDimensionRaw(int measuredWidth, int measuredHeight) &#123;</div><div class="line">        mMeasuredWidth = measuredWidth;</div><div class="line">        mMeasuredHeight = measuredHeight;</div><div class="line"></div><div class="line">        mPrivateFlags |= PFLAG_MEASURED_DIMENSION_SET;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>这段代码告诉我们以下信息：；</p>
+<ol>
+<li>measure流程使用了缓存机制，缓存机制通过key-value存取，key是一个Long类型的数据，其中高32位存储View的宽度信息，低32位存储View的高度信息；</li>
+<li>View的真正measure步骤是在onMeasure()方法里；</li>
+<li>只有标志位是PFLAG_FORCE_LAYOUT或者View的宽高发生变化，才会真正执行measure流程；</li>
+<li>当强制重新绘制(设置标志位PFLAG_FORCE_LAYOUT)或者忽略缓存（Android api版本小于19，即Android 4.4版本以下）时，才会在onMeasure()方法里面进行真正的measure流程；</li>
+<li>在onMeasure()方法执行结束后需要调用setMeasuredDimension()方法，重新保存新的宽高信息，setMeasuredDimension()方法里面实际上真正最后执行到setMeasuredDimensionRaw()方法里面，并且设置标志位PFLAG_MEASURED_DIMENSION_SET，代表已经重新设置测量值了。</li>
+<li>如果执行了onMeasure()方法，设置PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT标志位，代表已经measure过了，否则去掉这个标志位，这个标志位在layout流程中有用。</li>
+<li>使用缓存时，直接取上一次绘制后的值，并且直接调用setMeasuredDimensionRaw()给宽高重新设置。</li>
+<li>如果measure过了，设置标志位PFLAG_LAYOUT_REQUIRED，注意measure分两种，一种在onMeasure()方法里重新测量，一种使用缓存。</li>
+</ol>
+<h2 id="layout流程"><a href="#layout流程" class="headerlink" title="layout流程"></a>layout流程</h2><h2 id="draw流程"><a href="#draw流程" class="headerlink" title="draw流程"></a>draw流程</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;  看过许多讲Android View绘制原理的博客，也写过许多自定义View，但一直感觉停留在了解、使用的程度，只是有个大流程的理解。我们都知道View的绘制原理主要有3大步:Measure-&amp;gt;Layout-&amp;gt;Draw。网络上有许多技术大牛对这个有着非常深入的讲解，看别人写的博客，有的地方总是难以理解或者比较抽象，而且看过后，过了一段时间，又会忘了许多细节的地方，因此，这几天把View绘制流程的源码仔细过了一边，重新捋一下。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title>Monkey压力自动化测试</title>
@@ -152,53 +196,6 @@
       <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
     
       <category term="Monkey" scheme="http://yoursite.com/tags/Monkey/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>IntentService源码分析</title>
-    <link href="http://yoursite.com/2016/07/19/intentservice%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>http://yoursite.com/2016/07/19/intentservice源码分析/</id>
-    <published>2016-07-19T15:50:00.000Z</published>
-    <updated>2016-07-26T07:36:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="IntentService源码分析"></a>IntentService源码分析</h2><hr>
-<h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><hr>
-<p>IntentService是一种处理异步请求的Service。客户端通过调用<strong><em>Context.startService(Intent)</em></strong>来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。</p>
-<a id="more"></a>
-<h3 id="2-IntentService是如何启动一个异步线程处理请求的？"><a href="#2-IntentService是如何启动一个异步线程处理请求的？" class="headerlink" title="2 IntentService是如何启动一个异步线程处理请求的？"></a>2 IntentService是如何启动一个异步线程处理请求的？</h3><hr>
-<p>IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">        HandlerThread thread = new HandlerThread(&quot;IntentService[&quot; + mName + &quot;]&quot;);</div><div class="line">        thread.start();</div><div class="line">        mServiceLooper = thread.getLooper();</div><div class="line">        mServiceHandler = new ServiceHandler(mServiceLooper);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">public class HandlerThread extends Thread &#123;</div><div class="line">	int mPriority;</div><div class="line">    int mTid = -1;</div><div class="line">    Looper mLooper;</div><div class="line">    </div><div class="line">	public HandlerThread(String name) &#123;</div><div class="line">        super(name);</div><div class="line">        mPriority = Process.THREAD_PRIORITY_DEFAULT;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        mTid = Process.myTid();</div><div class="line">        Looper.prepare();</div><div class="line">        synchronized (this) &#123;</div><div class="line">            mLooper = Looper.myLooper();</div><div class="line">            notifyAll();</div><div class="line">        &#125;</div><div class="line">        Process.setThreadPriority(mPriority);</div><div class="line">        onLooperPrepared();</div><div class="line">        Looper.loop();</div><div class="line">        mTid = -1;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="3-IntentService是如何处理Intent的"><a href="#3-IntentService是如何处理Intent的" class="headerlink" title="3 IntentService是如何处理Intent的"></a>3 IntentService是如何处理Intent的</h3><hr>
-<p>调用<strong><em>Context.startService(Intent)</em></strong>后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public void onStart(Intent intent, int startId) &#123;</div><div class="line">       Message msg = mServiceHandler.obtainMessage();</div><div class="line">       msg.arg1 = startId;</div><div class="line">       msg.obj = intent;</div><div class="line">       mServiceHandler.sendMessage(msg);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final class ServiceHandler extends Handler &#123;</div><div class="line">       public ServiceHandler(Looper looper) &#123;</div><div class="line">           super(looper);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       @Override</div><div class="line">       public void handleMessage(Message msg) &#123;</div><div class="line">           onHandleIntent((Intent)msg.obj);</div><div class="line">           stopSelf(msg.arg1);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</p>
-<p>我们来看onHandleIntent(Intent intent);</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">protected abstract void onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
-<p>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用<code>stopSelf()</code>来停止Service。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
-<ol>
-<li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
-<li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
-<li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
-<li>ServiceHandler处理消息是在异步线程里面的，onHandleIntent(Intent)也是运行在异步线程里面的，这与UI主线程里面的Handler不同；</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;IntentService源码分析&quot;&gt;&lt;a href=&quot;#IntentService源码分析&quot; class=&quot;headerlink&quot; title=&quot;IntentService源码分析&quot;&gt;&lt;/a&gt;IntentService源码分析&lt;/h2&gt;&lt;hr&gt;
-&lt;h3 id=&quot;1-概论&quot;&gt;&lt;a href=&quot;#1-概论&quot; class=&quot;headerlink&quot; title=&quot;1 概论&quot;&gt;&lt;/a&gt;1 概论&lt;/h3&gt;&lt;hr&gt;
-&lt;p&gt;IntentService是一种处理异步请求的Service。客户端通过调用&lt;strong&gt;&lt;em&gt;Context.startService(Intent)&lt;/em&gt;&lt;/strong&gt;来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
-    
     
   </entry>
   
@@ -390,6 +387,53 @@
       <category term="Dialog" scheme="http://yoursite.com/tags/Dialog/"/>
     
       <category term="内存泄漏" scheme="http://yoursite.com/tags/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>IntentService源码分析</title>
+    <link href="http://yoursite.com/2016/07/19/intentservice%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>http://yoursite.com/2016/07/19/intentservice源码分析/</id>
+    <published>2016-07-19T15:50:00.000Z</published>
+    <updated>2016-07-26T07:36:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="IntentService源码分析"><a href="#IntentService源码分析" class="headerlink" title="IntentService源码分析"></a>IntentService源码分析</h2><hr>
+<h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1 概论"></a>1 概论</h3><hr>
+<p>IntentService是一种处理异步请求的Service。客户端通过调用<strong><em>Context.startService(Intent)</em></strong>来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。</p>
+<a id="more"></a>
+<h3 id="2-IntentService是如何启动一个异步线程处理请求的？"><a href="#2-IntentService是如何启动一个异步线程处理请求的？" class="headerlink" title="2 IntentService是如何启动一个异步线程处理请求的？"></a>2 IntentService是如何启动一个异步线程处理请求的？</h3><hr>
+<p>IntentService在创建时，会创建并启动一个线程HandlerThread，并且赋予这个线程一个Looper;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">        HandlerThread thread = new HandlerThread(&quot;IntentService[&quot; + mName + &quot;]&quot;);</div><div class="line">        thread.start();</div><div class="line">        mServiceLooper = thread.getLooper();</div><div class="line">        mServiceHandler = new ServiceHandler(mServiceLooper);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>ServiceHandler是Handler的一个子类，用来接受处理消息Message，我们知道一般Handler是在UI主线程接受处理消息的，要想在异步线程接受处理消息，必须给这个异步线程关联一个Looper，并且在异步线程调用Looper.prepare()方法；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">public class HandlerThread extends Thread &#123;</div><div class="line">	int mPriority;</div><div class="line">    int mTid = -1;</div><div class="line">    Looper mLooper;</div><div class="line">    </div><div class="line">	public HandlerThread(String name) &#123;</div><div class="line">        super(name);</div><div class="line">        mPriority = Process.THREAD_PRIORITY_DEFAULT;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        mTid = Process.myTid();</div><div class="line">        Looper.prepare();</div><div class="line">        synchronized (this) &#123;</div><div class="line">            mLooper = Looper.myLooper();</div><div class="line">            notifyAll();</div><div class="line">        &#125;</div><div class="line">        Process.setThreadPriority(mPriority);</div><div class="line">        onLooperPrepared();</div><div class="line">        Looper.loop();</div><div class="line">        mTid = -1;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-IntentService是如何处理Intent的"><a href="#3-IntentService是如何处理Intent的" class="headerlink" title="3 IntentService是如何处理Intent的"></a>3 IntentService是如何处理Intent的</h3><hr>
+<p>调用<strong><em>Context.startService(Intent)</em></strong>后，Service被启动，执行onCreate()方法，然后执行onStart(Intent intent,int startId);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public void onStart(Intent intent, int startId) &#123;</div><div class="line">       Message msg = mServiceHandler.obtainMessage();</div><div class="line">       msg.arg1 = startId;</div><div class="line">       msg.obj = intent;</div><div class="line">       mServiceHandler.sendMessage(msg);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>可以看到Service开始后，会把Intent对象通过Handler机制交给ServiceHandler来处理，ServiceHandler接受到消息后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final class ServiceHandler extends Handler &#123;</div><div class="line">       public ServiceHandler(Looper looper) &#123;</div><div class="line">           super(looper);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       @Override</div><div class="line">       public void handleMessage(Message msg) &#123;</div><div class="line">           onHandleIntent((Intent)msg.obj);</div><div class="line">           stopSelf(msg.arg1);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>ServiceHandler接受到消息后，取出Intent，启动onHandleIntent(Intent) 方法，来处理Intent；</p>
+<p>我们来看onHandleIntent(Intent intent);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">protected abstract void onHandleIntent(Intent intent);</div></pre></td></tr></table></figure>
+<p>这是一个抽象方法，留给开发者自己实现，异步操作的实现逻辑都在这个抽象方法里面；操作完成后，通过调用<code>stopSelf()</code>来停止Service。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
+<ol>
+<li>IntentService在创建的时候会创建一个线程，并启动这个异步线程；</li>
+<li>创建的异步线程会利用Looper、Handler来创建、发送、接受消息Message，与UI主线程通过Handler机制进行线程通信是同理的；</li>
+<li>Service的异步操作逻辑是定义在抽象方法onHandleIntent(Intent)里面，开发者需要实现这个抽象方法；</li>
+<li>ServiceHandler处理消息是在异步线程里面的，onHandleIntent(Intent)也是运行在异步线程里面的，这与UI主线程里面的Handler不同；</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;IntentService源码分析&quot;&gt;&lt;a href=&quot;#IntentService源码分析&quot; class=&quot;headerlink&quot; title=&quot;IntentService源码分析&quot;&gt;&lt;/a&gt;IntentService源码分析&lt;/h2&gt;&lt;hr&gt;
+&lt;h3 id=&quot;1-概论&quot;&gt;&lt;a href=&quot;#1-概论&quot; class=&quot;headerlink&quot; title=&quot;1 概论&quot;&gt;&lt;/a&gt;1 概论&lt;/h3&gt;&lt;hr&gt;
+&lt;p&gt;IntentService是一种处理异步请求的Service。客户端通过调用&lt;strong&gt;&lt;em&gt;Context.startService(Intent)&lt;/em&gt;&lt;/strong&gt;来发送请求，启动Service；Service按需启动后，会依次按顺序处理工作线程中的Intent，并且在工作结束后会自动停止。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+    
     
   </entry>
   
